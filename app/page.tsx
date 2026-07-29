@@ -158,8 +158,11 @@ function useScrollProgress() {
 function FieldLab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mode, setMode] = useState<"bar" | "coil">("bar");
-  const [current, setCurrent] = useState(2);
+  const [currentSetting, setCurrentSetting] = useState(2);
   const [turns, setTurns] = useState(5);
+  const [circuitClosed, setCircuitClosed] = useState(true);
+  const current = circuitClosed ? currentSetting : 0;
+  const coilVoltage = current * 3;
   const strength = Math.round((current * turns) / 2);
 
   useEffect(() => {
@@ -203,7 +206,7 @@ function FieldLab() {
         ctx.fillText("N", cx - 52, cy + 7);
         ctx.fillText("S", cx + 38, cy + 7);
       } else {
-        ctx.fillStyle = "#23455f";
+        ctx.fillStyle = current > 0 ? "#23455f" : "#8c999e";
         ctx.roundRect(cx - 85, cy - 24, 170, 48, 12);
         ctx.fill();
         ctx.strokeStyle = "#df8c38";
@@ -216,12 +219,16 @@ function FieldLab() {
         }
         ctx.fillStyle = "white";
         ctx.font = "700 16px sans-serif";
-        ctx.fillText("S", cx - 72, cy + 6);
-        ctx.fillText("N", cx + 61, cy + 6);
+        if (current > 0) {
+          ctx.fillText("S", cx - 72, cy + 6);
+          ctx.fillText("N", cx + 61, cy + 6);
+        } else {
+          ctx.fillText("OFF", cx - 17, cy + 6);
+        }
       }
-      const alpha = mode === "bar" ? 0.58 : Math.min(0.25 + strength / 45, 0.95);
+      const alpha = mode === "bar" ? 0.58 : current > 0 ? Math.min(0.25 + strength / 45, 0.95) : 0.08;
       ctx.strokeStyle = `rgba(28, 139, 116, ${alpha})`;
-      ctx.lineWidth = mode === "bar" ? 2 : 1.5 + strength / 14;
+      ctx.lineWidth = mode === "bar" ? 2 : current > 0 ? 1.5 + strength / 14 : 1;
       [-1, -0.72, -0.45, 0.45, 0.72, 1].forEach((curve, index) => {
         const upper = curve < 0;
         const spread = Math.abs(curve) * 95;
@@ -271,19 +278,34 @@ function FieldLab() {
       </div>
       <canvas ref={canvasRef} className="field-canvas" aria-label="Animated magnetic field model" />
       {mode === "coil" ? (
-        <div className="controls-grid">
-          <label>
-            Current <strong>{current.toFixed(1)} A</strong>
-            <input type="range" min="0.5" max="4" step="0.5" value={current} onChange={(e) => setCurrent(+e.target.value)} />
-          </label>
-          <label>
-            Coil turns <strong>{turns}</strong>
-            <input type="range" min="3" max="10" value={turns} onChange={(e) => setTurns(+e.target.value)} />
-          </label>
-          <div className="meter">
-            <span>Relative field strength</span>
-            <strong>{strength}</strong>
-            <i style={{ width: `${Math.min(strength * 4, 100)}%` }} />
+        <div className="electromagnet-controls">
+          <div className="em-sliders">
+            <label>
+              Current setting <strong>{currentSetting.toFixed(1)} A</strong>
+              <input type="range" min="0.5" max="4" step="0.5" value={currentSetting} onChange={(e) => setCurrentSetting(+e.target.value)} />
+            </label>
+            <label>
+              Coil turns <strong>{turns}</strong>
+              <input type="range" min="3" max="10" value={turns} onChange={(e) => setTurns(+e.target.value)} />
+            </label>
+          </div>
+          <div className={`em-circuit-board ${circuitClosed ? "closed" : "open"}`}>
+            <span className="em-board-label">Electromagnet circuit</span>
+            <div className="em-battery"><b>{(currentSetting * 3).toFixed(1)} V</b><span>supply</span></div>
+            <div className="em-circuit-wire" />
+            <button className="em-switch" onClick={() => setCircuitClosed(!circuitClosed)} aria-pressed={circuitClosed}>
+              <i /><b>{circuitClosed ? "CLOSED" : "OPEN"}</b><span>switch</span>
+            </button>
+            <div className="em-coil-symbol"><i /><i /><i /><span>coil</span></div>
+            <div className="em-indicator-bulb" style={{ "--brightness": current / 4 } as React.CSSProperties}>
+              <i /><b>{current > 0 ? "ON" : "OFF"}</b><span>indicator bulb</span>
+            </div>
+            <div className="em-voltmeter"><b>{coilVoltage.toFixed(1)}</b><span>V</span><small>across coil</small></div>
+          </div>
+          <div className="em-live-readouts">
+            <div><span>Actual current</span><b>{current.toFixed(1)} A</b></div>
+            <div className="em-strength-readout"><span>Relative field strength</span><b>{strength}</b><i><em style={{ width: `${Math.min(strength * 4, 100)}%` }} /></i></div>
+            <p>{circuitClosed ? "Increase current: the bulb brightens, the voltmeter rises and the magnetic field strengthens." : "The open switch breaks the circuit: no current, no bulb and no electromagnet field."}</p>
           </div>
         </div>
       ) : (
