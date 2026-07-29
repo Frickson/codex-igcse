@@ -815,51 +815,6 @@ function FuseDropLab() {
   );
 }
 
-function MotorGeneratorLab() {
-  const [mode, setMode] = useState<"motor" | "generator">("motor");
-  const [level, setLevel] = useState(3);
-  const [reversed, setReversed] = useState(false);
-  const reading = mode === "motor" ? `${level * 180} rpm` : `${(level * 1.8).toFixed(1)} V`;
-  return (
-    <div className="lab-shell motor-lab">
-      <div className="lab-header">
-        <div>
-          <span className="mini-label">Energy transfer lab</span>
-          <h3>Motor or generator?</h3>
-        </div>
-        <div className="segmented">
-          <button className={mode === "motor" ? "active" : ""} onClick={() => setMode("motor")}>Motor</button>
-          <button className={mode === "generator" ? "active" : ""} onClick={() => setMode("generator")}>Generator</button>
-        </div>
-      </div>
-      <div className="motor-stage">
-        <div className="pole north">N</div>
-        <div className="coil-wrap" style={{ "--speed": `${1.8 / level}s`, "--direction": reversed ? "reverse" : "normal" } as React.CSSProperties}>
-          <div className="coil" />
-          <div className="shaft" />
-        </div>
-        <div className="pole south">S</div>
-        <div className={`energy-flow ${reversed ? "reverse" : ""}`}>
-          <span>{mode === "motor" ? "electrical" : "kinetic"}</span><i>→</i><span>{mode === "motor" ? "kinetic" : "electrical"}</span>
-        </div>
-      </div>
-      <div className="controls-grid">
-        <label>
-          {mode === "motor" ? "Current" : "Rotation speed"} <strong>Level {level}</strong>
-          <input type="range" min="1" max="5" value={level} onChange={(e) => setLevel(+e.target.value)} />
-        </label>
-        <button className="action-button" onClick={() => setReversed(!reversed)}>Reverse {mode === "motor" ? "current" : "rotation"}</button>
-        <div className="big-reading"><span>{mode === "motor" ? "Coil speed" : "Induced e.m.f."}</span><strong>{reading}</strong></div>
-      </div>
-      <p className="lab-note">
-        {mode === "motor"
-          ? "The motor effect: a current-carrying conductor in a magnetic field experiences a force. Reverse current → reverse force."
-          : "Electromagnetic induction: changing magnetic flux through a conductor induces an e.m.f. Faster change → larger e.m.f."}
-      </p>
-    </div>
-  );
-}
-
 function TransformerLab() {
   const [primary, setPrimary] = useState(200);
   const [secondary, setSecondary] = useState(600);
@@ -1037,7 +992,10 @@ export default function Home() {
           <div><span className="eyebrow">4.5 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
         </div>
         <InductionDragLab />
-        <MotorGeneratorLab />
+        <div className="advanced-labs-cta">
+          <div><span className="mini-label">Separate practical page</span><h3>Explore the generator and motor in depth</h3><p>Synchronise a rotating coil with its a.c. waveform, predict motor-force direction and investigate the split-ring commutator.</p></div>
+          <a href="electromagnetic-labs/">Open advanced labs <span>→</span></a>
+        </div>
         <div className="rules-grid">
           <article><span>01</span><h3>Motor effect</h3><p>Field + current → force. Use Fleming’s left-hand rule for field, current and force.</p></article>
           <article><span>02</span><h3>Induction</h3><p>Changing flux linkage → induced e.m.f. The induced effect opposes the change that produces it.</p></article>

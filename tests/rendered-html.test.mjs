@@ -40,3 +40,19 @@ test("includes GitHub Pages and social assets", async () => {
   assert.match(html, /og:image/);
   assert.match(html, /twitter:card/);
 });
+
+test("exports the separate generator and motor laboratory page", async () => {
+  const [mainHtml, labsHtml, labsSource] = await Promise.all([
+    readFile(new URL("out/index.html", root), "utf8"),
+    readFile(new URL("out/electromagnetic-labs/index.html", root), "utf8"),
+    readFile(new URL("app/electromagnetic-labs/page.tsx", root), "utf8"),
+  ]);
+  assert.match(mainHtml, /Open advanced labs/);
+  assert.match(mainHtml, /electromagnetic-labs\//);
+  assert.match(labsHtml, /Match coil position to the e\.m\.f\. waveform/);
+  assert.match(labsHtml, /Predict the force, then run the motor/);
+  assert.match(labsHtml, /slip rings/);
+  assert.match(labsHtml, /split-ring commutator/);
+  assert.match(labsHtml, /Return to the complete Chapter 4 lesson/);
+  assert.match(labsSource, /currentReversed !== fieldReversed/);
+});
