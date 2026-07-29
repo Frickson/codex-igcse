@@ -320,6 +320,7 @@ function ElectrostaticLab() {
   const [rubs, setRubs] = useState(0);
   const [nearPaper, setNearPaper] = useState(false);
   const charge = material === "insulator" ? Math.min(rubs, 6) : 0;
+  const attracted = nearPaper && charge > 0;
 
   return (
     <div className="lab-shell electrostatic-lab">
@@ -330,7 +331,7 @@ function ElectrostaticLab() {
           <button className={material === "conductor" ? "active" : ""} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
         </div>
       </div>
-      <div className={`static-stage ${nearPaper ? "testing" : ""}`}>
+      <div className={`static-stage ${nearPaper ? "testing" : ""} ${attracted ? "attracting" : ""}`} data-charge={charge} data-attracted={attracted}>
         <div className="cloth"><span>cloth</span><i /></div>
         <div className={`charged-rod ${charge ? "charged" : ""}`}>
           {Array.from({ length: charge }, (_, index) => <i key={index}>−</i>)}
@@ -345,9 +346,15 @@ function ElectrostaticLab() {
       </div>
       <p className="lab-note">
         {material === "conductor"
-          ? "The metal is held in your hand, so transferred charge flows through the conductor and your body to Earth."
+          ? rubs > 0
+            ? "Rubbing can transfer electrons, but the metal is held in your hand, so the charge immediately flows through your body to Earth. The rod stays neutral and the paper stays still."
+            : nearPaper
+              ? "The neutral metal rod is close to the paper, but there is no electrostatic attraction because it has not retained any charge."
+              : "The metal is held in your hand. Try rubbing it, then observe why it cannot retain charge."
           : charge === 0
-            ? "Rub the plastic rod. Charging by friction transfers electrons; positive charge does not move between the solids."
+            ? nearPaper
+              ? "The neutral plastic rod is close to the paper, but the paper stays still. Rub the rod first to transfer electrons."
+              : "Rub the plastic rod. Charging by friction transfers electrons; positive charge does not move between the solids."
             : nearPaper
               ? "The charged rod polarises the neutral paper, producing attraction. The rod gained electrons and is negatively charged."
               : `${charge} excess-electron markers are trapped on the insulating rod. Move it near the paper to detect the charge.`}

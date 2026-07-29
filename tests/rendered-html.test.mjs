@@ -56,3 +56,14 @@ test("exports the separate generator and motor laboratory page", async () => {
   assert.match(labsHtml, /Return to the complete Chapter 4 lesson/);
   assert.match(labsSource, /currentReversed !== fieldReversed/);
 });
+
+test("paper attraction requires a charged rod near the paper", async () => {
+  const [source, css] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(source, /const attracted = nearPaper && charge > 0/);
+  assert.match(source, /data-attracted=\{attracted\}/);
+  assert.match(css, /\.attracting \.paper-bits i/);
+  assert.doesNotMatch(css, /\.testing \.paper-bits i/);
+});
