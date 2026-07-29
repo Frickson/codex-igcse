@@ -11,6 +11,7 @@ An interactive English teaching resource for Cambridge IGCSE Physics 0625, Chapt
 - interactive series/parallel circuit builder
 - circuit-component and potential-divider design activities
 - motor, generator, and transformer activities
+- separate advanced generator-waveform and motor-force laboratory page
 - electrical safety explanations and checks
 - original exam-style questions based on recurring assessment patterns
 - retrieval mind map and saved six-question checkpoint
