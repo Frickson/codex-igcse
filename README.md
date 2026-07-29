@@ -4,9 +4,12 @@ An interactive English teaching resource for Cambridge IGCSE Physics 0625, Chapt
 
 ## What is included
 
-- syllabus map for sections 4.1–4.6
+- syllabus map for the current sections 4.1–4.5
 - animated magnetic field and electromagnet model
+- electrostatics and electric-field mapping laboratories
+- ammeter/voltmeter placement and live I–V graph activities
 - interactive series/parallel circuit builder
+- circuit-component and potential-divider design activities
 - motor, generator, and transformer activities
 - electrical safety explanations and checks
 - original exam-style questions based on recurring assessment patterns

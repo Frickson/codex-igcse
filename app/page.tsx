@@ -315,6 +315,240 @@ function FieldLab() {
   );
 }
 
+function ElectrostaticLab() {
+  const [material, setMaterial] = useState<"insulator" | "conductor">("insulator");
+  const [rubs, setRubs] = useState(0);
+  const [nearPaper, setNearPaper] = useState(false);
+  const charge = material === "insulator" ? Math.min(rubs, 6) : 0;
+
+  return (
+    <div className="lab-shell electrostatic-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.2.1 · electrostatics laboratory</span><h3>Transfer electrons, then test the charge</h3></div>
+        <div className="segmented" aria-label="Choose rod material">
+          <button className={material === "insulator" ? "active" : ""} onClick={() => { setMaterial("insulator"); setRubs(0); }}>Plastic</button>
+          <button className={material === "conductor" ? "active" : ""} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
+        </div>
+      </div>
+      <div className={`static-stage ${nearPaper ? "testing" : ""}`}>
+        <div className="cloth"><span>cloth</span><i /></div>
+        <div className={`charged-rod ${charge ? "charged" : ""}`}>
+          {Array.from({ length: charge }, (_, index) => <i key={index}>−</i>)}
+          <b>{material === "insulator" ? "plastic rod" : "metal rod"}</b>
+        </div>
+        <div className="paper-bits">{Array.from({ length: 6 }, (_, index) => <i key={index} />)}<span>paper</span></div>
+      </div>
+      <div className="lab-action-row">
+        <button onClick={() => setRubs((value) => Math.min(6, value + 1))}>Rub with cloth</button>
+        <button onClick={() => setNearPaper((value) => !value)}>{nearPaper ? "Move rod away" : "Move near paper"}</button>
+        <button className="secondary-action" onClick={() => { setRubs(0); setNearPaper(false); }}>Reset</button>
+      </div>
+      <p className="lab-note">
+        {material === "conductor"
+          ? "The metal is held in your hand, so transferred charge flows through the conductor and your body to Earth."
+          : charge === 0
+            ? "Rub the plastic rod. Charging by friction transfers electrons; positive charge does not move between the solids."
+            : nearPaper
+              ? "The charged rod polarises the neutral paper, producing attraction. The rod gained electrons and is negatively charged."
+              : `${charge} excess-electron markers are trapped on the insulating rod. Move it near the paper to detect the charge.`}
+      </p>
+    </div>
+  );
+}
+
+function ElectricFieldLab() {
+  const [mode, setMode] = useState<"point" | "sphere" | "plates">("point");
+  const [x, setX] = useState(72);
+  const [y, setY] = useState(35);
+  const dx = x - 50;
+  const dy = y - 50;
+  const angle = mode === "plates" ? 0 : Math.atan2(dy, dx) * 180 / Math.PI;
+  const fieldLabel = mode === "plates" ? "uniform field: + plate → − plate" : "field points away from the positive charge";
+
+  return (
+    <div className="lab-shell electric-field-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.2.1 · electric-field mapper · Supplement</span><h3>Move a positive test charge through the field</h3></div>
+        <div className="segmented" aria-label="Choose electric field">
+          <button className={mode === "point" ? "active" : ""} onClick={() => setMode("point")}>Point charge</button>
+          <button className={mode === "sphere" ? "active" : ""} onClick={() => setMode("sphere")}>Sphere</button>
+          <button className={mode === "plates" ? "active" : ""} onClick={() => setMode("plates")}>Plates</button>
+        </div>
+      </div>
+      <div className={`electric-field-stage ${mode}`}>
+        <div className="field-source">{mode === "plates" ? <><i>+</i><i>−</i></> : <b>+</b>}</div>
+        <svg viewBox="0 0 100 60" aria-hidden="true">
+          {mode === "plates"
+            ? [10, 20, 30, 40, 50].map((line) => <path key={line} d={`M 18 ${line} L 82 ${line}`} />)
+            : [0, 45, 90, 135, 180, 225, 270, 315].map((degree) => {
+                const radians = degree * Math.PI / 180;
+                return <path key={degree} d={`M ${50 + Math.cos(radians) * 8} ${30 + Math.sin(radians) * 8} L ${50 + Math.cos(radians) * 30} ${30 + Math.sin(radians) * 24}`} />;
+              })}
+        </svg>
+        <div className="test-charge" style={{ left: `${x}%`, top: `${y}%` }}><b>+</b><i style={{ transform: `rotate(${angle}deg)` }}>→</i></div>
+      </div>
+      <div className="field-position-controls">
+        <label>Horizontal position<input type="range" min="8" max="92" value={x} onChange={(event) => setX(+event.target.value)} /></label>
+        <label>Vertical position<input type="range" min="12" max="88" value={y} onChange={(event) => setY(+event.target.value)} /></label>
+        <p><b>Force direction:</b> {fieldLabel}. Electric-field direction is defined using a positive test charge.</p>
+      </div>
+    </div>
+  );
+}
+
+function MeterPlacementLab() {
+  const meters = [{ id: "ammeter", label: "A", name: "ammeter" }, { id: "voltmeter", label: "V", name: "voltmeter" }] as const;
+  type MeterId = typeof meters[number]["id"];
+  const [seriesMeter, setSeriesMeter] = useState<MeterId | null>(null);
+  const [parallelMeter, setParallelMeter] = useState<MeterId | null>(null);
+  const [selected, setSelected] = useState<MeterId | null>(null);
+  const correct = seriesMeter === "ammeter" && parallelMeter === "voltmeter";
+
+  const place = (meter: MeterId, slot: "series" | "parallel") => {
+    if (slot === "series") {
+      setSeriesMeter(meter);
+      if (parallelMeter === meter) setParallelMeter(null);
+    } else {
+      setParallelMeter(meter);
+      if (seriesMeter === meter) setSeriesMeter(null);
+    }
+    setSelected(null);
+  };
+  const drop = (event: DragEvent<HTMLButtonElement>, slot: "series" | "parallel") => {
+    event.preventDefault();
+    const meter = event.dataTransfer.getData("text/plain") as MeterId;
+    if (meters.some((candidate) => candidate.id === meter)) place(meter, slot);
+  };
+
+  return (
+    <div className="lab-shell meter-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.2.2–4.2.3 · meter challenge</span><h3>Measure current and potential difference correctly</h3></div>
+        <span className={`status-pill ${correct ? "up" : ""}`}>{correct ? "Circuit ready" : "Place both meters"}</span>
+      </div>
+      <div className="meter-tray">
+        {meters.map((meter) => <button key={meter.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", meter.id)} onClick={() => setSelected(meter.id)} className={selected === meter.id ? "selected" : ""}><b>{meter.label}</b><span>{meter.name}</span></button>)}
+      </div>
+      <div className="meter-circuit">
+        <div className="meter-wire" />
+        <div className="meter-lamp">⊗<span>lamp</span></div>
+        <button onDragOver={(event) => event.preventDefault()} onDrop={(event) => drop(event, "series")} onClick={() => selected && place(selected, "series")} className="meter-slot series-slot">
+          {seriesMeter ? <><b>{seriesMeter === "ammeter" ? "A" : "V"}</b><span>in series</span></> : <><b>?</b><span>series position</span></>}
+        </button>
+        <button onDragOver={(event) => event.preventDefault()} onDrop={(event) => drop(event, "parallel")} onClick={() => selected && place(selected, "parallel")} className="meter-slot parallel-slot">
+          {parallelMeter ? <><b>{parallelMeter === "ammeter" ? "A" : "V"}</b><span>across lamp</span></> : <><b>?</b><span>parallel position</span></>}
+        </button>
+      </div>
+      <p className={`lab-note ${seriesMeter && parallelMeter ? correct ? "success-note" : "error-note" : ""}`}>
+        {!seriesMeter || !parallelMeter ? "Drag or tap each meter, then place one in each position." : correct ? "Correct: an ammeter measures charge flow in series; a voltmeter measures p.d. across a component in parallel." : "Try again: a voltmeter has very high resistance, while an ammeter must carry the circuit current."}
+      </p>
+    </div>
+  );
+}
+
+function IVGraphLab() {
+  const [component, setComponent] = useState<"resistor" | "lamp" | "diode">("resistor");
+  const [voltage, setVoltage] = useState(3);
+  const currentFor = (v: number) => component === "resistor" ? v / 3 : component === "lamp" ? Math.sign(v) * Math.sqrt(Math.abs(v)) * 0.65 : v > 0.7 ? (v - 0.7) * 0.72 : v < 0 ? -0.03 : 0;
+  const current = currentFor(voltage);
+  const points = Array.from({ length: 49 }, (_, index) => {
+    const v = -6 + index * 0.25;
+    const i = currentFor(v);
+    return `${50 + v * 6.6},${50 - i * 14}`;
+  }).join(" ");
+
+  return (
+    <div className="lab-shell iv-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.2.4 · current–voltage practical · Supplement</span><h3>Trace an I–V characteristic</h3></div>
+        <div className="segmented">
+          <button className={component === "resistor" ? "active" : ""} onClick={() => setComponent("resistor")}>Resistor</button>
+          <button className={component === "lamp" ? "active" : ""} onClick={() => setComponent("lamp")}>Lamp</button>
+          <button className={component === "diode" ? "active" : ""} onClick={() => setComponent("diode")}>Diode</button>
+        </div>
+      </div>
+      <div className="iv-workbench">
+        <svg viewBox="0 0 100 100" role="img" aria-label={`Current-voltage graph for a ${component}`}>
+          <path className="axis" d="M 8 50 L 94 50 M 50 8 L 50 92" />
+          <text x="91" y="47">V</text><text x="53" y="12">I</text>
+          <polyline points={points} />
+          <circle cx={50 + voltage * 6.6} cy={50 - current * 14} r="2.6" />
+        </svg>
+        <div>
+          <label>Supply p.d. <strong>{voltage.toFixed(1)} V</strong><input type="range" min="-6" max="6" step="0.5" value={voltage} onChange={(event) => setVoltage(+event.target.value)} /></label>
+          <div className="iv-readings"><span>Voltmeter <b>{voltage.toFixed(1)} V</b></span><span>Ammeter <b>{current.toFixed(2)} A</b></span></div>
+          <p>{component === "resistor" ? "Straight line through the origin: resistance is constant." : component === "lamp" ? "The filament heats as current increases, so resistance increases and the graph becomes less steep." : "The diode conducts significantly in the forward direction only after its threshold."}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ComponentBoardLab() {
+  const components = [
+    { id: "cell", symbol: "— | | —", name: "Cell", role: "source", behavior: "Provides e.m.f. and transfers energy to the circuit." },
+    { id: "ldr", symbol: "↘ (▭)", name: "LDR", role: "sensor", behavior: "Its resistance decreases as light intensity increases." },
+    { id: "ntc", symbol: "ϑ (▭)", name: "NTC thermistor", role: "sensor", behavior: "Its resistance decreases as temperature increases." },
+    { id: "lamp", symbol: "— ⊗ —", name: "Lamp", role: "output", behavior: "Transfers electrical energy by heating and light." },
+    { id: "relay", symbol: "coil ⇢ switch", name: "Relay", role: "output", behavior: "An electromagnet operates a separate switch." },
+    { id: "led", symbol: "— ▷| ⇗", name: "LED", role: "output", behavior: "Emits light when forward biased; it is a diode." },
+  ] as const;
+  type ComponentId = typeof components[number]["id"];
+  const [slots, setSlots] = useState<Record<"source" | "sensor" | "output", ComponentId | null>>({ source: null, sensor: null, output: null });
+  const [selected, setSelected] = useState<ComponentId | null>(null);
+  const complete = Object.values(slots).every(Boolean);
+  const place = (id: ComponentId, role: "source" | "sensor" | "output") => {
+    setSlots((old) => ({ ...old, [role]: id }));
+    setSelected(null);
+  };
+
+  return (
+    <div className="lab-shell component-board-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.3.1 · circuit-symbol board</span><h3>Build a sensor-controlled output circuit</h3></div>
+        <span className={`status-pill ${complete ? "up" : ""}`}>{complete ? "Design complete" : "Choose three components"}</span>
+      </div>
+      <div className="symbol-tray">
+        {components.map((item) => <button key={item.id} onClick={() => setSelected(item.id)} className={selected === item.id ? "selected" : ""}><b>{item.symbol}</b><span>{item.name}</span><small>{item.behavior}</small></button>)}
+      </div>
+      <div className="design-slots">
+        {(["source", "sensor", "output"] as const).map((role) => {
+          const item = components.find((candidate) => candidate.id === slots[role]);
+          return <button key={role} onClick={() => selected && components.find((candidate) => candidate.id === selected)?.role === role && place(selected, role)} className={item ? "filled" : ""}><span>{role}</span><b>{item ? item.symbol : "select then place"}</b><small>{item?.name ?? `Needs a ${role}`}</small></button>;
+        })}
+      </div>
+      <p className="lab-note">{complete ? `Circuit idea: the ${components.find((item) => item.id === slots.sensor)?.name} senses a change and controls the ${components.find((item) => item.id === slots.output)?.name}.` : "Select a component, then place it in the matching source, sensor or output slot."}</p>
+    </div>
+  );
+}
+
+function PotentialDividerLab() {
+  const [input, setInput] = useState(12);
+  const [r1, setR1] = useState(4);
+  const [r2, setR2] = useState(8);
+  const output = input * r2 / (r1 + r2);
+  return (
+    <div className="lab-shell divider-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">4.3.3 · potential divider · Supplement</span><h3>Share the supply potential difference</h3></div>
+        <div className="big-reading"><span>Output p.d.</span><strong>{output.toFixed(1)} V</strong></div>
+      </div>
+      <div className="divider-circuit">
+        <div className="divider-source"><b>{input} V</b><span>input</span></div>
+        <div className="divider-resistor top"><b>R₁</b><span>{r1} kΩ</span></div>
+        <div className="divider-tap">V<sub>out</sub></div>
+        <div className="divider-resistor bottom"><b>R₂</b><span>{r2} kΩ</span></div>
+      </div>
+      <div className="controls-grid three">
+        <label>Input p.d. <strong>{input} V</strong><input type="range" min="3" max="15" step="3" value={input} onChange={(event) => setInput(+event.target.value)} /></label>
+        <label>R₁ <strong>{r1} kΩ</strong><input type="range" min="1" max="12" value={r1} onChange={(event) => setR1(+event.target.value)} /></label>
+        <label>R₂ <strong>{r2} kΩ</strong><input type="range" min="1" max="12" value={r2} onChange={(event) => setR2(+event.target.value)} /></label>
+      </div>
+      <div className="formula-strip"><span>R₁ / R₂ = V₁ / V₂</span><b>Vout is across R₂</b><span>{r2}/{r1 + r2} of input</span></div>
+    </div>
+  );
+}
+
 function CircuitLab() {
   const [layout, setLayout] = useState<"series" | "parallel">("series");
   const [voltage, setVoltage] = useState(12);
@@ -736,16 +970,15 @@ export default function Home() {
       <section className="lesson-section intro-section" id="overview">
         <div className="section-heading">
           <span className="section-number">01</span>
-          <div><span className="eyebrow">Route map</span><h2>Six ideas. One connected story.</h2><p>The current syllabus moves from fields to quantities, circuits, safety, digital electronics and electromagnetic effects.</p></div>
+          <div><span className="eyebrow">Route map</span><h2>Five sections. One connected story.</h2><p>The official 2026–2028 syllabus moves from magnetism to electrical quantities, circuits, safety and electromagnetic effects.</p></div>
         </div>
         <div className="syllabus-grid">
           {[
             ["4.1", "Magnetism", "Fields, poles, induced magnetism, permanent and temporary magnets"],
-            ["4.2", "Electrical quantities", "Charge, current, e.m.f., p.d., resistance and electrical energy"],
+            ["4.2", "Electrical quantities", "Electrostatics, current, e.m.f., p.d., resistance, energy and power"],
             ["4.3", "Circuits", "Symbols, series and parallel networks, I–V behaviour and potential dividers"],
-            ["4.4", "Digital electronics", "Logic states, gates and truth tables (Supplement)"],
-            ["4.5", "Electrical safety", "Hazards, insulation, earthing, fuses and circuit breakers"],
-            ["4.6", "Electromagnetic effects", "Induction, a.c. generators, transformers and the motor effect"],
+            ["4.4", "Electrical safety", "Hazards, insulation, earthing, fuses and circuit breakers"],
+            ["4.5", "Electromagnetic effects", "Induction, a.c. generators, transformers and the motor effect"],
           ].map(([n, title, copy]) => (
             <article key={n}><span>{n}</span><h3>{title}</h3><p>{copy}</p></article>
           ))}
@@ -776,31 +1009,32 @@ export default function Home() {
       <section className="lesson-section dark-section" id="circuits">
         <div className="section-heading">
           <span className="section-number">03</span>
-          <div><span className="eyebrow">4.2–4.3 · quantities and circuits</span><h2>Three questions unlock most circuit problems.</h2><p>What stays the same? What splits? What adds?</p></div>
+          <div><span className="eyebrow">4.2–4.3 · quantities and circuits</span><h2>Charge first. Then make it flow.</h2><p>Begin with electrostatics and fields, then measure current, p.d. and component behaviour in complete circuits.</p></div>
         </div>
+        <ElectrostaticLab />
+        <ElectricFieldLab />
         <div className="formula-grid">
           <article><span>charge flow</span><b>I = Q / t</b><p>current = charge per unit time</p></article>
           <article><span>resistance</span><b>R = V / I</b><p>opposition to current</p></article>
           <article><span>electrical power</span><b>P = IV</b><p>energy transferred each second</p></article>
           <article><span>electrical energy</span><b>E = IVt</b><p>or E = Pt</p></article>
         </div>
+        <MeterPlacementLab />
         <CircuitLab />
         <CircuitAssemblyLab />
         <div className="examiner-lens">
           <span>EXAMINER’S LENS</span>
           <p><b>Never write “current is used up”.</b> Charge is conserved. Components transfer energy; the current entering a component equals the current leaving it in steady state.</p>
         </div>
-        <div className="iv-cards">
-          <article><div className="mini-graph ohmic"><i /></div><h3>Fixed resistor</h3><p>Straight line through the origin at constant temperature: current is proportional to p.d.</p></article>
-          <article><div className="mini-graph filament"><i /></div><h3>Filament lamp</h3><p>As temperature rises, resistance increases; the graph becomes less steep.</p></article>
-          <article><div className="mini-graph diode"><i /></div><h3>Diode</h3><p>Current passes mainly in one direction after the forward threshold is reached.</p></article>
-        </div>
+        <IVGraphLab />
+        <ComponentBoardLab />
+        <PotentialDividerLab />
       </section>
 
       <section className="lesson-section" id="effects">
         <div className="section-heading">
           <span className="section-number">04</span>
-          <div><span className="eyebrow">4.6 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
+          <div><span className="eyebrow">4.5 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
         </div>
         <InductionDragLab />
         <MotorGeneratorLab />
@@ -819,7 +1053,7 @@ export default function Home() {
       <section className="lesson-section safety-section" id="safety">
         <div className="section-heading">
           <span className="section-number">05</span>
-          <div><span className="eyebrow">4.4–4.5 · logic and safety</span><h2>Protection works by controlling the path.</h2><p>Electric shock needs current through the body. Good design prevents contact, provides a safer path, or disconnects the supply quickly.</p></div>
+          <div><span className="eyebrow">4.4 · electrical safety</span><h2>Protection works by controlling the path.</h2><p>Electric shock needs current through the body. Good design prevents contact, provides a safer path, or disconnects the supply quickly.</p></div>
         </div>
         <div className="safety-flow">
           <article><span>fault</span><b>Live wire touches metal case</b></article>
@@ -834,7 +1068,7 @@ export default function Home() {
           <article><b>Double insulation</b><p>Two layers of insulation; no exposed metal case. An earth wire is not required.</p></article>
           <article><b>Fuse</b><p>A thin wire melts when current exceeds its rating. It must be replaced after operating.</p></article>
           <article><b>Circuit breaker</b><p>An electromagnetic device opens the circuit and can be reset.</p></article>
-          <article><b>Logic gates</b><p>AND needs both inputs high; OR needs at least one; NOT reverses the state. Supplement content.</p></article>
+          <article><b>Live-wire switching</b><p>The switch and fuse belong in the live wire so opening either disconnects the appliance from the high-potential supply.</p></article>
         </div>
         <FuseDropLab />
         <div className="micro-checks">
