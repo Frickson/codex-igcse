@@ -49,6 +49,8 @@ test("exports the separate generator and motor laboratory page", async () => {
   ]);
   assert.match(mainHtml, /Open advanced labs/);
   assert.match(mainHtml, /electromagnetic-labs\//);
+  assert.match(mainHtml, /Generator &amp; Motor Labs/);
+  assert.match(mainHtml, /advanced-labs-button/);
   assert.match(labsHtml, /Match coil position to the e\.m\.f\. waveform/);
   assert.match(labsHtml, /Predict the force, then run the motor/);
   assert.match(labsHtml, /slip rings/);

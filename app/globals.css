@@ -62,6 +62,8 @@ section { scroll-margin-top: 74px; }
 .hero-actions { display: flex; align-items: center; gap: 25px; margin-top: 34px; }
 .primary-button { display: inline-flex; gap: 18px; align-items: center; border-radius: 999px; padding: 14px 21px; background: var(--navy); color: white; text-decoration: none; font-size: 13px; font-weight: 800; box-shadow: var(--shadow); }
 .primary-button span { color: var(--mint-2); font-size: 18px; }
+.advanced-labs-button { display: inline-flex; gap: 12px; align-items: center; border: 1px solid var(--navy); border-radius: 999px; padding: 13px 19px; color: var(--navy); text-decoration: none; font-size: 12px; font-weight: 800; }
+.advanced-labs-button:hover { border-color: var(--teal); color: var(--teal); }.advanced-labs-button span { font-size: 17px; }
 .time-note { color: var(--muted); font-size: 12px; }
 .time-note b { display: block; color: var(--ink); }
 .hero-visual { position: relative; aspect-ratio: 1; display: grid; place-items: center; }

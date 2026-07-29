@@ -918,6 +918,7 @@ export default function Home() {
           <p>Chapter 4 rebuilt as a field guide: manipulate the models, explain the patterns, then answer like an examiner is marking.</p>
           <div className="hero-actions">
             <a href="#overview" className="primary-button">Begin the fieldwork <span>↓</span></a>
+            <a href="electromagnetic-labs/" className="advanced-labs-button">Generator &amp; Motor Labs <span>→</span></a>
             <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
         </div>
