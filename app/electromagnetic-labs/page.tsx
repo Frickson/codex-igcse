@@ -67,7 +67,7 @@ function MotorForceLab() {
   const [turns, setTurns] = useState(3);
   const [field, setField] = useState(3);
   const [prediction, setPrediction] = useState<"out" | "in" | null>(null);
-  const forceOut = currentReversed === fieldReversed;
+  const forceOut = currentReversed !== fieldReversed;
   const force = current * turns * field;
   const correct = prediction === (forceOut ? "out" : "in");
   const resetPrediction = () => setPrediction(null);

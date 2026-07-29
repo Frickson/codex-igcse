@@ -42,9 +42,10 @@ test("includes GitHub Pages and social assets", async () => {
 });
 
 test("exports the separate generator and motor laboratory page", async () => {
-  const [mainHtml, labsHtml] = await Promise.all([
+  const [mainHtml, labsHtml, labsSource] = await Promise.all([
     readFile(new URL("out/index.html", root), "utf8"),
     readFile(new URL("out/electromagnetic-labs/index.html", root), "utf8"),
+    readFile(new URL("app/electromagnetic-labs/page.tsx", root), "utf8"),
   ]);
   assert.match(mainHtml, /Open advanced labs/);
   assert.match(mainHtml, /electromagnetic-labs\//);
@@ -53,4 +54,5 @@ test("exports the separate generator and motor laboratory page", async () => {
   assert.match(labsHtml, /slip rings/);
   assert.match(labsHtml, /split-ring commutator/);
   assert.match(labsHtml, /Return to the complete Chapter 4 lesson/);
+  assert.match(labsSource, /currentReversed !== fieldReversed/);
 });
