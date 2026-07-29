@@ -21,7 +21,7 @@ test("exports the complete interactive lesson", async () => {
   assert.match(html, /Electric-field mapper/i);
   assert.match(html, /Meter challenge/i);
   assert.match(html, /Current–voltage practical/i);
-  assert.match(html, /Circuit-symbol board/i);
+  assert.match(html, /Circuit-symbol builder/i);
   assert.match(html, /Potential divider/i);
   assert.match(html, /Transformer calculator/);
   assert.match(html, /Drag-and-drop circuit/);
@@ -83,4 +83,14 @@ test("electric-field mapper uses direct dragging and correct model boundaries", 
   assert.match(css, /marker-end: url\(#electric-field-arrow\)/);
   assert.doesNotMatch(source, /Horizontal position/);
   assert.doesNotMatch(source, /Vertical position/);
+});
+
+test("circuit-symbol builder supports challenges and removal controls", async () => {
+  const source = await readFile(new URL("app/page.tsx", root), "utf8");
+  assert.match(source, /Temperature indicator/);
+  assert.match(source, /Light-level indicator/);
+  assert.match(source, /Protected LED/);
+  assert.match(source, /onDrop=\{\(event\) => drop\(event, slot\)\}/);
+  assert.match(source, /Tap any placed symbol to remove it individually/);
+  assert.match(source, />Remove all</);
 });
