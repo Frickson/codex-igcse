@@ -49,10 +49,38 @@ test("exports the separate generator and motor laboratory page", async () => {
   ]);
   assert.match(mainHtml, /Open advanced labs/);
   assert.match(mainHtml, /electromagnetic-labs\//);
+  assert.match(mainHtml, /Generator &amp; Motor Labs/);
+  assert.match(mainHtml, /advanced-labs-button/);
   assert.match(labsHtml, /Match coil position to the e\.m\.f\. waveform/);
   assert.match(labsHtml, /Predict the force, then run the motor/);
   assert.match(labsHtml, /slip rings/);
   assert.match(labsHtml, /split-ring commutator/);
   assert.match(labsHtml, /Return to the complete Chapter 4 lesson/);
   assert.match(labsSource, /currentReversed !== fieldReversed/);
+});
+
+test("paper attraction requires a charged rod near the paper", async () => {
+  const [source, css] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(source, /const attracted = nearPaper && charge > 0/);
+  assert.match(source, /data-attracted=\{attracted\}/);
+  assert.match(css, /\.attracting \.paper-bits i/);
+  assert.doesNotMatch(css, /\.testing \.paper-bits i/);
+});
+
+test("electric-field mapper uses direct dragging and correct model boundaries", async () => {
+  const [source, css] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(source, /onPointerDown=\{startDrag\}/);
+  assert.match(source, /onKeyDown=\{nudgeCharge\}/);
+  assert.match(source, /E = 0 inside a charged conductor/);
+  assert.match(source, /end effects are not examined/);
+  assert.match(source, /sourceSign === -1/);
+  assert.match(css, /marker-end: url\(#electric-field-arrow\)/);
+  assert.doesNotMatch(source, /Horizontal position/);
+  assert.doesNotMatch(source, /Vertical position/);
 });

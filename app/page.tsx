@@ -320,6 +320,7 @@ function ElectrostaticLab() {
   const [rubs, setRubs] = useState(0);
   const [nearPaper, setNearPaper] = useState(false);
   const charge = material === "insulator" ? Math.min(rubs, 6) : 0;
+  const attracted = nearPaper && charge > 0;
 
   return (
     <div className="lab-shell electrostatic-lab">
@@ -330,7 +331,7 @@ function ElectrostaticLab() {
           <button className={material === "conductor" ? "active" : ""} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
         </div>
       </div>
-      <div className={`static-stage ${nearPaper ? "testing" : ""}`}>
+      <div className={`static-stage ${nearPaper ? "testing" : ""} ${attracted ? "attracting" : ""}`} data-charge={charge} data-attracted={attracted}>
         <div className="cloth"><span>cloth</span><i /></div>
         <div className={`charged-rod ${charge ? "charged" : ""}`}>
           {Array.from({ length: charge }, (_, index) => <i key={index}>−</i>)}
@@ -345,9 +346,15 @@ function ElectrostaticLab() {
       </div>
       <p className="lab-note">
         {material === "conductor"
-          ? "The metal is held in your hand, so transferred charge flows through the conductor and your body to Earth."
+          ? rubs > 0
+            ? "Rubbing can transfer electrons, but the metal is held in your hand, so the charge immediately flows through your body to Earth. The rod stays neutral and the paper stays still."
+            : nearPaper
+              ? "The neutral metal rod is close to the paper, but there is no electrostatic attraction because it has not retained any charge."
+              : "The metal is held in your hand. Try rubbing it, then observe why it cannot retain charge."
           : charge === 0
-            ? "Rub the plastic rod. Charging by friction transfers electrons; positive charge does not move between the solids."
+            ? nearPaper
+              ? "The neutral plastic rod is close to the paper, but the paper stays still. Rub the rod first to transfer electrons."
+              : "Rub the plastic rod. Charging by friction transfers electrons; positive charge does not move between the solids."
             : nearPaper
               ? "The charged rod polarises the neutral paper, producing attraction. The rod gained electrons and is negatively charged."
               : `${charge} excess-electron markers are trapped on the insulating rod. Move it near the paper to detect the charge.`}
@@ -358,39 +365,142 @@ function ElectrostaticLab() {
 
 function ElectricFieldLab() {
   const [mode, setMode] = useState<"point" | "sphere" | "plates">("point");
+  const [sourceSign, setSourceSign] = useState<1 | -1>(1);
   const [x, setX] = useState(72);
   const [y, setY] = useState(35);
+  const [dragging, setDragging] = useState(false);
+  const [stageSize, setStageSize] = useState({ width: 600, height: 330 });
+  const stageRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const measure = () => {
+      const rect = stage.getBoundingClientRect();
+      setStageSize({ width: rect.width, height: rect.height });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
   const dx = x - 50;
   const dy = y - 50;
-  const angle = mode === "plates" ? 0 : Math.atan2(dy, dx) * 180 / Math.PI;
-  const fieldLabel = mode === "plates" ? "uniform field: + plate → − plate" : "field points away from the positive charge";
+  const dxPixels = dx * stageSize.width / 100;
+  const dyPixels = dy * stageSize.height / 100;
+  const distanceFromCentre = Math.hypot(dxPixels, dyPixels);
+  const onPointCharge = mode === "point" && distanceFromCentre <= 31;
+  const insideSphere = mode === "sphere" && distanceFromCentre < 55;
+  const betweenPlates = mode === "plates"
+    && x * stageSize.width / 100 > stageSize.width * 0.1 + 42
+    && x * stageSize.width / 100 < stageSize.width * 0.9 - 42
+    && y >= 9
+    && y <= 91;
+  const hasFieldDirection = mode === "point" ? !onPointCharge : mode === "sphere" ? !insideSphere : betweenPlates;
+  const radialAngle = Math.atan2(dyPixels, dxPixels) * 180 / Math.PI;
+  const angle = mode === "plates" ? 0 : radialAngle + (sourceSign === -1 ? 180 : 0);
+  const fieldLabel = mode === "point"
+    ? onPointCharge
+      ? "The field is not defined at the position of the source charge. Drag the test charge away from it."
+      : `The positive test charge is pushed ${sourceSign === 1 ? "away from" : "towards"} the ${sourceSign === 1 ? "positive" : "negative"} point charge.`
+    : mode === "sphere"
+      ? insideSphere
+        ? "E = 0 inside a charged conductor in electrostatic equilibrium, so there is no force arrow."
+        : `Outside the conducting sphere, the field is radial and points ${sourceSign === 1 ? "away from" : "towards"} it.`
+      : betweenPlates
+        ? "Between the plates, the uniform field points from the positive plate to the negative plate."
+        : "Outside the region between the plates, this IGCSE model does not show a field: end effects are not examined.";
+
+  const moveCharge = (clientX: number, clientY: number) => {
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setX(Math.max(4, Math.min(96, (clientX - rect.left) / rect.width * 100)));
+    setY(Math.max(6, Math.min(94, (clientY - rect.top) / rect.height * 100)));
+  };
+  const startDrag = (event: PointerEvent<HTMLButtonElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    draggingRef.current = true;
+    setDragging(true);
+    moveCharge(event.clientX, event.clientY);
+  };
+  const dragCharge = (event: PointerEvent<HTMLButtonElement>) => {
+    if (draggingRef.current) moveCharge(event.clientX, event.clientY);
+  };
+  const stopDrag = (event: PointerEvent<HTMLButtonElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    draggingRef.current = false;
+    setDragging(false);
+  };
+  const nudgeCharge = (event: KeyboardEvent<HTMLButtonElement>) => {
+    const step = event.shiftKey ? 5 : 2;
+    if (event.key === "ArrowLeft") setX((value) => Math.max(4, value - step));
+    else if (event.key === "ArrowRight") setX((value) => Math.min(96, value + step));
+    else if (event.key === "ArrowUp") setY((value) => Math.max(6, value - step));
+    else if (event.key === "ArrowDown") setY((value) => Math.min(94, value + step));
+    else return;
+    event.preventDefault();
+  };
+  const chooseMode = (nextMode: "point" | "sphere" | "plates") => {
+    setMode(nextMode);
+    setX(nextMode === "plates" ? 50 : 72);
+    setY(nextMode === "plates" ? 30 : 35);
+  };
 
   return (
     <div className="lab-shell electric-field-lab">
       <div className="lab-header">
-        <div><span className="mini-label">4.2.1 · electric-field mapper · Supplement</span><h3>Move a positive test charge through the field</h3></div>
+        <div><span className="mini-label">4.2.1 · electric-field mapper · Supplement</span><h3>Drag the positive test charge through the field</h3></div>
         <div className="segmented" aria-label="Choose electric field">
-          <button className={mode === "point" ? "active" : ""} onClick={() => setMode("point")}>Point charge</button>
-          <button className={mode === "sphere" ? "active" : ""} onClick={() => setMode("sphere")}>Sphere</button>
-          <button className={mode === "plates" ? "active" : ""} onClick={() => setMode("plates")}>Plates</button>
+          <button className={mode === "point" ? "active" : ""} onClick={() => chooseMode("point")}>Point charge</button>
+          <button className={mode === "sphere" ? "active" : ""} onClick={() => chooseMode("sphere")}>Sphere</button>
+          <button className={mode === "plates" ? "active" : ""} onClick={() => chooseMode("plates")}>Plates</button>
         </div>
       </div>
-      <div className={`electric-field-stage ${mode}`}>
-        <div className="field-source">{mode === "plates" ? <><i>+</i><i>−</i></> : <b>+</b>}</div>
+      {mode !== "plates" && (
+        <div className="charge-sign-controls" aria-label="Choose source charge">
+          <span>Source charge</span>
+          <button className={sourceSign === 1 ? "active" : ""} onClick={() => setSourceSign(1)}>Positive +</button>
+          <button className={sourceSign === -1 ? "active" : ""} onClick={() => setSourceSign(-1)}>Negative −</button>
+        </div>
+      )}
+      <div ref={stageRef} className={`electric-field-stage ${mode}`}>
+        <div className="field-source">{mode === "plates" ? <><i>+</i><i>−</i></> : <b>{sourceSign === 1 ? "+" : "−"}</b>}</div>
         <svg viewBox="0 0 100 60" aria-hidden="true">
+          <defs>
+            <marker id="electric-field-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
           {mode === "plates"
             ? [10, 20, 30, 40, 50].map((line) => <path key={line} d={`M 18 ${line} L 82 ${line}`} />)
             : [0, 45, 90, 135, 180, 225, 270, 315].map((degree) => {
                 const radians = degree * Math.PI / 180;
-                return <path key={degree} d={`M ${50 + Math.cos(radians) * 8} ${30 + Math.sin(radians) * 8} L ${50 + Math.cos(radians) * 30} ${30 + Math.sin(radians) * 24}`} />;
+                const inner = mode === "sphere" ? 13 : 8;
+                const start = `${50 + Math.cos(radians) * inner} ${30 + Math.sin(radians) * inner}`;
+                const end = `${50 + Math.cos(radians) * 30} ${30 + Math.sin(radians) * 24}`;
+                return <path key={degree} d={sourceSign === 1 ? `M ${start} L ${end}` : `M ${end} L ${start}`} />;
               })}
         </svg>
-        <div className="test-charge" style={{ left: `${x}%`, top: `${y}%` }}><b>+</b><i style={{ transform: `rotate(${angle}deg)` }}>→</i></div>
+        <span className="field-drag-hint">Drag + or use arrow keys</span>
+        <button
+          type="button"
+          className={`test-charge ${dragging ? "dragging" : ""} ${hasFieldDirection ? "" : "no-field"}`}
+          style={{ left: `${x}%`, top: `${y}%` }}
+          aria-label="Positive test charge. Drag it around the field, or use the arrow keys."
+          onPointerDown={startDrag}
+          onPointerMove={dragCharge}
+          onPointerUp={stopDrag}
+          onPointerCancel={stopDrag}
+          onKeyDown={nudgeCharge}
+        >
+          <b>+</b><i style={{ transform: `rotate(${angle}deg)` }}>→</i>
+        </button>
       </div>
-      <div className="field-position-controls">
-        <label>Horizontal position<input type="range" min="8" max="92" value={x} onChange={(event) => setX(+event.target.value)} /></label>
-        <label>Vertical position<input type="range" min="12" max="88" value={y} onChange={(event) => setY(+event.target.value)} /></label>
-        <p><b>Force direction:</b> {fieldLabel}. Electric-field direction is defined using a positive test charge.</p>
+      <div className={`field-readout ${hasFieldDirection ? "" : "zero-field"}`} aria-live="polite">
+        <p><b>{hasFieldDirection ? "Force direction:" : "Model boundary:"}</b> {fieldLabel}</p>
+        <small>Electric-field direction is defined as the direction of force on a positive test charge.</small>
       </div>
     </div>
   );
@@ -911,6 +1021,7 @@ export default function Home() {
           <p>Chapter 4 rebuilt as a field guide: manipulate the models, explain the patterns, then answer like an examiner is marking.</p>
           <div className="hero-actions">
             <a href="#overview" className="primary-button">Begin the fieldwork <span>↓</span></a>
+            <a href="electromagnetic-labs/" className="advanced-labs-button">Generator &amp; Motor Labs <span>→</span></a>
             <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
         </div>
