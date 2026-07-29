@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build IGCSE Interactive Chapter"
+  short_description: "Build syllabus-aligned interactive physics chapters"
+  default_prompt: "Use $build-igcse-interactive-chapter to create Cambridge IGCSE Physics Chapter 5 as an interactive, tested teaching page."

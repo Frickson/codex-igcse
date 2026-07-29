@@ -18,6 +18,20 @@ An interactive English teaching resource for Cambridge IGCSE Physics 0625, Chapt
 
 The lesson is aligned to the Cambridge IGCSE Physics 0625 syllabus for examinations in 2026–2028. It is an independent educational resource and is not endorsed by Cambridge International Education.
 
+## Reusable chapter-building skill
+
+The repository includes
+[`build-igcse-interactive-chapter`](skills/build-igcse-interactive-chapter/SKILL.md),
+a reusable agent skill for planning, building, validating, and publishing future
+chapters such as Chapter 5. `AGENTS.md` directs Codex to the skill after a fresh
+clone, while `CLAUDE.md` provides the equivalent entry point for Claude.
+
+Example request:
+
+```text
+Use $build-igcse-interactive-chapter to create Cambridge IGCSE Physics Chapter 5 as an interactive, tested teaching page.
+```
+
 ## Local development
 
 ```bash
