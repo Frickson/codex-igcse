@@ -596,38 +596,138 @@ function IVGraphLab() {
 
 function ComponentBoardLab() {
   const components = [
-    { id: "cell", symbol: "— | | —", name: "Cell", role: "source", behavior: "Provides e.m.f. and transfers energy to the circuit." },
-    { id: "ldr", symbol: "↘ (▭)", name: "LDR", role: "sensor", behavior: "Its resistance decreases as light intensity increases." },
-    { id: "ntc", symbol: "ϑ (▭)", name: "NTC thermistor", role: "sensor", behavior: "Its resistance decreases as temperature increases." },
-    { id: "lamp", symbol: "— ⊗ —", name: "Lamp", role: "output", behavior: "Transfers electrical energy by heating and light." },
-    { id: "relay", symbol: "coil ⇢ switch", name: "Relay", role: "output", behavior: "An electromagnet operates a separate switch." },
-    { id: "led", symbol: "— ▷| ⇗", name: "LED", role: "output", behavior: "Emits light when forward biased; it is a diode." },
+    { id: "cell", symbol: "— | ‖ —", name: "Cell", behavior: "Provides e.m.f. and transfers energy to the circuit." },
+    { id: "resistor", symbol: "— ▭ —", name: "Resistor", behavior: "Limits current; it protects an LED from excessive current." },
+    { id: "ldr", symbol: "↘ (▭)", name: "LDR", behavior: "Its resistance decreases as light intensity increases." },
+    { id: "ntc", symbol: "ϑ (▭)", name: "NTC thermistor", behavior: "Its resistance decreases as temperature increases." },
+    { id: "lamp", symbol: "— ⊗ —", name: "Lamp", behavior: "Transfers electrical energy by heating and light." },
+    { id: "switch", symbol: "— / —", name: "Open switch", behavior: "Breaks the conducting path, so there is no current." },
+    { id: "led", symbol: "— ▷| ⇗", name: "LED", behavior: "Emits light when forward biased; it is a diode." },
   ] as const;
   type ComponentId = typeof components[number]["id"];
-  const [slots, setSlots] = useState<Record<"source" | "sensor" | "output", ComponentId | null>>({ source: null, sensor: null, output: null });
+  const challenges = [
+    {
+      id: "temperature",
+      label: "Temperature indicator",
+      task: "Build a series circuit whose lamp becomes brighter as the NTC thermistor gets warmer.",
+      expected: { source: "cell", control: "ntc", output: "lamp" },
+      explanation: "Correct. Warming the NTC thermistor lowers its resistance. Total resistance falls, so current increases and the series lamp becomes brighter.",
+    },
+    {
+      id: "light",
+      label: "Light-level indicator",
+      task: "Build a series circuit whose lamp becomes brighter when more light reaches the LDR.",
+      expected: { source: "cell", control: "ldr", output: "lamp" },
+      explanation: "Correct. More light lowers the LDR resistance. Total resistance falls, so current and lamp brightness increase.",
+    },
+    {
+      id: "led",
+      label: "Protected LED",
+      task: "Build a forward-biased LED circuit with a component that limits the current.",
+      expected: { source: "cell", control: "resistor", output: "led" },
+      explanation: "Correct. The cell supplies energy, the series resistor limits current and the forward-biased LED emits light.",
+    },
+  ] as const satisfies ReadonlyArray<{
+    id: string;
+    label: string;
+    task: string;
+    expected: Record<"source" | "control" | "output", ComponentId>;
+    explanation: string;
+  }>;
+  type SlotId = keyof typeof challenges[number]["expected"];
+  type ChallengeId = typeof challenges[number]["id"];
+  const slotLabels: Record<SlotId, string> = { source: "Energy source", control: "Series control", output: "Output" };
+  const [challengeId, setChallengeId] = useState<ChallengeId>("temperature");
+  const [slots, setSlots] = useState<Record<SlotId, ComponentId | null>>({ source: null, control: null, output: null });
   const [selected, setSelected] = useState<ComponentId | null>(null);
+  const challenge = challenges.find((item) => item.id === challengeId) ?? challenges[0];
   const complete = Object.values(slots).every(Boolean);
-  const place = (id: ComponentId, role: "source" | "sensor" | "output") => {
-    setSlots((old) => ({ ...old, [role]: id }));
+  const correct = complete && (Object.keys(slots) as SlotId[]).every((slot) => slots[slot] === challenge.expected[slot]);
+  const hasComponents = Object.values(slots).some(Boolean);
+  const place = (id: ComponentId, slot: SlotId) => {
+    setSlots((old) => {
+      const moved = Object.fromEntries(
+        (Object.entries(old) as [SlotId, ComponentId | null][]).map(([key, value]) => [key, value === id ? null : value]),
+      ) as Record<SlotId, ComponentId | null>;
+      return { ...moved, [slot]: id };
+    });
     setSelected(null);
   };
+  const remove = (slot: SlotId) => setSlots((old) => ({ ...old, [slot]: null }));
+  const clearBoard = () => {
+    setSlots({ source: null, control: null, output: null });
+    setSelected(null);
+  };
+  const chooseChallenge = (id: ChallengeId) => {
+    setChallengeId(id);
+    clearBoard();
+  };
+  const drop = (event: DragEvent<HTMLButtonElement>, slot: SlotId) => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData("text/plain") as ComponentId;
+    if (components.some((item) => item.id === id)) place(id, slot);
+  };
+  const feedback = !complete
+    ? "Complete all three gaps to make one unbroken series loop. Drag a symbol, or tap it and then tap a gap."
+    : correct
+      ? challenge.explanation
+      : `Not yet. For this challenge use: ${(["source", "control", "output"] as SlotId[]).map((slot) => components.find((item) => item.id === challenge.expected[slot])?.name).join(" → ")}.`;
 
   return (
     <div className="lab-shell component-board-lab">
       <div className="lab-header">
-        <div><span className="mini-label">4.3.1 · circuit-symbol board</span><h3>Build a sensor-controlled output circuit</h3></div>
-        <span className={`status-pill ${complete ? "up" : ""}`}>{complete ? "Design complete" : "Choose three components"}</span>
+        <div><span className="mini-label">4.3.1 · circuit-symbol builder</span><h3>Build a complete circuit for the challenge</h3></div>
+        <span className={`status-pill ${correct ? "up" : ""}`}>{correct ? "Circuit correct" : complete ? "Check the symbols" : "Build the loop"}</span>
       </div>
+      <div className="segmented symbol-challenges" aria-label="Choose circuit challenge">
+        {challenges.map((item) => <button key={item.id} className={challengeId === item.id ? "active" : ""} onClick={() => chooseChallenge(item.id)}>{item.label}</button>)}
+      </div>
+      <p className="symbol-task"><b>Challenge:</b> {challenge.task}</p>
       <div className="symbol-tray">
-        {components.map((item) => <button key={item.id} onClick={() => setSelected(item.id)} className={selected === item.id ? "selected" : ""}><b>{item.symbol}</b><span>{item.name}</span><small>{item.behavior}</small></button>)}
-      </div>
-      <div className="design-slots">
-        {(["source", "sensor", "output"] as const).map((role) => {
-          const item = components.find((candidate) => candidate.id === slots[role]);
-          return <button key={role} onClick={() => selected && components.find((candidate) => candidate.id === selected)?.role === role && place(selected, role)} className={item ? "filled" : ""}><span>{role}</span><b>{item ? item.symbol : "select then place"}</b><small>{item?.name ?? `Needs a ${role}`}</small></button>;
+        {components.map((item) => {
+          const used = Object.values(slots).includes(item.id);
+          return (
+            <button
+              key={item.id}
+              draggable
+              onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)}
+              onClick={() => setSelected(item.id)}
+              className={`${selected === item.id ? "selected" : ""} ${used ? "used" : ""}`}
+              aria-pressed={selected === item.id}
+            >
+              <b>{item.symbol}</b><span>{item.name}</span><small>{item.behavior}</small>
+            </button>
+          );
         })}
       </div>
-      <p className="lab-note">{complete ? `Circuit idea: the ${components.find((item) => item.id === slots.sensor)?.name} senses a change and controls the ${components.find((item) => item.id === slots.output)?.name}.` : "Select a component, then place it in the matching source, sensor or output slot."}</p>
+      <div className={`circuit-symbol-loop ${correct ? "complete" : ""}`}>
+        <div className="design-slots">
+        {(["source", "control", "output"] as SlotId[]).map((slot) => {
+          const item = components.find((candidate) => candidate.id === slots[slot]);
+          const expected = item?.id === challenge.expected[slot];
+          return (
+            <button
+              key={slot}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => drop(event, slot)}
+              onClick={() => selected ? place(selected, slot) : item && remove(slot)}
+              className={`${item ? "filled" : ""} ${complete && !expected ? "incorrect" : ""}`}
+              aria-label={item ? `${slotLabels[slot]}: ${item.name}. Tap to remove or select another symbol to replace it.` : `${slotLabels[slot]}: empty. Select or drag a symbol here.`}
+            >
+              <span>{slotLabels[slot]}</span>
+              <b>{item ? item.symbol : "+"}</b>
+              <small>{item ? `${item.name} · tap to remove` : "Drop or tap to place"}</small>
+            </button>
+          );
+        })}
+        </div>
+        <div className="circuit-flow" aria-hidden="true"><span>conventional current</span><b>→</b></div>
+      </div>
+      <div className="symbol-board-actions">
+        <button className="secondary-action" onClick={clearBoard} disabled={!hasComponents}>Remove all</button>
+        <span>Tap any placed symbol to remove it individually.</span>
+      </div>
+      <p className={`lab-note ${complete ? correct ? "success-note" : "error-note" : ""}`}>{feedback}</p>
     </div>
   );
 }
