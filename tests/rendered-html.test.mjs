@@ -69,3 +69,18 @@ test("paper attraction requires a charged rod near the paper", async () => {
   assert.match(css, /\.attracting \.paper-bits i/);
   assert.doesNotMatch(css, /\.testing \.paper-bits i/);
 });
+
+test("electric-field mapper uses direct dragging and correct model boundaries", async () => {
+  const [source, css] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(source, /onPointerDown=\{startDrag\}/);
+  assert.match(source, /onKeyDown=\{nudgeCharge\}/);
+  assert.match(source, /E = 0 inside a charged conductor/);
+  assert.match(source, /end effects are not examined/);
+  assert.match(source, /sourceSign === -1/);
+  assert.match(css, /marker-end: url\(#electric-field-arrow\)/);
+  assert.doesNotMatch(source, /Horizontal position/);
+  assert.doesNotMatch(source, /Vertical position/);
+});
