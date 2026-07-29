@@ -122,6 +122,29 @@ input[type="range"] { display: block; width: 100%; margin-top: 12px; accent-colo
 .meter i { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--teal); }
 .lab-note { margin: 20px 0 0; padding: 14px 17px; background: var(--mint); border-radius: 12px; font-size: 12px; color: #315a52; }
 
+.electromagnet-controls { margin-top: 22px; }
+.em-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 18px; }
+.em-sliders label { color: var(--muted); font-size: 12px; font-weight: 800; }.em-sliders label strong { float: right; color: var(--navy); }
+.em-circuit-board { min-height: 245px; position: relative; border-radius: 17px; background: #edf2f0; overflow: hidden; }
+.em-board-label { position: absolute; left: 17px; top: 14px; color: var(--teal); font-size: 8px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+.em-circuit-wire { position: absolute; inset: 61px 6% 42px; border: 4px solid var(--teal); border-radius: 26px; transition: border-color .2s; }
+.em-circuit-board.open .em-circuit-wire { border-color: #8f9da1; }
+.em-battery { position: absolute; z-index: 3; left: 4%; top: 91px; min-width: 92px; padding: 10px 12px; border-radius: 10px; background: var(--navy); color: white; text-align: center; box-shadow: 0 9px 20px rgba(16,42,56,.15); }
+.em-battery b { display: block; font: 700 18px var(--serif); }.em-battery span { color: #aac1c9; font-size: 7px; font-weight: 900; text-transform: uppercase; }
+.em-switch { position: absolute; z-index: 3; left: 25%; top: 88px; width: 96px; min-height: 62px; padding: 9px; border: 1px solid var(--line); border-radius: 11px; background: white; color: var(--navy); }
+.em-switch i { display: block; width: 42px; height: 14px; margin: 0 auto 4px; border-bottom: 4px solid var(--teal); transform-origin: left; transition: transform .2s; }.em-circuit-board.open .em-switch i { transform: rotate(-28deg); border-color: var(--coral); }
+.em-switch b { display: block; font-size: 8px; }.em-switch span { color: var(--muted); font-size: 7px; text-transform: uppercase; }
+.em-coil-symbol { position: absolute; z-index: 3; left: 45%; top: 73px; width: 138px; height: 94px; display: flex; align-items: center; justify-content: center; }
+.em-coil-symbol i { width: 38px; height: 82px; margin: 0 -8px; border: 7px solid var(--copper); border-radius: 50%; background: rgba(255,255,255,.2); }.em-coil-symbol span { position: absolute; bottom: -8px; color: var(--muted); font-size: 7px; font-weight: 900; text-transform: uppercase; }
+.em-indicator-bulb { --brightness: 0; position: absolute; z-index: 3; right: 23%; top: 82px; width: 66px; height: 66px; display: grid; place-items: center; border: 4px solid var(--navy); border-radius: 50%; background: rgba(255,211,90,calc(.12 + var(--brightness) * .82)); box-shadow: 0 0 calc(36px * var(--brightness)) rgba(255,183,53,var(--brightness)); }
+.em-indicator-bulb::after { content: ""; position: absolute; bottom: -13px; width: 22px; height: 15px; background: var(--navy); border-radius: 0 0 4px 4px; }.em-indicator-bulb b { color: var(--navy); font-size: 8px; }.em-indicator-bulb span { position: absolute; top: 82px; width: 90px; text-align: center; color: var(--muted); font-size: 7px; font-weight: 900; text-transform: uppercase; }
+.em-voltmeter { position: absolute; z-index: 3; right: 5%; top: 78px; width: 96px; height: 76px; display: grid; grid-template-columns: 1fr auto; place-content: center; column-gap: 3px; padding: 10px; border: 4px solid var(--navy); border-radius: 16px; background: white; color: var(--navy); text-align: center; }
+.em-voltmeter b { font: 700 22px var(--serif); }.em-voltmeter > span { align-self: center; color: var(--teal); font-size: 10px; font-weight: 900; }.em-voltmeter small { grid-column: 1 / -1; color: var(--muted); font-size: 7px; text-transform: uppercase; font-weight: 900; }
+.em-live-readouts { display: grid; grid-template-columns: 140px 1fr 1.6fr; gap: 12px; align-items: stretch; margin-top: 12px; }
+.em-live-readouts > div, .em-live-readouts > p { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--mint); }
+.em-live-readouts span { display: block; color: var(--muted); font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; }.em-live-readouts b { color: var(--navy); font: 700 21px var(--serif); }
+.em-live-readouts p { color: #315a52; font-size: 10px; }.em-strength-readout { position: relative; overflow: hidden; }.em-strength-readout > i { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(28,139,116,.15); }.em-strength-readout > i em { display: block; height: 100%; background: var(--teal); }
+
 .micro-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
 .quick-check { padding: 22px; background: var(--cream); border: 1px solid var(--line); border-radius: 16px; }
 .quick-check p { margin: 0 0 15px; font-size: 13px; font-weight: 700; }
@@ -299,6 +322,7 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
   .hero { grid-template-columns: 1fr; min-height: auto; padding: 80px 30px; }.hero-visual { max-width: 520px; width: 100%; margin: 0 auto; }
   .syllabus-grid { grid-template-columns: 1fr 1fr; }.formula-grid { grid-template-columns: 1fr 1fr; }
   .controls-grid, .controls-grid.three { grid-template-columns: 1fr 1fr; }.controls-grid > :last-child { grid-column: 1 / -1; }
+  .em-circuit-board { min-height: 320px; }.em-battery { left: 5%; top: 87px; }.em-switch { left: 29%; top: 84px; }.em-coil-symbol { left: 58%; top: 66px; }.em-indicator-bulb { left: 26%; right: auto; top: 211px; }.em-voltmeter { right: 19%; top: 207px; }.em-live-readouts { grid-template-columns: 1fr 1fr; }.em-live-readouts p { grid-column: 1 / -1; }
   .safety-flow { grid-template-columns: 1fr; }.safety-flow > i { transform: rotate(90deg); text-align: center; }
   .safety-grid { grid-template-columns: 1fr 1fr; }
   .component-tray { grid-template-columns: 1fr; }.component-tray button { min-height: 66px; }
@@ -317,6 +341,7 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
   .core-supplement { grid-template-columns: 1fr; }.core-supplement div { align-items: flex-start; }
   .lab-shell { padding: 18px; border-radius: 18px; }.lab-header { flex-direction: column; }.field-canvas { height: 270px; }
   .controls-grid, .controls-grid.three { grid-template-columns: 1fr; }.controls-grid > :last-child { grid-column: auto; }
+  .em-sliders { grid-template-columns: 1fr; }.em-circuit-board { min-height: 500px; }.em-circuit-wire { inset: 62px 9% 42px; }.em-battery { left: 50%; top: 56px; transform: translateX(-50%); }.em-switch { left: 50%; top: 145px; transform: translateX(-50%); }.em-coil-symbol { left: 50%; top: 226px; transform: translateX(-50%); }.em-indicator-bulb { left: 18%; top: 368px; }.em-voltmeter { right: 14%; top: 362px; }.em-live-readouts { grid-template-columns: 1fr; }.em-live-readouts p { grid-column: auto; }
   .formula-grid { grid-template-columns: 1fr 1fr; }.formula-grid b { font-size: 21px; }
   .circuit-stage { height: 250px; }.battery { left: 14px; }.series .path-one { inset: 42px 30px; }.parallel .path-one { inset: 35px 30px 130px; }.parallel .path-two { inset: 130px 30px 35px; }.bulb { right: 70px; }.series .bulb-two { right: 190px; }
   .assembly-board { height: 390px; display: grid; grid-template-columns: 1fr 1fr; padding: 38px 28px 120px; }.assembly-wire { inset: 58px 9% 70px; }.drop-socket { width: 100%; min-width: 0; }.drop-socket:nth-of-type(3) { grid-column: 1 / -1; }.assembly-bulb { bottom: 26px; }.assembly-footer { grid-template-columns: 1fr 1fr; }.assembly-footer p { grid-column: 1 / -1; margin-left: 0; }
