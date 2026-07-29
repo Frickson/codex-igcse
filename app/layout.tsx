@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const socialImage = `${siteUrl.replace(/\/$/, "")}/og.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     title: "Field Notes · Electricity & Magnetism",
     description: "Interactive Cambridge IGCSE Physics teaching material for Chapter 4.",
     type: "website",
-    images: [{ url: `${basePath}/og.png`, width: 1200, height: 630, alt: "Field Notes: Electricity and Magnetism" }],
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "Field Notes: Electricity and Magnetism" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Field Notes · Electricity & Magnetism",
     description: "Interactive Cambridge IGCSE Physics teaching material for Chapter 4.",
-    images: [`${basePath}/og.png`],
+    images: [socialImage],
   },
 };
 
