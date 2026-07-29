@@ -12,6 +12,9 @@ test("exports the complete interactive lesson", async () => {
   assert.match(html, /Interactive field lab/);
   assert.match(html, /Circuit builder/);
   assert.match(html, /Transformer calculator/);
+  assert.match(html, /Drag-and-drop circuit/);
+  assert.match(html, /Drag-to-induce lab/);
+  assert.match(html, /Fuse drop challenge/);
   assert.match(html, /Past-paper patterns/);
   assert.match(html, /Final checkpoint/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);

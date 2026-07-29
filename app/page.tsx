@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent, type PointerEvent } from "react";
 
 type QuizQuestion = {
   question: string;
@@ -346,6 +346,219 @@ function CircuitLab() {
   );
 }
 
+function CircuitAssemblyLab() {
+  const parts = [
+    { id: "cell", label: "Cell", symbol: "+ | −" },
+    { id: "switch", label: "Switch", symbol: "— / —" },
+    { id: "lamp", label: "Lamp", symbol: "⊗" },
+  ] as const;
+  const [slots, setSlots] = useState<(typeof parts[number]["id"] | null)[]>([null, null, null]);
+  const [selected, setSelected] = useState<typeof parts[number]["id"] | null>(null);
+  const [closed, setClosed] = useState(false);
+  const complete = parts.every((part) => slots.includes(part.id));
+  const lit = complete && closed;
+
+  const placePart = (part: typeof parts[number]["id"], index: number) => {
+    setSlots((old) => old.map((value, slotIndex) => slotIndex === index ? part : value === part ? null : value));
+    setSelected(null);
+  };
+  const startDrag = (event: DragEvent<HTMLButtonElement>, part: typeof parts[number]["id"]) => {
+    event.dataTransfer.setData("text/plain", part);
+    event.dataTransfer.effectAllowed = "move";
+  };
+  const dropPart = (event: DragEvent<HTMLButtonElement>, index: number) => {
+    event.preventDefault();
+    const part = event.dataTransfer.getData("text/plain") as typeof parts[number]["id"];
+    if (parts.some((candidate) => candidate.id === part)) placePart(part, index);
+  };
+
+  return (
+    <div className="lab-shell assembly-lab">
+      <div className="lab-header">
+        <div>
+          <span className="mini-label">Drag-and-drop circuit</span>
+          <h3>Complete the loop, then close the switch</h3>
+        </div>
+        <span className={`status-pill ${lit ? "up" : ""}`}>{lit ? "Current flowing" : complete ? "Switch is open" : "Circuit incomplete"}</span>
+      </div>
+      <p className="drag-instruction">Drag each component into an empty socket. On touch screens, tap a component and then tap a socket.</p>
+      <div className="component-tray" aria-label="Circuit components">
+        {parts.map((part) => (
+          <button
+            key={part.id}
+            draggable
+            onDragStart={(event) => startDrag(event, part.id)}
+            onClick={() => setSelected(part.id)}
+            className={selected === part.id ? "selected" : ""}
+            aria-pressed={selected === part.id}
+          >
+            <b>{part.symbol}</b><span>{part.label}</span><small>drag me</small>
+          </button>
+        ))}
+      </div>
+      <div className={`assembly-board ${lit ? "powered" : ""}`}>
+        <div className="assembly-wire" />
+        {slots.map((partId, index) => {
+          const part = parts.find((candidate) => candidate.id === partId);
+          return (
+            <button
+              key={index}
+              className={`drop-socket ${part ? "filled" : ""}`}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => dropPart(event, index)}
+              onClick={() => selected ? placePart(selected, index) : part && setSlots((old) => old.map((value, i) => i === index ? null : value))}
+              aria-label={part ? `${part.label} in socket ${index + 1}; click to remove` : `Empty circuit socket ${index + 1}`}
+            >
+              {part ? <><b>{part.symbol}</b><span>{part.label}</span></> : <><b>+</b><span>drop here</span></>}
+            </button>
+          );
+        })}
+        <div className={`assembly-bulb ${lit ? "on" : ""}`}><i /><span>{lit ? "LIGHT" : "OFF"}</span></div>
+      </div>
+      <div className="assembly-footer">
+        <button disabled={!complete} onClick={() => setClosed(!closed)}>{closed ? "Open switch" : "Close switch"}</button>
+        <button className="secondary-action" onClick={() => { setSlots([null, null, null]); setClosed(false); }}>Reset components</button>
+        <p>{lit ? "A complete, closed conducting path allows charge to flow." : complete ? "All components are connected, but an open switch breaks the path." : "Current cannot flow until the circuit is a complete loop."}</p>
+      </div>
+    </div>
+  );
+}
+
+function InductionDragLab() {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const previousX = useRef(18);
+  const fadeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [magnetX, setMagnetX] = useState(18);
+  const [dragging, setDragging] = useState(false);
+  const [brightness, setBrightness] = useState(0);
+  const [direction, setDirection] = useState<"towards" | "away" | "still">("still");
+  const [turns, setTurns] = useState(5);
+
+  const moveMagnet = (next: number) => {
+    const clamped = Math.max(7, Math.min(88, next));
+    const delta = clamped - previousX.current;
+    const proximity = Math.max(0, 1 - Math.abs(clamped - 68) / 32);
+    const induced = Math.min(1, Math.abs(delta) * proximity * (turns / 5) * 0.3);
+    setMagnetX(clamped);
+    setBrightness(induced);
+    setDirection(Math.abs(delta) < 0.08 ? "still" : delta > 0 ? "towards" : "away");
+    previousX.current = clamped;
+    if (fadeTimer.current) clearTimeout(fadeTimer.current);
+    fadeTimer.current = setTimeout(() => { setBrightness(0); setDirection("still"); }, 180);
+  };
+  const pointerMove = (event: PointerEvent<HTMLButtonElement>) => {
+    if (!dragging || !stageRef.current) return;
+    const box = stageRef.current.getBoundingClientRect();
+    moveMagnet(((event.clientX - box.left) / box.width) * 100);
+  };
+  const keyboardMove = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      moveMagnet(magnetX + (event.key === "ArrowRight" ? 5 : -5));
+    }
+  };
+
+  useEffect(() => () => {
+    if (fadeTimer.current) clearTimeout(fadeTimer.current);
+  }, []);
+
+  return (
+    <div className="lab-shell induction-drag-lab">
+      <div className="lab-header">
+        <div>
+          <span className="mini-label">Drag-to-induce lab</span>
+          <h3>Move the magnet. Watch the bulb.</h3>
+        </div>
+        <div className="induction-reading"><span>Induced current</span><b>{direction === "still" ? "0" : direction === "towards" ? "→" : "←"}</b></div>
+      </div>
+      <p className="drag-instruction">Drag the magnet quickly into and out of the coil. Hold it still inside the coil and observe what happens.</p>
+      <div className="induction-stage" ref={stageRef}>
+        <div className="motion-track"><span>move magnet</span><i>↔</i></div>
+        <button
+          className={`drag-magnet ${dragging ? "dragging" : ""}`}
+          style={{ left: `${magnetX}%` }}
+          onPointerDown={(event) => { setDragging(true); event.currentTarget.setPointerCapture(event.pointerId); }}
+          onPointerMove={pointerMove}
+          onPointerUp={(event) => { setDragging(false); event.currentTarget.releasePointerCapture(event.pointerId); }}
+          onPointerCancel={() => setDragging(false)}
+          onKeyDown={keyboardMove}
+          aria-label="Draggable bar magnet. Use left and right arrow keys to move it."
+        >
+          <span>N</span><span>S</span>
+        </button>
+        <div className="induction-coil" style={{ "--turn-count": turns } as React.CSSProperties}>
+          {Array.from({ length: turns }, (_, index) => <i key={index} style={{ left: `${index * (52 / Math.max(1, turns - 1))}%` }} />)}
+          <span>COIL</span>
+        </div>
+        <div className="induction-wire" />
+        <div className="induction-bulb" style={{ "--brightness": brightness } as React.CSSProperties}><i /><b>{brightness > .12 ? "ON" : "OFF"}</b></div>
+      </div>
+      <div className="induction-controls">
+        <label>Coil turns <strong>{turns}</strong><input type="range" min="3" max="9" value={turns} onChange={(event) => setTurns(+event.target.value)} /></label>
+        <div><span>Brightness</span><i><b style={{ width: `${brightness * 100}%` }} /></i></div>
+        <p><b>{direction === "still" ? "No change in flux → no induced e.m.f." : direction === "towards" ? "Flux is increasing: current flows one way." : "Flux is decreasing: current reverses."}</b></p>
+      </div>
+    </div>
+  );
+}
+
+function FuseDropLab() {
+  const challenges = [
+    { appliance: "Desk lamp", power: 460, current: 2, correct: 3 },
+    { appliance: "Kettle", power: 920, current: 4, correct: 5 },
+    { appliance: "Heater", power: 2300, current: 10, correct: 13 },
+  ];
+  const fuses = [3, 5, 13];
+  const [challenge, setChallenge] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [dropped, setDropped] = useState<number | null>(null);
+  const item = challenges[challenge];
+  const correct = dropped === item.correct;
+
+  const startDrag = (event: DragEvent<HTMLButtonElement>, rating: number) => {
+    event.dataTransfer.setData("text/plain", String(rating));
+    event.dataTransfer.effectAllowed = "copy";
+  };
+  const acceptFuse = (rating: number) => {
+    if (fuses.includes(rating)) {
+      setDropped(rating);
+      setSelected(null);
+    }
+  };
+
+  return (
+    <div className="lab-shell fuse-lab">
+      <div className="lab-header">
+        <div><span className="mini-label">Fuse drop challenge</span><h3>Choose the smallest safe fuse</h3></div>
+        <div className="challenge-tabs">{challenges.map((_, index) => <button key={index} className={challenge === index ? "active" : ""} onClick={() => { setChallenge(index); setDropped(null); }}>0{index + 1}</button>)}</div>
+      </div>
+      <p className="drag-instruction">At 230 V, the {item.appliance.toLowerCase()} uses {item.power} W, so its normal current is {item.power} ÷ 230 = <b>{item.current} A</b>. Drag the best fuse into the plug.</p>
+      <div className="fuse-workbench">
+        <div className="fuse-tray">
+          {fuses.map((rating) => (
+            <button key={rating} draggable onDragStart={(event) => startDrag(event, rating)} onClick={() => setSelected(rating)} className={selected === rating ? "selected" : ""}>
+              <i /><b>{rating} A</b><span>FUSE</span>
+            </button>
+          ))}
+        </div>
+        <button
+          className={`plug-drop ${dropped ? correct ? "correct" : "wrong" : ""}`}
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => { event.preventDefault(); acceptFuse(+event.dataTransfer.getData("text/plain")); }}
+          onClick={() => selected && acceptFuse(selected)}
+        >
+          <span>{item.appliance}</span>
+          <i>{dropped ? `${dropped} A` : "drop fuse here"}</i>
+          <b>230 V · {item.power} W</b>
+        </button>
+      </div>
+      <div className={`fuse-feedback ${dropped ? correct ? "correct" : "wrong" : ""}`}>
+        {!dropped ? "Pick a fuse rated just above the normal operating current." : correct ? `Correct: ${item.correct} A is the smallest rating above ${item.current} A.` : dropped < item.current ? `${dropped} A is too low and may melt during normal use.` : `${dropped} A is higher than necessary, so it gives poorer protection than the ${item.correct} A fuse.`}
+      </div>
+    </div>
+  );
+}
+
 function MotorGeneratorLab() {
   const [mode, setMode] = useState<"motor" | "generator">("motor");
   const [level, setLevel] = useState(3);
@@ -550,6 +763,7 @@ export default function Home() {
           <article><span>electrical energy</span><b>E = IVt</b><p>or E = Pt</p></article>
         </div>
         <CircuitLab />
+        <CircuitAssemblyLab />
         <div className="examiner-lens">
           <span>EXAMINER’S LENS</span>
           <p><b>Never write “current is used up”.</b> Charge is conserved. Components transfer energy; the current entering a component equals the current leaving it in steady state.</p>
@@ -566,6 +780,7 @@ export default function Home() {
           <span className="section-number">04</span>
           <div><span className="eyebrow">4.6 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
         </div>
+        <InductionDragLab />
         <MotorGeneratorLab />
         <div className="rules-grid">
           <article><span>01</span><h3>Motor effect</h3><p>Field + current → force. Use Fleming’s left-hand rule for field, current and force.</p></article>
@@ -599,6 +814,7 @@ export default function Home() {
           <article><b>Circuit breaker</b><p>An electromagnetic device opens the circuit and can be reset.</p></article>
           <article><b>Logic gates</b><p>AND needs both inputs high; OR needs at least one; NOT reverses the state. Supplement content.</p></article>
         </div>
+        <FuseDropLab />
         <div className="micro-checks">
           <QuickCheck statement="The earth wire normally carries the operating current." answer={false} explanation="It normally carries no current; it provides a low-resistance path only during a fault." />
           <QuickCheck statement="A 5 A fuse is suitable for an appliance that normally draws 3.2 A." answer={true} explanation="Choose a rating just above the normal current, so normal operation is allowed but excessive current breaks the circuit." />
