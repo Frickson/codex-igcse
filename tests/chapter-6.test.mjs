@@ -15,6 +15,8 @@ test("exports the Chapter 6 space-physics lesson", async () => {
   assert.match(html, /Walk the Moon around Earth/);
   assert.match(html, /Average orbital speed/);
   assert.match(html, /Build the planetary order/);
+  assert.match(html, /Drag a planet onto an orbit|Tap to place|Drop here/);
+  assert.match(html, /Show names/);
   assert.match(html, /What force keeps a planet in orbit/);
   assert.match(html, /How long does sunlight take/);
   assert.match(html, /Read the planetary data table/);
@@ -57,6 +59,12 @@ test("orbital speed and Hubble models compute from inputs", async () => {
   const hubble = await readFile(new URL("app/chapter-6/labs/HubbleLab.tsx", root), "utf8");
   assert.match(hubble, /2\.2e-18/);
   assert.match(hubble, /1 \/ Huse/);
+
+  const solar = await readFile(new URL("app/chapter-6/labs/SolarSystemLab.tsx", root), "utf8");
+  assert.match(solar, /draggable/);
+  assert.match(solar, /onDrop/);
+  assert.match(solar, /PlanetIcon/);
+  assert.match(solar, /text\/planet/);
 
   const page = await readFile(new URL("app/chapter-6/page.tsx", root), "utf8");
   assert.match(page, /igcse-space-progress/);
