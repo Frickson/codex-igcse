@@ -15,4 +15,5 @@ export const CHAPTERS: Chapter[] = [
   { n: 3, path: "chapter-3", title: "Waves", blurb: "Wave properties and v = fλ, reflection, refraction and total internal reflection, converging lenses, dispersion, the electromagnetic spectrum and sound." },
   { n: 4, path: "", title: "Electricity & magnetism", blurb: "Magnetism, electrical quantities, circuits, electrical safety and electromagnetic effects." },
   { n: 5, path: "chapter-5", title: "Nuclear physics", blurb: "The nuclear model of the atom, radioactivity, decay and half-life, uses and safety." },
+  { n: 6, path: "chapter-6", title: "Space physics", blurb: "Earth and the Solar System, orbital motion and gravity, stars, redshift, Hubble and the expanding Universe." },
 ];

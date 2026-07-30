@@ -1020,7 +1020,6 @@ export default function NuclearPhysicsPage() {
           <p>From the scattering experiment that revealed the nucleus to the random ticks of radioactive decay — explore the atom, radiation and half-life with models where every control changes real physics.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
-            <a className="advanced-labs-button" href="../">Chapter 4 <span>↗</span></a>
             <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
         </div>

@@ -270,18 +270,17 @@ export default function ThermalPhysicsPage() {
       <section className="hero">
         <div className="hero-copy">
           <span className="eyebrow">Cambridge IGCSE Physics 0625 · 2 Thermal physics</span>
-          <h1>Heat the particles, then <em>watch</em> energy move.</h1>
+          <h1>Heat the particles,<br />then <em>watch</em> energy move.</h1>
           <p>From solid–liquid–gas diagrams to pans, radiators and Earth&apos;s radiation balance — build the thermal toolkit with models where every slider changes real particle behaviour, expansion, specific heat and energy transfer.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
-            <a className="advanced-labs-button" href="../chapters/">All chapters <span>↗</span></a>
             <span className="time-note"><b>55–80 min</b> interactive lesson</span>
           </div>
         </div>
         <div className="hero-visual" aria-hidden="true">
           <div className="orbital"><i /><i /><i /></div>
-          <div style={{ position: "relative", zIndex: 3, width: 96, height: 96, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--navy)", boxShadow: "0 18px 50px rgba(16,42,56,.22)" }}>
-            <b style={{ font: "700 22px var(--serif)", color: "var(--mint-2)" }}>ΔE=mcΔθ</b>
+          <div className="thermal-hero-badge" aria-hidden="true">
+            <b>ΔE = mcΔθ</b>
           </div>
           <p>Particles store and transfer heat.</p>
         </div>
