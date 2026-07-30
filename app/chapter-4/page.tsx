@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent } from "react";
 import ChapterNav from "../ChapterNav";
 
 type QuizQuestion = {
@@ -273,8 +273,8 @@ function FieldLab() {
           <h3>See what field lines are telling you</h3>
         </div>
         <div className="segmented" aria-label="Choose magnet type">
-          <button className={mode === "bar" ? "active" : ""} onClick={() => setMode("bar")}>Bar magnet</button>
-          <button className={mode === "coil" ? "active" : ""} onClick={() => setMode("coil")}>Electromagnet</button>
+          <button className={mode === "bar" ? "active" : ""} aria-pressed={mode === "bar"} onClick={() => setMode("bar")}>Bar magnet</button>
+          <button className={mode === "coil" ? "active" : ""} aria-pressed={mode === "coil"} onClick={() => setMode("coil")}>Electromagnet</button>
         </div>
       </div>
       <canvas ref={canvasRef} className="field-canvas" aria-label="Animated magnetic field model" />
@@ -328,8 +328,8 @@ function ElectrostaticLab() {
       <div className="lab-header">
         <div><span className="mini-label">4.2.1 · electrostatics laboratory</span><h3>Transfer electrons, then test the charge</h3></div>
         <div className="segmented" aria-label="Choose rod material">
-          <button className={material === "insulator" ? "active" : ""} onClick={() => { setMaterial("insulator"); setRubs(0); }}>Plastic</button>
-          <button className={material === "conductor" ? "active" : ""} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
+          <button className={material === "insulator" ? "active" : ""} aria-pressed={material === "insulator"} onClick={() => { setMaterial("insulator"); setRubs(0); }}>Plastic</button>
+          <button className={material === "conductor" ? "active" : ""} aria-pressed={material === "conductor"} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
         </div>
       </div>
       <div className={`static-stage ${nearPaper ? "testing" : ""} ${attracted ? "attracting" : ""}`} data-charge={charge} data-attracted={attracted}>
@@ -434,7 +434,7 @@ function ElectricFieldLab() {
     draggingRef.current = false;
     setDragging(false);
   };
-  const nudgeCharge = (event: KeyboardEvent<HTMLButtonElement>) => {
+  const nudgeCharge = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
     const step = event.shiftKey ? 5 : 2;
     if (event.key === "ArrowLeft") setX((value) => Math.max(4, value - step));
     else if (event.key === "ArrowRight") setX((value) => Math.min(96, value + step));
@@ -454,16 +454,16 @@ function ElectricFieldLab() {
       <div className="lab-header">
         <div><span className="mini-label">4.2.1 · electric-field mapper · Supplement</span><h3>Drag the positive test charge through the field</h3></div>
         <div className="segmented" aria-label="Choose electric field">
-          <button className={mode === "point" ? "active" : ""} onClick={() => chooseMode("point")}>Point charge</button>
-          <button className={mode === "sphere" ? "active" : ""} onClick={() => chooseMode("sphere")}>Sphere</button>
-          <button className={mode === "plates" ? "active" : ""} onClick={() => chooseMode("plates")}>Plates</button>
+          <button className={mode === "point" ? "active" : ""} aria-pressed={mode === "point"} onClick={() => chooseMode("point")}>Point charge</button>
+          <button className={mode === "sphere" ? "active" : ""} aria-pressed={mode === "sphere"} onClick={() => chooseMode("sphere")}>Sphere</button>
+          <button className={mode === "plates" ? "active" : ""} aria-pressed={mode === "plates"} onClick={() => chooseMode("plates")}>Plates</button>
         </div>
       </div>
       {mode !== "plates" && (
         <div className="charge-sign-controls" aria-label="Choose source charge">
           <span>Source charge</span>
-          <button className={sourceSign === 1 ? "active" : ""} onClick={() => setSourceSign(1)}>Positive +</button>
-          <button className={sourceSign === -1 ? "active" : ""} onClick={() => setSourceSign(-1)}>Negative −</button>
+          <button className={sourceSign === 1 ? "active" : ""} aria-pressed={sourceSign === 1} onClick={() => setSourceSign(1)}>Positive +</button>
+          <button className={sourceSign === -1 ? "active" : ""} aria-pressed={sourceSign === -1} onClick={() => setSourceSign(-1)}>Negative −</button>
         </div>
       )}
       <div ref={stageRef} className={`electric-field-stage ${mode}`}>
@@ -538,7 +538,7 @@ function MeterPlacementLab() {
         <span className={`status-pill ${correct ? "up" : ""}`}>{correct ? "Circuit ready" : "Place both meters"}</span>
       </div>
       <div className="meter-tray">
-        {meters.map((meter) => <button key={meter.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", meter.id)} onClick={() => setSelected(meter.id)} className={selected === meter.id ? "selected" : ""}><b>{meter.label}</b><span>{meter.name}</span></button>)}
+        {meters.map((meter) => <button key={meter.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", meter.id)} onClick={() => setSelected(meter.id)} className={selected === meter.id ? "selected" : ""} aria-pressed={selected === meter.id}><b>{meter.label}</b><span>{meter.name}</span></button>)}
       </div>
       <div className="meter-circuit">
         <div className="meter-wire" />
@@ -572,10 +572,10 @@ function IVGraphLab() {
     <div className="lab-shell iv-lab">
       <div className="lab-header">
         <div><span className="mini-label">4.2.4 · current–voltage practical · Supplement</span><h3>Trace an I–V characteristic</h3></div>
-        <div className="segmented">
-          <button className={component === "resistor" ? "active" : ""} onClick={() => setComponent("resistor")}>Resistor</button>
-          <button className={component === "lamp" ? "active" : ""} onClick={() => setComponent("lamp")}>Lamp</button>
-          <button className={component === "diode" ? "active" : ""} onClick={() => setComponent("diode")}>Diode</button>
+        <div className="segmented" aria-label="Choose component">
+          <button className={component === "resistor" ? "active" : ""} aria-pressed={component === "resistor"} onClick={() => setComponent("resistor")}>Resistor</button>
+          <button className={component === "lamp" ? "active" : ""} aria-pressed={component === "lamp"} onClick={() => setComponent("lamp")}>Lamp</button>
+          <button className={component === "diode" ? "active" : ""} aria-pressed={component === "diode"} onClick={() => setComponent("diode")}>Diode</button>
         </div>
       </div>
       <div className="iv-workbench">
@@ -681,7 +681,7 @@ function ComponentBoardLab() {
         <span className={`status-pill ${correct ? "up" : ""}`}>{correct ? "Circuit correct" : complete ? "Check the symbols" : "Build the loop"}</span>
       </div>
       <div className="segmented symbol-challenges" aria-label="Choose circuit challenge">
-        {challenges.map((item) => <button key={item.id} className={challengeId === item.id ? "active" : ""} onClick={() => chooseChallenge(item.id)}>{item.label}</button>)}
+        {challenges.map((item) => <button key={item.id} className={challengeId === item.id ? "active" : ""} aria-pressed={challengeId === item.id} onClick={() => chooseChallenge(item.id)}>{item.label}</button>)}
       </div>
       <p className="symbol-task"><b>Challenge:</b> {challenge.task}</p>
       <div className="symbol-tray">
@@ -777,8 +777,8 @@ function CircuitLab() {
           <h3>What changes in series and parallel?</h3>
         </div>
         <div className="segmented" aria-label="Choose circuit layout">
-          <button className={layout === "series" ? "active" : ""} onClick={() => setLayout("series")}>Series</button>
-          <button className={layout === "parallel" ? "active" : ""} onClick={() => setLayout("parallel")}>Parallel</button>
+          <button className={layout === "series" ? "active" : ""} aria-pressed={layout === "series"} onClick={() => setLayout("series")}>Series</button>
+          <button className={layout === "parallel" ? "active" : ""} aria-pressed={layout === "parallel"} onClick={() => setLayout("parallel")}>Parallel</button>
         </div>
       </div>
       <div className={`circuit-stage ${layout}`}>
@@ -918,7 +918,7 @@ function InductionDragLab() {
     const box = stageRef.current.getBoundingClientRect();
     moveMagnet(((event.clientX - box.left) / box.width) * 100);
   };
-  const keyboardMove = (event: KeyboardEvent<HTMLButtonElement>) => {
+  const keyboardMove = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
       moveMagnet(magnetX + (event.key === "ArrowRight" ? 5 : -5));
@@ -997,13 +997,13 @@ function FuseDropLab() {
     <div className="lab-shell fuse-lab">
       <div className="lab-header">
         <div><span className="mini-label">Fuse drop challenge</span><h3>Choose the smallest safe fuse</h3></div>
-        <div className="challenge-tabs">{challenges.map((_, index) => <button key={index} className={challenge === index ? "active" : ""} onClick={() => { setChallenge(index); setDropped(null); }}>0{index + 1}</button>)}</div>
+        <div className="challenge-tabs" aria-label="Choose fuse challenge">{challenges.map((_, index) => <button key={index} className={challenge === index ? "active" : ""} aria-pressed={challenge === index} onClick={() => { setChallenge(index); setDropped(null); }}>0{index + 1}</button>)}</div>
       </div>
       <p className="drag-instruction">At 230 V, the {item.appliance.toLowerCase()} uses {item.power} W, so its normal current is {item.power} ÷ 230 = <b>{item.current} A</b>. Drag the best fuse into the plug.</p>
       <div className="fuse-workbench">
         <div className="fuse-tray">
           {fuses.map((rating) => (
-            <button key={rating} draggable onDragStart={(event) => startDrag(event, rating)} onClick={() => setSelected(rating)} className={selected === rating ? "selected" : ""}>
+            <button key={rating} draggable onDragStart={(event) => startDrag(event, rating)} onClick={() => setSelected(rating)} className={selected === rating ? "selected" : ""} aria-pressed={selected === rating}>
               <i /><b>{rating} A</b><span>FUSE</span>
             </button>
           ))}
@@ -1098,6 +1098,14 @@ export default function Home() {
   useEffect(() => {
     if (Object.keys(answers).length) localStorage.setItem("igcse-electricity-progress", JSON.stringify(answers));
   }, [answers]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
 
   return (
     <main>
@@ -1106,19 +1114,28 @@ export default function Home() {
         <a href="#top" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Chapter 4</small></span></a>
         <nav aria-label="Lesson sections">
           {sections.slice(0, 5).map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
-          <a href="../chapters/">All chapters</a>
+          <details className="desktop-more">
+            <summary>More</summary>
+            <div>
+              {sections.slice(5).map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
+              <a href="../chapters/">All chapters</a>
+            </div>
+          </details>
         </nav>
-        <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>Contents</button>
+        <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="chapter-contents">Contents</button>
       </header>
       {menuOpen && (
-        <div className="mobile-menu">
-          {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
-          <a href="../chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
-          <a href="../chapter-5/" onClick={() => setMenuOpen(false)}>Chapter 5 · Nuclear physics →</a>
-        </div>
+        <>
+          <div className="mobile-menu-backdrop" aria-hidden="true" onClick={() => setMenuOpen(false)} />
+          <nav className="mobile-menu" id="chapter-contents" aria-label="Chapter contents">
+            {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
+            <a href="../chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
+            <a href="../chapter-5/" onClick={() => setMenuOpen(false)}>Chapter 5 · Nuclear physics →</a>
+          </nav>
+        </>
       )}
 
-      <section className="hero" id="top">
+      <section className="hero chapter-hero" id="top">
         <div className="hero-copy">
           <span className="eyebrow">Cambridge IGCSE Physics 0625 · 2026–2028</span>
           <h1>Electricity is a flow.<br /><em>Magnetism gives it direction.</em></h1>
