@@ -29,15 +29,17 @@ test("Chapter 2 route carries social + metadata and relative links only", async 
   const html = await readFile(new URL("out/chapter-2/index.html", root), "utf8");
   assert.match(html, /og:image/);
   assert.match(html, /twitter:card/);
-  assert.match(html, /href="\.\.\/"/);
+  assert.match(html, /href="\.\.\/chapter-3\/"/); // next chapter is now Chapter 3 (Waves)
   assert.match(html, /href="\.\.\/chapters\/"/);
   assert.doesNotMatch(html, /href="\/chapter-2/);
 });
 
-test("home and directory link to Chapter 2", async () => {
+test("directory lists Chapter 2, and the home page reaches it via the directory", async () => {
+  // Chapter 3 now sits between Chapter 2 and the home page (Chapter 4), so the
+  // home nav links to Chapter 3, not Chapter 2 — Chapter 2 is reached through
+  // the chapter directory, which still lists it.
   const home = await readFile(new URL("out/index.html", root), "utf8");
-  assert.match(home, /chapter-2\//);
-  assert.match(home, /Thermal physics/);
+  assert.match(home, /href="chapters\/"/);
 
   const dir = await readFile(new URL("out/chapters/index.html", root), "utf8");
   assert.match(dir, /chapter-2\//);
