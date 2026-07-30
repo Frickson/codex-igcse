@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import MeasurementLab from "./labs/MeasurementLab";
+import VectorLab from "./labs/VectorLab";
+import MotionGraphLab from "./labs/MotionGraphLab";
+import FreeFallLab from "./labs/FreeFallLab";
+import MassWeightLab from "./labs/MassWeightLab";
+import DensityLab from "./labs/DensityLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -156,7 +162,12 @@ export default function MotionForcesEnergyPage() {
             <p>Measure length, volume and time with the right instrument, and average repeats to reduce error. Then separate scalars (size only) from vectors (size and direction).</p>
           </div>
         </div>
-        {/* Phase 2: MeasurementLab, VectorLab */}
+        <MeasurementLab />
+        <VectorLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Distance is a vector quantity." answer={false} explanation="Distance has size only, so it is a scalar. Displacement (distance in a stated direction) is the vector." />
+          <QuickCheck statement="Timing 20 swings and dividing by 20 gives a more reliable period than timing one swing." answer={true} explanation="The reaction-time error is fixed on the total, so sharing it over 20 swings makes the error per swing much smaller." />
+        </div>
       </section>
 
       {/* 1.2 */}
@@ -169,7 +180,12 @@ export default function MotionForcesEnergyPage() {
             <p>Speed is distance per time; velocity adds direction; acceleration is the rate of change of velocity. Distance–time and speed–time graphs make each one visible as a gradient or an area.</p>
           </div>
         </div>
-        {/* Phase 2: MotionGraphLab, FreeFallLab */}
+        <MotionGraphLab />
+        <FreeFallLab />
+        <div className="micro-checks">
+          <QuickCheck statement="A steeper line on a speed–time graph means a larger acceleration." answer={true} explanation="Acceleration is the gradient of a speed–time graph, so a steeper line is a greater rate of change of velocity." />
+          <QuickCheck statement="At terminal velocity a falling object is still accelerating." answer={false} explanation="At terminal velocity the drag balances the weight, so the resultant force and the acceleration are both zero — the speed stays constant." />
+        </div>
       </section>
 
       {/* 1.3–1.4 */}
@@ -182,7 +198,12 @@ export default function MotionForcesEnergyPage() {
             <p>Mass measures the amount of matter and its inertia; weight is the gravitational force W = mg. Density ρ = m/V decides whether an object floats or sinks.</p>
           </div>
         </div>
-        {/* Phase 2: MassWeightLab, DensityLab */}
+        <MassWeightLab />
+        <DensityLab />
+        <div className="micro-checks">
+          <QuickCheck statement="An astronaut's mass is smaller on the Moon than on Earth." answer={false} explanation="Mass is the same everywhere; only the weight is smaller on the Moon because g is smaller (about 1.6 N/kg)." />
+          <QuickCheck statement="An object floats when its density is less than the density of the fluid." answer={true} explanation="If the object is less dense than the fluid it displaces enough fluid to support its weight, so it floats." />
+        </div>
       </section>
 
       {/* 1.5 */}
