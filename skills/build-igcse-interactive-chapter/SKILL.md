@@ -17,10 +17,12 @@ Create a teaching chapter that connects concise explanations, direct manipulatio
 
 ## 2. Inspect the existing project
 
+**Canonical home:** these chapters live in the `Frickson/codex-igcse` repository (Next.js + React + TypeScript, Tailwind, static `output: "export"` to GitHub Pages, the "Field Notes" design system). Add every new chapter *into that repo* as a new `app/chapter-N/` route — do not start a standalone project. Chapter 4 is the home page (`app/page.tsx`); Chapter 5 is `app/chapter-5/` and is the closest template for a fresh chapter: copy its structure (client page component, `useScrollProgress`, `QuickCheck`, `sections` nav array, numbered `lesson-section`s opening with a Route-map `syllabus-grid` + CORE/SUPPLEMENT band, `lab-shell` interactions, exam list, mind map, `localStorage` checkpoint) and its `layout.tsx` metadata pattern. Link the new chapter from the previous chapter's hero and nav, and add a `tests/chapter-N.test.mjs` plus a `docs/chapter-N-syllabus-map.md`.
+
 1. Read repository instructions, routes, components, styles, tests and deployment workflow.
-2. Reuse the established design system and interaction conventions.
-3. Preserve unrelated user changes.
-4. Decide whether the chapter belongs on the main page or a separate route based on length and cognitive load.
+2. Reuse the established design system and interaction conventions; append any chapter-specific CSS as new, chapter-scoped classes rather than editing existing chapters' rules.
+3. Preserve unrelated user changes; leave earlier chapters' content untouched and treat them only as templates.
+4. Each chapter is its own route; only trivial chapters belong inline on the home page.
 
 Read [chapter-blueprint.md](references/chapter-blueprint.md) before planning a new chapter or major chapter expansion.
 
