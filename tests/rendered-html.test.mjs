@@ -107,3 +107,24 @@ test("circuit-symbol builder supports challenges and removal controls", async ()
   assert.match(source, /Tap any placed symbol to remove it individually/);
   assert.match(source, />Remove all</);
 });
+
+test("UI polish keeps every lesson destination reachable and improves control accessibility", async () => {
+  const [html, source, css] = await Promise.all([
+    readFile(new URL("out/chapter-4/index.html", root), "utf8"),
+    readFile(new URL("app/chapter-4/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(html, /<summary>More<\/summary>/);
+  assert.match(html, /href="#practice"/);
+  assert.match(html, /href="#mindmap"/);
+  assert.match(html, /href="#quiz"/);
+  assert.match(source, /aria-controls="chapter-contents"/);
+  assert.match(source, /event\.key === "Escape"/);
+  assert.match(source, /mobile-menu-backdrop/);
+  assert.match(source, /aria-pressed=\{mode === "bar"\}/);
+  assert.match(source, /aria-pressed=\{layout === "series"\}/);
+  assert.match(css, /button:focus-visible/);
+  assert.match(css, /input\[type="range"\][^{]*\{[^}]*height: 44px/s);
+  assert.match(css, /\.home-hero \{ min-height: 610px/);
+  assert.match(css, /\.chapter-hero \{ min-height: 640px/);
+});
