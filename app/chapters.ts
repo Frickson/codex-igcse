@@ -14,4 +14,5 @@ export const CHAPTERS: Chapter[] = [
   { n: 2, path: "chapter-2", title: "Thermal physics", blurb: "Kinetic particle model, gases and absolute temperature, thermal expansion, specific heat, phase change, and transfer by conduction, convection and radiation." },
   { n: 4, path: "", title: "Electricity & magnetism", blurb: "Magnetism, electrical quantities, circuits, electrical safety and electromagnetic effects." },
   { n: 5, path: "chapter-5", title: "Nuclear physics", blurb: "The nuclear model of the atom, radioactivity, decay and half-life, uses and safety." },
+  { n: 6, path: "chapter-6", title: "Space physics", blurb: "Earth and the Solar System, orbital motion and gravity, stars, redshift, Hubble and the expanding Universe." },
 ];
