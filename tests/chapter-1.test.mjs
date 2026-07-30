@@ -37,7 +37,8 @@ test("Chapter 1 route carries social + metadata and relative links only", async 
   assert.match(html, /og:image/);
   assert.match(html, /twitter:card/);
   // back-links must be relative so they survive the GitHub Pages basePath
-  assert.match(html, /href="\.\.\/"/);
+  assert.match(html, /href="\.\.\/chapters\/"/);
+  assert.match(html, /href="\.\.\/chapter-2\/"/); // next chapter after Ch1
   assert.doesNotMatch(html, /href="\/chapter-1/);
 });
 
