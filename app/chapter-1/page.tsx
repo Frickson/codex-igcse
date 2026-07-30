@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChapterNav from "../ChapterNav";
 import MeasurementLab from "./labs/MeasurementLab";
 import VectorLab from "./labs/VectorLab";
@@ -238,13 +238,19 @@ export default function MotionForcesEnergyPage() {
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
   const score = useMemo(() => quizQuestions.reduce((s, q, i) => s + (answers[i] === q.answer ? 1 : 0), 0), [answers]);
 
+  // Defer reading saved answers to after hydration (avoids an SSR/client
+  // mismatch). `hydrated` guards the write effect so it does not overwrite the
+  // saved value with the empty initial state before the read has run.
+  const hydrated = useRef(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       try { const saved = localStorage.getItem("igcse-motion-progress"); if (saved) setAnswers(JSON.parse(saved)); } catch { /* ignore */ }
+      hydrated.current = true;
     });
     return () => cancelAnimationFrame(id);
   }, []);
   useEffect(() => {
+    if (!hydrated.current) return;
     try { localStorage.setItem("igcse-motion-progress", JSON.stringify(answers)); } catch { /* ignore */ }
   }, [answers]);
 

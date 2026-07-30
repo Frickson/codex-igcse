@@ -9,7 +9,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next dev",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/chapter-5.test.mjs tests/chapters.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/chapter-5.test.mjs tests/chapter-1.test.mjs tests/chapters.test.mjs",
     "lint": "eslint . --ignore-pattern .next"
   },
   "dependencies": {
