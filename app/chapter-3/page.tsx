@@ -114,7 +114,6 @@ export default function WavesPage() {
           <p>From ripples on water to X-rays and sound, every wave carries energy and obeys v = fλ. Bend it, bounce it, focus it and split it into colour with models where each control changes real wave physics.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
-            <a className="advanced-labs-button" href="../chapters/">All chapters <span>↗</span></a>
             <span className="time-note"><b>70–100 min</b> interactive lesson</span>
           </div>
         </div>
