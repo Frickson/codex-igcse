@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent, type PointerEvent } from "react";
+import ChapterNav from "./ChapterNav";
 
 type QuizQuestion = {
   question: string;
@@ -1105,13 +1106,14 @@ export default function Home() {
         <a href="#top" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Chapter 4</small></span></a>
         <nav aria-label="Lesson sections">
           {sections.slice(0, 5).map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
-          <a href="chapter-5/">Chapter 5 →</a>
+          <a href="chapters/">All chapters</a>
         </nav>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>Contents</button>
       </header>
       {menuOpen && (
         <div className="mobile-menu">
           {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          <a href="chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
           <a href="chapter-5/" onClick={() => setMenuOpen(false)}>Chapter 5 · Nuclear physics →</a>
         </div>
       )}
@@ -1319,6 +1321,8 @@ export default function Home() {
         </div>
         <button className="reset-button" onClick={() => { setAnswers({}); localStorage.removeItem("igcse-electricity-progress"); }}>Reset checkpoint</button>
       </section>
+
+      <ChapterNav current={4} prefix="" />
 
       <footer>
         <div><i>Φ</i><b>Field Notes</b><span>Interactive teaching material for Cambridge IGCSE Physics 0625</span></div>

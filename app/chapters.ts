@@ -1,0 +1,15 @@
+export type Chapter = {
+  n: number;
+  /** Route segment relative to the site root. "" = the home page ("/"). */
+  path: string;
+  title: string;
+  blurb: string;
+};
+
+// Ordered list of chapters — the single source of truth for both the
+// /chapters/ directory page and the prev/next chapter navigation.
+// To add a chapter, append an entry here and create its app/chapter-N/ route.
+export const CHAPTERS: Chapter[] = [
+  { n: 4, path: "", title: "Electricity & magnetism", blurb: "Magnetism, electrical quantities, circuits, electrical safety and electromagnetic effects." },
+  { n: 5, path: "chapter-5", title: "Nuclear physics", blurb: "The nuclear model of the atom, radioactivity, decay and half-life, uses and safety." },
+];

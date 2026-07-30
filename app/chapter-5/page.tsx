@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import ChapterNav from "../ChapterNav";
 
 /* ---------- element data + helpers ---------- */
 const SYM = ["", "H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca",
@@ -1000,13 +1001,14 @@ export default function NuclearPhysicsPage() {
         <a href="#top" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Chapter 5</small></span></a>
         <nav aria-label="Lesson sections">
           {sections.slice(0, 5).map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
-          <a href="../">↑ Chapter 4</a>
+          <a href="../chapters/">All chapters</a>
         </nav>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>Contents</button>
       </header>
       {menuOpen && (
         <div className="mobile-menu">
           {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          <a href="../chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
           <a href="../" onClick={() => setMenuOpen(false)}>← Chapter 4 lesson</a>
         </div>
       )}
@@ -1252,6 +1254,8 @@ export default function NuclearPhysicsPage() {
         </div>
         <button className="reset-button" onClick={resetCheckpoint}>Reset checkpoint</button>
       </section>
+
+      <ChapterNav current={5} prefix="../" />
 
       <footer>
         <div><i>Φ</i><b>Field Notes</b><span>Chapter 5 · Nuclear physics · Cambridge IGCSE Physics 0625 (2026–2028)</span></div>
