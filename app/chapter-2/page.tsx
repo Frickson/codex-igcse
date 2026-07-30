@@ -10,6 +10,9 @@ import ExpansionLab from "./labs/ExpansionLab";
 import SpecificHeatLab from "./labs/SpecificHeatLab";
 import PhaseChangeLab from "./labs/PhaseChangeLab";
 import EvaporationLab from "./labs/EvaporationLab";
+import ConductionLab from "./labs/ConductionLab";
+import ConvectionLab from "./labs/ConvectionLab";
+import RadiationLab from "./labs/RadiationLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -52,12 +55,173 @@ function QuickCheck({ statement, answer, explanation }: { statement: string; ans
   );
 }
 
-/* ---------- checkpoint / exam data (filled in later build phases) ---------- */
+/* ---------- checkpoint / exam data ---------- */
 type QuizQuestion = { question: string; options: string[]; answer: number; why: string };
-const quizQuestions: QuizQuestion[] = [];
+const quizQuestions: QuizQuestion[] = [
+  {
+    question: "Which state has particles farthest apart on average?",
+    options: ["Solid", "Liquid", "Gas", "All the same"],
+    answer: 2,
+    why: "Gas particles move freely with much larger average separation than solids or liquids.",
+  },
+  {
+    question: "Absolute zero on the Celsius scale is",
+    options: ["0 °C", "−100 °C", "−273 °C", "273 °C"],
+    answer: 2,
+    why: "Absolute zero is −273 °C (0 K), where particles have least kinetic energy.",
+  },
+  {
+    question: "Brownian motion of a smoke particle is best explained by",
+    options: ["The particle vibrating by itself", "Random collisions with fast fluid molecules", "Gravity pulling unevenly", "Magnetic forces in air"],
+    answer: 1,
+    why: "Invisible molecules hit the larger microscopic particle from changing directions.",
+  },
+  {
+    question: "A fixed mass of gas is heated at constant volume. Pressure",
+    options: ["Falls", "Stays the same", "Rises", "Becomes zero"],
+    answer: 2,
+    why: "Faster particles collide with the walls more often and harder, so pressure rises.",
+  },
+  {
+    question: "Convert 27 °C to kelvin.",
+    options: ["27 K", "246 K", "300 K", "373 K"],
+    answer: 2,
+    why: "T(K) = θ(°C) + 273 → 27 + 273 = 300 K.",
+  },
+  {
+    question: "For the same temperature rise at constant pressure, which expands most?",
+    options: ["Solid", "Liquid", "Gas", "They expand equally"],
+    answer: 2,
+    why: "Gases expand most; solids least — particle attractions and spacing differ.",
+  },
+  {
+    question: "Energy to raise 2 kg of water (c = 4200 J/kg °C) by 5 °C is",
+    options: ["840 J", "4200 J", "42 000 J", "84 000 J"],
+    answer: 2,
+    why: "ΔE = m c Δθ = 2 × 4200 × 5 = 42 000 J.",
+  },
+  {
+    question: "While pure ice melts at 0 °C, its temperature",
+    options: ["Rises steadily", "Falls", "Stays at 0 °C", "Jumps to 100 °C"],
+    answer: 2,
+    why: "Energy goes into changing state, not into raising average KE, so temperature is constant.",
+  },
+  {
+    question: "The best emitter of infrared among these surfaces is",
+    options: ["Shiny silver", "Dull white", "Dull black", "Clear glass"],
+    answer: 2,
+    why: "Dull black surfaces are the best emitters (and absorbers) of infrared radiation.",
+  },
+  {
+    question: "Convection in a fluid happens because heating changes",
+    options: ["Colour only", "Density", "Chemical formula", "Magnetic field"],
+    answer: 1,
+    why: "Warm fluid is less dense and rises; cooler denser fluid sinks — a convection current.",
+  },
+];
 
 type ExamQuestion = { tag: string; marks: number; question: string; scheme: string[] };
-const examQuestions: ExamQuestion[] = [];
+const examQuestions: ExamQuestion[] = [
+  {
+    tag: "Q1 · describe",
+    marks: 3,
+    question: "Describe the arrangement and motion of particles in a solid and in a gas.",
+    scheme: [
+      "Solid: regular/lattice arrangement; particles vibrate about fixed positions (1)",
+      "Gas: random/irregular; particles far apart (1)",
+      "Gas: free motion in all directions / frequent collisions (1)",
+    ],
+  },
+  {
+    tag: "Q2 · explain",
+    marks: 3,
+    question: "Explain, in terms of particles, why the pressure of a fixed mass of gas increases when its volume is reduced at constant temperature.",
+    scheme: [
+      "Same number of particles in a smaller volume / particles closer on average (1)",
+      "Collisions with the walls more frequent (1)",
+      "Pressure is force per unit area from these collisions, so pressure rises (1)",
+    ],
+  },
+  {
+    tag: "Q3 · calculate",
+    marks: 3,
+    question: "A sealed syringe holds gas at 100 kPa and 40 cm³. At constant temperature the volume becomes 25 cm³. Calculate the new pressure. (pV = constant)",
+    scheme: [
+      "p₁V₁ = p₂V₂ (1)",
+      "p₂ = (100 × 40) / 25 (1)",
+      "p₂ = 160 kPa (1)",
+    ],
+  },
+  {
+    tag: "Q4 · calculate",
+    marks: 3,
+    question: "How much energy is needed to raise the temperature of 0.40 kg of aluminium (c = 900 J/kg °C) from 20 °C to 70 °C?",
+    scheme: [
+      "Δθ = 50 °C (1)",
+      "ΔE = m c Δθ = 0.40 × 900 × 50 (1)",
+      "ΔE = 18 000 J (1)",
+    ],
+  },
+  {
+    tag: "Q5 · explain",
+    marks: 3,
+    question: "A pan of water is heated on a stove. Explain why the water temperature stays at 100 °C while it boils.",
+    scheme: [
+      "Boiling occurs at a fixed temperature (at standard pressure) (1)",
+      "Energy supplied goes into changing liquid → gas / overcoming attractions (1)",
+      "Average kinetic energy of particles (hence temperature) does not rise during the change of state (1)",
+    ],
+  },
+  {
+    tag: "Q6 · describe",
+    marks: 3,
+    question: "State three factors that increase the rate of evaporation of a puddle, and link one of them to particle behaviour.",
+    scheme: [
+      "Higher temperature / larger surface area / air movement (draught) — any three (2)",
+      "e.g. higher T → more particles have enough energy to escape the surface (1)",
+    ],
+  },
+  {
+    tag: "Q7 · explain",
+    marks: 3,
+    question: "Explain why copper is a better thermal conductor than wood.",
+    scheme: [
+      "Copper has free/delocalised electrons that transfer energy quickly (1)",
+      "Both also transfer energy by lattice/particle vibrations (1)",
+      "Wood lacks free electrons / energy transfer by vibration only is slower (1)",
+    ],
+  },
+  {
+    tag: "Q8 · explain",
+    marks: 3,
+    question: "Explain how a convection current forms above a radiator in a room.",
+    scheme: [
+      "Air near the radiator is heated and expands / becomes less dense (1)",
+      "Warm air rises (1)",
+      "Cooler denser air sinks to replace it, forming a circulation (1)",
+    ],
+  },
+  {
+    tag: "Q9 · describe",
+    marks: 2,
+    question: "Compare dull black and shiny silver surfaces as emitters and absorbers of infrared radiation.",
+    scheme: [
+      "Dull black: good emitter and good absorber (1)",
+      "Shiny silver: poor emitter and poor absorber / good reflector (1)",
+    ],
+  },
+  {
+    tag: "Q10 · explain",
+    marks: 4,
+    question: "A wood fire heats a room. Explain how conduction, convection and radiation each play a part.",
+    scheme: [
+      "Conduction: heat through the grate/metal parts or into logs (1)",
+      "Radiation: infrared from the flames/embers warms people and walls directly (1)",
+      "Convection: warm air rises and circulates around the room (1)",
+      "More than one method is significant — credit clear linking of each (1)",
+    ],
+  },
+];
 
 /* =====================================================================
    Page
@@ -208,7 +372,7 @@ export default function ThermalPhysicsPage() {
         </div>
       </section>
 
-      {/* 2.3 — labs wired in Phase 4 */}
+      {/* 2.3 */}
       <section className="lesson-section" id="transfer">
         <div className="section-heading">
           <span className="section-number">05</span>
@@ -218,7 +382,14 @@ export default function ThermalPhysicsPage() {
             <p>Energy leaves hot objects through particle vibration and free electrons, density-driven fluid currents, and infrared radiation that needs no medium.</p>
           </div>
         </div>
-        <p className="lab-note">Conduction, convection and radiation labs land in a later build phase.</p>
+        <ConductionLab />
+        <ConvectionLab />
+        <RadiationLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Thermal radiation needs air or another medium to travel." answer={false} explanation="Infrared radiation transfers energy without a medium — that is why Sunlight reaches Earth through space." />
+          <QuickCheck statement="A dull black surface is both a good emitter and a good absorber of infrared." answer={true} explanation="Dull black ranks highest for emission and absorption; shiny silver is poor at both and reflects well." />
+          <QuickCheck statement="A car radiator mainly cools the engine by trapping heat inside the metal fins." answer={false} explanation="Supplement multi-mode idea: hot coolant transfers energy to metal (conduction), air flow removes energy by convection, and hot surfaces also radiate — the design increases area to speed all of these." />
+        </div>
       </section>
 
       {/* Exam practice */}
