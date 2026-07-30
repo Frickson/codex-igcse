@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import DayNightLab from "./labs/DayNightLab";
+import SeasonsLab from "./labs/SeasonsLab";
+import MoonPhasesLab from "./labs/MoonPhasesLab";
+import OrbitalSpeedLab from "./labs/OrbitalSpeedLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -164,10 +168,10 @@ export default function SpacePhysicsPage() {
             <p>Earth rotates once in about 24 hours on a tilted axis, orbits the Sun in about 365 days, and the Moon takes about a month to orbit Earth — producing day/night, seasons and phases.</p>
           </div>
         </div>
-        <LabPlaceholder label="6.1.1 · day & night" title="Spin the Earth — when is it day?" />
-        <LabPlaceholder label="6.1.1 · seasons" title="Tilt and orbit — why seasons change" />
-        <LabPlaceholder label="6.1.1 · Moon phases" title="Walk the Moon around Earth" />
-        <LabPlaceholder label="6.1.1 · Supplement · orbital speed" title="Average orbital speed v = 2πr / T" />
+        <DayNightLab />
+        <SeasonsLab />
+        <MoonPhasesLab />
+        <OrbitalSpeedLab />
         <div className="micro-checks">
           <QuickCheck statement="Day and night happen because the Earth orbits the Sun once per day." answer={false} explanation="Day and night come from Earth rotating on its axis roughly once every 24 hours. The year-long orbit around the Sun is what (with the tilt) drives the seasons." />
           <QuickCheck statement="The Moon's phases repeat because the Moon orbits the Earth about once a month." answer={true} explanation="As the Moon orbits, we see different fractions of its sunlit hemisphere — the cycle of phases takes about a month." />
