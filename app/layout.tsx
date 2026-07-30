@@ -6,18 +6,18 @@ const socialImage = `${siteUrl.replace(/\/$/, "")}/og.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Field Notes · IGCSE Physics Chapter 4",
-  description: "Interactive Cambridge IGCSE Physics teaching material for electricity and magnetism.",
+  title: "Field Notes · IGCSE Physics",
+  description: "Interactive Cambridge IGCSE Physics teaching chapters aligned to the 2026–2028 syllabus (0625).",
   openGraph: {
-    title: "Field Notes · Electricity & Magnetism",
-    description: "Interactive Cambridge IGCSE Physics teaching material for Chapter 4.",
+    title: "Field Notes · IGCSE Physics",
+    description: "Interactive Cambridge IGCSE Physics teaching chapters aligned to the 2026–2028 syllabus.",
     type: "website",
-    images: [{ url: socialImage, width: 1200, height: 630, alt: "Field Notes: Electricity and Magnetism" }],
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "Field Notes: IGCSE Physics" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Field Notes · Electricity & Magnetism",
-    description: "Interactive Cambridge IGCSE Physics teaching material for Chapter 4.",
+    title: "Field Notes · IGCSE Physics",
+    description: "Interactive Cambridge IGCSE Physics teaching chapters aligned to the 2026–2028 syllabus.",
     images: [socialImage],
   },
 };

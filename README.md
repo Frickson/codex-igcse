@@ -1,20 +1,17 @@
-# Field Notes — Electricity & Magnetism
+# Field Notes — Cambridge IGCSE Physics
 
-An interactive English teaching resource for Cambridge IGCSE Physics 0625, Chapter 4.
+Interactive English teaching chapters for Cambridge IGCSE Physics 0625 (examinations 2026–2028), covering all six syllabus topics.
 
-## What is included
+The site home (`/`) is the Field Notes landing page, `/chapters/` is the chapter directory, and each lesson lives at `/chapter-1/` through `/chapter-6/`.
 
-- syllabus map for the current sections 4.1–4.5
-- animated magnetic field and electromagnet model
-- electrostatics and electric-field mapping laboratories
-- ammeter/voltmeter placement and live I–V graph activities
-- interactive series/parallel circuit builder
-- circuit-component and potential-divider design activities
-- motor, generator, and transformer activities
-- separate advanced generator-waveform and motor-force laboratory page
-- electrical safety explanations and checks
-- original exam-style questions based on recurring assessment patterns
-- retrieval mind map and saved six-question checkpoint
+## Chapters
+
+1. Motion, forces & energy — `/chapter-1/`
+2. Thermal physics — `/chapter-2/`
+3. Waves — `/chapter-3/`
+4. Electricity & magnetism — `/chapter-4/`
+5. Nuclear physics — `/chapter-5/`
+6. Space physics — `/chapter-6/`
 
 The lesson is aligned to the Cambridge IGCSE Physics 0625 syllabus for examinations in 2026–2028. It is an independent educational resource and is not endorsed by Cambridge International Education.
 
