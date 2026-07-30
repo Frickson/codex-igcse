@@ -6,6 +6,8 @@ import WaveAnatomyLab from "./labs/WaveAnatomyLab";
 import DiffractionLab from "./labs/DiffractionLab";
 import ReflectionLab from "./labs/ReflectionLab";
 import RefractionLab from "./labs/RefractionLab";
+import LensLab from "./labs/LensLab";
+import DispersionLab from "./labs/DispersionLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -216,7 +218,11 @@ export default function WavesPage() {
             <p>A converging lens bends parallel rays to a principal focus. Where the object sits relative to the focal length decides whether the image is real or virtual, enlarged or diminished, upright or inverted.</p>
           </div>
         </div>
-        {/* Phase 3: LensLab */}
+        <LensLab />
+        <div className="micro-checks">
+          <QuickCheck statement="An object placed inside the focal length of a converging lens gives a real image." answer={false} explanation="Inside the focal length the refracted rays diverge, so no real image forms. Tracing them back gives a virtual, upright, enlarged image — the magnifying-glass case." />
+          <QuickCheck statement="At exactly twice the focal length, a converging lens forms an image the same size as the object." answer={true} explanation="With the object at 2F the image forms at 2F on the other side, real, inverted and the same size (m = 1)." />
+        </div>
       </section>
 
       {/* 3.2.4 */}
@@ -229,7 +235,10 @@ export default function WavesPage() {
             <p>A prism refracts each colour by a different amount — violet most, red least — because each travels at a slightly different speed in glass. The result is the visible spectrum.</p>
           </div>
         </div>
-        {/* Phase 3: DispersionLab */}
+        <DispersionLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Red light is refracted more than violet light in a glass prism." answer={false} explanation="It is the other way round: violet has the higher refractive index in glass, so it is refracted and deviated the most; red the least." />
+        </div>
       </section>
 
       {/* 3.3 */}
