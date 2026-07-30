@@ -8,6 +8,12 @@ import MotionGraphLab from "./labs/MotionGraphLab";
 import FreeFallLab from "./labs/FreeFallLab";
 import MassWeightLab from "./labs/MassWeightLab";
 import DensityLab from "./labs/DensityLab";
+import HookeLab from "./labs/HookeLab";
+import NewtonsSecondLab from "./labs/NewtonsSecondLab";
+import CircularMotionLab from "./labs/CircularMotionLab";
+import MomentsLab from "./labs/MomentsLab";
+import StabilityLab from "./labs/StabilityLab";
+import MomentumLab from "./labs/MomentumLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -216,7 +222,15 @@ export default function MotionForcesEnergyPage() {
             <p>A resultant force changes motion (F = ma); balanced forces do not. Springs obey Hooke&apos;s law up to a limit, forces turn objects about a pivot (moments), and the centre of gravity governs stability.</p>
           </div>
         </div>
-        {/* Phase 3: HookeLab, NewtonsSecondLab, CircularMotionLab, MomentsLab, StabilityLab */}
+        <NewtonsSecondLab />
+        <HookeLab />
+        <MomentsLab />
+        <StabilityLab />
+        <CircularMotionLab />
+        <div className="micro-checks">
+          <QuickCheck statement="If the forces on an object are balanced, it must be stationary." answer={false} explanation="Balanced forces mean zero resultant, so no acceleration — the object stays at rest OR keeps moving at constant velocity." />
+          <QuickCheck statement="Doubling the distance of a force from a pivot doubles its moment." answer={true} explanation="Moment = force × perpendicular distance, so at twice the distance the same force gives twice the turning effect." />
+        </div>
       </section>
 
       {/* 1.6 */}
@@ -229,7 +243,11 @@ export default function MotionForcesEnergyPage() {
             <p>Momentum p = mv measures mass in motion. In a collision with no external force, total momentum is conserved — the basis for analysing impacts and recoil.</p>
           </div>
         </div>
-        {/* Phase 3: MomentumLab */}
+        <MomentumLab />
+        <div className="micro-checks">
+          <QuickCheck statement="In a collision with no external force, total momentum stays the same." answer={true} explanation="Momentum is conserved: the momentum lost by one object equals that gained by the other." />
+          <QuickCheck statement="A light object and a heavy object can never have the same momentum." answer={false} explanation="Momentum is mv — a light object moving fast can have the same momentum as a heavy object moving slowly." />
+        </div>
       </section>
 
       {/* 1.7 */}
