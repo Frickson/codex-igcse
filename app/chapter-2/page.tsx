@@ -6,6 +6,10 @@ import StatesOfMatterLab from "./labs/StatesOfMatterLab";
 import ParticleTempLab from "./labs/ParticleTempLab";
 import BrownianLab from "./labs/BrownianLab";
 import GasPressureLab from "./labs/GasPressureLab";
+import ExpansionLab from "./labs/ExpansionLab";
+import SpecificHeatLab from "./labs/SpecificHeatLab";
+import PhaseChangeLab from "./labs/PhaseChangeLab";
+import EvaporationLab from "./labs/EvaporationLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -183,7 +187,7 @@ export default function ThermalPhysicsPage() {
         </div>
       </section>
 
-      {/* 2.2 — labs wired in Phase 3 */}
+      {/* 2.2 */}
       <section className="lesson-section" id="properties">
         <div className="section-heading">
           <span className="section-number">04</span>
@@ -193,7 +197,15 @@ export default function ThermalPhysicsPage() {
             <p>Energy can stretch particle spacing (expansion), raise average kinetic energy (temperature), or break attractions during melting and boiling without a temperature rise.</p>
           </div>
         </div>
-        <p className="lab-note">Expansion, specific-heat and phase-change labs land in a later build phase.</p>
+        <ExpansionLab />
+        <SpecificHeatLab />
+        <PhaseChangeLab />
+        <EvaporationLab />
+        <div className="micro-checks">
+          <QuickCheck statement="For the same temperature rise at constant pressure, a gas expands more than a solid." answer={true} explanation="Gas particles are weakly bound and far apart, so heating at constant pressure produces the largest expansion; solids expand least." />
+          <QuickCheck statement="During boiling, water's temperature keeps rising as you add energy." answer={false} explanation="At the boiling point the temperature stays constant while the energy goes into changing liquid into gas." />
+          <QuickCheck statement="Evaporation can cool a liquid even when the surroundings are warmer than the boiling point." answer={true} explanation="Evaporation happens at the surface at any temperature. Escaping energetic particles leave behind a cooler liquid — that is why sweat cools you." />
+        </div>
       </section>
 
       {/* 2.3 — labs wired in Phase 4 */}
