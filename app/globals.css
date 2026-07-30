@@ -496,3 +496,60 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* ===================== Chapter 5 · Nuclear physics ===================== */
+.nuclear-stage { position: relative; min-height: 320px; display: grid; place-items: center; border-radius: 16px; background: #eef3f0; overflow: hidden; }
+.nuclear-stage svg, .nuclear-stage canvas { display: block; width: 100%; height: auto; }
+.nuclear-stage.tall { min-height: 360px; }
+.lab-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 24px; align-items: start; }
+.lab-grid .side { display: grid; gap: 14px; }
+
+.rad-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font: 800 11px var(--sans); border: 1px solid var(--line); background: white; }
+.rad-pill.alpha { color: var(--coral); border-color: #e6bcae; }
+.rad-pill.beta { color: var(--teal); border-color: var(--mint-2); }
+.rad-pill.gamma { color: #a85f17; border-color: #ecd0ac; }
+
+.rad-select { display: inline-flex; padding: 4px; border-radius: 999px; background: #edf1ef; gap: 2px; }
+.rad-select button { border: 0; padding: 8px 13px; border-radius: 999px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 800; }
+.rad-select button.active { background: var(--navy); color: white; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; }
+.chip-row button { border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; background: white; color: var(--navy); font-size: 11px; font-weight: 800; }
+.chip-row button.active { border-color: var(--teal); background: var(--mint); color: #146653; }
+
+.nuclide { display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; vertical-align: middle; margin: 0 3px; line-height: 1; }
+.nuclide .nuc-sym { grid-row: 1 / span 2; grid-column: 2; align-self: center; padding-left: 2px; font: 700 1.08em var(--serif); }
+.nuclide .nuc-a { grid-row: 1; grid-column: 1; text-align: right; font-size: .6em; }
+.nuclide .nuc-z { grid-row: 2; grid-column: 1; text-align: right; font-size: .6em; }
+
+.eqn-line { text-align: center; font: 700 clamp(19px, 3vw, 27px)/2.1 var(--serif); color: var(--navy-2); margin: 16px 0; }
+.eqn-line .op { color: var(--copper); margin: 0 8px; }
+.eqn-line sup, .eqn-line sub { font-size: .55em; }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.data-table th, .data-table td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; }
+.data-table thead th, .data-table tbody th { background: var(--mint); color: var(--navy); font-weight: 800; }
+.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--navy); }
+
+.nuclear select { font: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
+.nuclear .num-field { display: inline-flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 800; }
+.nuclear .num-field input { width: 96px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
+.inline-controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; margin: 6px 0 4px; }
+
+.match-list { display: grid; gap: 10px; }
+.match-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 13px 16px; border: 1px solid var(--line); border-radius: 13px; background: var(--cream); }
+.match-row > p { margin: 0; font-size: 13px; font-weight: 700; color: var(--navy); }
+.match-why { margin: 4px 0 0; font-size: 11px; color: #315a52; }
+
+.field-note { margin-top: 14px; padding: 13px 16px; border-radius: 12px; background: var(--mint); color: #315a52; font-size: 12px; }
+.field-note.zero { background: #f5e9d5; color: #76521f; }
+.model-caption { margin: 12px 0 0; color: var(--muted); font-size: 11px; font-style: italic; }
+
+@media (max-width: 900px) {
+  .lab-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 650px) {
+  .inline-controls { gap: 10px; }
+  .match-row { grid-template-columns: 1fr; align-items: flex-start; }
+  .data-table { font-size: 12px; }
+  .data-table th, .data-table td { padding: 7px 8px; }
+}
