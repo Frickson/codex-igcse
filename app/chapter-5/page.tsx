@@ -40,6 +40,7 @@ function useScrollProgress() {
 }
 
 const sections: [string, string][] = [
+  ["overview", "Route map"],
   ["atom", "The atom"],
   ["nucleus", "The nucleus"],
   ["radioactivity", "Radioactivity"],
@@ -662,6 +663,95 @@ function DecayLab() {
 /* =====================================================================
    5.2.4 Half-life curve + calculator
    ===================================================================== */
+const RAD_COMPARE = {
+  a: { name: "Alpha (α)", nature: "Helium nucleus (2 protons + 2 neutrons)", charge: "+2", mass: "4", ion: "Strong", pen: "Stopped by paper / skin", defl: "Small (opposite to β)" },
+  b: { name: "Beta (β⁻)", nature: "Fast electron from the nucleus", charge: "−1", mass: "≈ 1/1840 (negligible)", ion: "Moderate", pen: "Stopped by a few mm of aluminium", defl: "Large (opposite to α)" },
+  g: { name: "Gamma (γ)", nature: "High-energy electromagnetic wave", charge: "0", mass: "0", ion: "Weak", pen: "Only reduced by thick lead / concrete", defl: "None" },
+} as const;
+
+function RadiationCompareLab() {
+  const [sel, setSel] = useState<"a" | "b" | "g">("a");
+  const cols = ["a", "b", "g"] as const;
+  const rows: [string, keyof typeof RAD_COMPARE["a"]][] = [
+    ["Nature", "nature"], ["Relative charge", "charge"], ["Relative mass", "mass"],
+    ["Ionising effect", "ion"], ["Penetration", "pen"], ["Deflection in a field", "defl"],
+  ];
+  const hi = (c: string) => (c === sel ? { background: "#f8e8d5", color: "var(--ink)", fontWeight: 700 } : undefined);
+  return (
+    <div className="lab-shell nuclear">
+      <div className="lab-header">
+        <div><span className="mini-label">5.2.2 · comparing radiations</span><h3>α, β and γ at a glance</h3></div>
+        <div className="rad-select">
+          <button className={sel === "a" ? "active" : ""} onClick={() => setSel("a")}>α alpha</button>
+          <button className={sel === "b" ? "active" : ""} onClick={() => setSel("b")}>β beta</button>
+          <button className={sel === "g" ? "active" : ""} onClick={() => setSel("g")}>γ gamma</button>
+        </div>
+      </div>
+      <table className="data-table">
+        <thead>
+          <tr><th aria-hidden="true"></th>{cols.map((c) => <th key={c} style={hi(c)}>{RAD_COMPARE[c].name}</th>)}</tr>
+        </thead>
+        <tbody>
+          {rows.map(([label, key]) => (
+            <tr key={key}><th>{label}</th>{cols.map((c) => <td key={c} style={hi(c)}>{RAD_COMPARE[c][key]}</td>)}</tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="field-note" aria-live="polite">{
+        sel === "a" ? "Alpha is the most strongly ionising because of its +2 charge and large mass, so it loses energy quickly over a short range and is stopped first." :
+        sel === "b" ? "Beta is lighter and faster than alpha, so it ionises less but penetrates further — through paper, but stopped by a few millimetres of aluminium." :
+        "Gamma has no charge or mass, so it ionises weakly but penetrates the most: thick lead or concrete only reduces its intensity, never fully stops it."
+      }</p>
+    </div>
+  );
+}
+
+function RandomDecayLab() {
+  const N = 100;
+  const [decayed, setDecayed] = useState<boolean[]>(() => Array(N).fill(false));
+  const [step, setStep] = useState(0);
+  const remaining = decayed.reduce((a, d) => a + (d ? 0 : 1), 0);
+  const expected = Math.round(N * Math.pow(0.5, step));
+  const advance = () => {
+    if (remaining === 0) return;
+    setDecayed(decayed.map((d) => (d ? true : Math.random() < 0.5)));
+    setStep(step + 1);
+  };
+  const reset = () => { setDecayed(Array(N).fill(false)); setStep(0); };
+  return (
+    <div className="lab-shell nuclear">
+      <div className="lab-header">
+        <div><span className="mini-label">5.2.2 · 5.2.4 · random decay</span><h3>Why does a random process give a fixed half-life?</h3></div>
+        <div className="chip-row">
+          <button onClick={advance} disabled={remaining === 0}>Advance one interval</button>
+          <button onClick={reset}>Reset</button>
+        </div>
+      </div>
+      <div className="lab-grid">
+        <div className="nuclear-stage">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(10, 1fr)", gap: 6, width: "100%", maxWidth: 300, margin: "0 auto" }} aria-hidden="true">
+            {decayed.map((d, i) => (
+              <span key={i} style={{ aspectRatio: "1", borderRadius: "50%", background: d ? "rgba(16,42,56,.12)" : "var(--teal)", transition: "background .25s" }} />
+            ))}
+          </div>
+          <p className="model-caption">{remaining} of {N} nuclei still undecayed — teal = not yet decayed</p>
+        </div>
+        <div className="side">
+          <table className="data-table" aria-live="polite">
+            <tbody>
+              <tr><th>Intervals elapsed (n)</th><td className="num">{step}</td></tr>
+              <tr><th>Nuclei remaining</th><td className="num">{remaining}</td></tr>
+              <tr><th>Expected N₀ × (½)ⁿ</th><td className="num">{expected}</td></tr>
+            </tbody>
+          </table>
+          <p className="eqn-line" style={{ fontSize: 15, lineHeight: 1.6 }}>Each interval, every remaining nucleus has a <b>50%</b> chance to decay.</p>
+        </div>
+      </div>
+      <p className="field-note">You cannot predict which nucleus decays next, or exactly how many go each interval — decay is spontaneous and random. Yet across many nuclei, close to half decay every interval, so the count follows a smooth halving curve. That is why a random process still has a fixed, reliable half-life.</p>
+    </div>
+  );
+}
+
 function HalfLifeLab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [T, setT] = useState(6);
@@ -927,10 +1017,10 @@ export default function NuclearPhysicsPage() {
           <h1>Inside the <em>nucleus</em>.</h1>
           <p>From the scattering experiment that revealed the nucleus to the random ticks of radioactive decay — explore the atom, radiation and half-life with models where every control changes real physics.</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#atom">Start the lesson <span>↓</span></a>
+            <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
             <a className="advanced-labs-button" href="../">Chapter 4 <span>↗</span></a>
+            <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
-          <p className="time-note"><b>~4–5 lessons</b>5.1 The nuclear model · 5.2 Radioactivity · Core + Supplement</p>
         </div>
         <div className="hero-visual" aria-hidden="true">
           <div className="orbital"><i /><i /><i /></div>
@@ -942,10 +1032,37 @@ export default function NuclearPhysicsPage() {
         </div>
       </section>
 
+      <section className="lesson-section intro-section" id="overview">
+        <div className="section-heading">
+          <span className="section-number">01</span>
+          <div>
+            <span className="eyebrow">Route map</span>
+            <h2>Two ideas, six moves, one nucleus.</h2>
+            <p>The 2026–2028 syllabus runs from the model of the atom to the radiation unstable nuclei emit, how fast they decay, and how we use and contain them.</p>
+          </div>
+        </div>
+        <div className="syllabus-grid">
+          {[
+            ["5.1.1", "The nuclear model", "Dense positive nucleus, orbiting electrons, ions — and the α-scattering evidence for it"],
+            ["5.1.2", "The nucleus", "Protons and neutrons, proton (Z) and nucleon (A) number, nuclide notation, isotopes, fission and fusion"],
+            ["5.2.1", "Detecting radiation", "Background radiation and its sources, count rate and corrected count rate"],
+            ["5.2.2", "Radiation types", "α, β and γ: their nature, ionising effect, penetration and deflection in fields"],
+            ["5.2.3", "Radioactive decay", "Spontaneous, random change of unstable nuclei written as balanced decay equations"],
+            ["5.2.4–5", "Half-life, uses & safety", "Half-life and its calculations, choosing an isotope for a job, dose and safe handling"],
+          ].map(([n, title, copy]) => (
+            <article key={n}><span>{n}</span><h3>{title}</h3><p>{copy}</p></article>
+          ))}
+        </div>
+        <div className="core-supplement">
+          <div><b>CORE</b><span>Build the physical picture and the standard count-rate and half-life calculations.</span></div>
+          <div><b>SUPPLEMENT</b><span>Extend to scattering evidence, fission and fusion, field deflection, decay equations and dose reduction.</span></div>
+        </div>
+      </section>
+
       {/* 5.1.1–5.1.1S */}
       <section className="lesson-section" id="atom">
         <div className="section-heading">
-          <span className="section-number">01</span>
+          <span className="section-number">02</span>
           <div>
             <span className="eyebrow">5.1.1 · the nuclear model of the atom</span>
             <h2>A dense nucleus, in mostly empty space.</h2>
@@ -963,7 +1080,7 @@ export default function NuclearPhysicsPage() {
       {/* 5.1.2 */}
       <section className="lesson-section" id="nucleus">
         <div className="section-heading">
-          <span className="section-number">02</span>
+          <span className="section-number">03</span>
           <div>
             <span className="eyebrow">5.1.2 · the nucleus</span>
             <h2>Protons and neutrons, counted by Z and A.</h2>
@@ -987,7 +1104,7 @@ export default function NuclearPhysicsPage() {
       {/* 5.2.1–5.2.2 */}
       <section className="lesson-section" id="radioactivity">
         <div className="section-heading">
-          <span className="section-number">03</span>
+          <span className="section-number">04</span>
           <div>
             <span className="eyebrow">5.2.1–5.2.2 · radioactivity</span>
             <h2>Spontaneous, random, and three kinds of emission.</h2>
@@ -997,6 +1114,7 @@ export default function NuclearPhysicsPage() {
         <BackgroundLab />
         <PenetrationLab />
         <DeflectionLab />
+        <RadiationCompareLab />
         <div className="micro-checks">
           <QuickCheck statement="Gamma radiation is completely stopped by a thin sheet of paper." answer={false} explanation="Paper stops alpha. Gamma is the most penetrating and is only reduced by thick lead or concrete." />
           <QuickCheck statement="You can predict exactly which nucleus will decay next." answer={false} explanation="Radioactive decay is random; you cannot predict which nucleus decays or when." />
@@ -1006,7 +1124,7 @@ export default function NuclearPhysicsPage() {
       {/* 5.2.3–5.2.4 */}
       <section className="lesson-section dark-section" id="decay">
         <div className="section-heading">
-          <span className="section-number">04</span>
+          <span className="section-number">05</span>
           <div>
             <span className="eyebrow">5.2.3–5.2.4 · decay &amp; half-life</span>
             <h2>Each decay changes the nucleus by a fixed rule.</h2>
@@ -1020,6 +1138,7 @@ export default function NuclearPhysicsPage() {
           <article><span>Half-life</span><b>×½ each T</b><p>count rate halves every half-life.</p></article>
         </div>
         <DecayLab />
+        <RandomDecayLab />
         <HalfLifeLab />
         <ApplicationLab />
       </section>
@@ -1027,7 +1146,7 @@ export default function NuclearPhysicsPage() {
       {/* 5.2.5 */}
       <section className="lesson-section" id="safety">
         <div className="section-heading">
-          <span className="section-number">05</span>
+          <span className="section-number">06</span>
           <div>
             <span className="eyebrow">5.2.5 · uses &amp; safety</span>
             <h2>Useful, but ionising — so handle with care.</h2>
@@ -1050,7 +1169,7 @@ export default function NuclearPhysicsPage() {
       {/* Exam practice */}
       <section className="lesson-section practice-section" id="practice">
         <div className="section-heading">
-          <span className="section-number">06</span>
+          <span className="section-number">07</span>
           <div>
             <span className="eyebrow">Exam practice · nuclear physics</span>
             <h2>Answer, then reveal the mark points.</h2>
@@ -1078,7 +1197,7 @@ export default function NuclearPhysicsPage() {
       {/* Mind map */}
       <section className="lesson-section" id="mindmap">
         <div className="section-heading">
-          <span className="section-number">07</span>
+          <span className="section-number">08</span>
           <div>
             <span className="eyebrow">Retrieval map</span>
             <h2>Rebuild each branch from memory.</h2>
@@ -1099,7 +1218,7 @@ export default function NuclearPhysicsPage() {
       {/* Checkpoint */}
       <section className="lesson-section quiz-section" id="checkpoint">
         <div className="section-heading">
-          <span className="section-number">08</span>
+          <span className="section-number">09</span>
           <div>
             <span className="eyebrow">Final checkpoint</span>
             <h2>Ten questions. Instant feedback.</h2>

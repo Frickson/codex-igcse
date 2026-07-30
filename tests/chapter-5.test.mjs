@@ -9,7 +9,10 @@ test("exports the Chapter 5 nuclear-physics lesson", async () => {
   assert.match(html, /Field Notes/);
   assert.match(html, /Cambridge IGCSE Physics 0625/);
   assert.match(html, /Nuclear physics/i);
+  assert.match(html, /Two ideas, six moves, one nucleus/);
   assert.match(html, /Build an atom, then make an ion/);
+  assert.match(html, /α, β and γ at a glance/);
+  assert.match(html, /Why does a random process give a fixed half-life/);
   assert.match(html, /Which model matches the observations/);
   assert.match(html, /How do Z and A fix a nucleus/);
   assert.match(html, /Same element, different neutrons/);
