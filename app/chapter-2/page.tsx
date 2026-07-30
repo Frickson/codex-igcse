@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import StatesOfMatterLab from "./labs/StatesOfMatterLab";
+import ParticleTempLab from "./labs/ParticleTempLab";
+import BrownianLab from "./labs/BrownianLab";
+import GasPressureLab from "./labs/GasPressureLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -29,7 +33,20 @@ const sections: [string, string][] = [
   ["checkpoint", "Checkpoint"],
 ];
 
-/* QuickCheck micro-checks are added with section content in later phases. */
+/* ---------- shared micro-check ---------- */
+function QuickCheck({ statement, answer, explanation }: { statement: string; answer: boolean; explanation: string }) {
+  const [choice, setChoice] = useState<boolean | null>(null);
+  return (
+    <div className="quick-check">
+      <p>{statement}</p>
+      <div>
+        <button className={choice === true ? (answer ? "correct" : "wrong") : ""} onClick={() => setChoice(true)}>True</button>
+        <button className={choice === false ? (!answer ? "correct" : "wrong") : ""} onClick={() => setChoice(false)}>False</button>
+      </div>
+      {choice !== null && <small className={choice === answer ? "correct-text" : "wrong-text"}>{choice === answer ? "Correct. " : "Not quite. "}{explanation}</small>}
+    </div>
+  );
+}
 
 /* ---------- checkpoint / exam data (filled in later build phases) ---------- */
 type QuizQuestion = { question: string; options: string[]; answer: number; why: string };
@@ -129,7 +146,7 @@ export default function ThermalPhysicsPage() {
         </div>
       </section>
 
-      {/* 2.1.1–2.1.2 — labs wired in Phase 2 */}
+      {/* 2.1.1–2.1.2 */}
       <section className="lesson-section" id="particles">
         <div className="section-heading">
           <span className="section-number">02</span>
@@ -139,10 +156,17 @@ export default function ThermalPhysicsPage() {
             <p>Solids, liquids and gases differ in how tightly particles pack and how freely they move. Temperature tracks particle kinetic energy — down to absolute zero.</p>
           </div>
         </div>
-        <p className="lab-note">Interactive labs for states of matter, temperature and Brownian motion land in the next build phase.</p>
+        <StatesOfMatterLab />
+        <ParticleTempLab />
+        <BrownianLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Liquids have particles that are much farther apart than in solids." answer={false} explanation="Liquid particles are still close together — similar spacing to a solid — but they can slide past each other, so a liquid flows and takes the container's shape." />
+          <QuickCheck statement="Absolute zero is −273 °C, where particles have the least kinetic energy." answer={true} explanation="There is a lowest possible temperature (−273 °C = 0 K). At absolute zero the particles have least kinetic energy." />
+          <QuickCheck statement="Brownian motion is evidence that fluid particles (atoms/molecules) are moving and colliding randomly." answer={true} explanation="The visible speck jitters because countless unseen fast molecules hit it from changing directions." />
+        </div>
       </section>
 
-      {/* 2.1.3 — labs wired in Phase 2 */}
+      {/* 2.1.3 */}
       <section className="lesson-section" id="gases">
         <div className="section-heading">
           <span className="section-number">03</span>
@@ -152,7 +176,11 @@ export default function ThermalPhysicsPage() {
             <p>Warm a fixed-volume gas and particles hit the walls harder and more often. Squeeze the volume at fixed temperature and the same mass collides more frequently — pressure rises.</p>
           </div>
         </div>
-        <p className="lab-note">Gas-pressure and absolute-scale labs land in the next build phase.</p>
+        <GasPressureLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Halving the volume of a fixed mass of gas at constant temperature roughly doubles its pressure." answer={true} explanation="Supplement: pV = constant at fixed temperature, so half the volume means twice the pressure — more frequent wall collisions." />
+          <QuickCheck statement="20 °C is the same as 20 K on the absolute scale." answer={false} explanation="Convert with T(K) = θ(°C) + 273, so 20 °C = 293 K. Equal numbers in °C and K only coincide near absolute zero in a misleading way — never treat them as the same scale." />
+        </div>
       </section>
 
       {/* 2.2 — labs wired in Phase 3 */}
