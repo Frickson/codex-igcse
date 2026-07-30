@@ -14,6 +14,11 @@ import CircularMotionLab from "./labs/CircularMotionLab";
 import MomentsLab from "./labs/MomentsLab";
 import StabilityLab from "./labs/StabilityLab";
 import MomentumLab from "./labs/MomentumLab";
+import EnergyStoresLab from "./labs/EnergyStoresLab";
+import EnergyCalcLab from "./labs/EnergyCalcLab";
+import ResourcesLab from "./labs/ResourcesLab";
+import PressureLab from "./labs/PressureLab";
+import LiquidPressureLab from "./labs/LiquidPressureLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -61,10 +66,167 @@ function QuickCheck({ statement, answer, explanation }: { statement: string; ans
 
 /* ---------- checkpoint quiz data (filled in a later build phase) ---------- */
 type QuizQuestion = { question: string; options: string[]; answer: number; why: string };
-const quizQuestions: QuizQuestion[] = [];
+const quizQuestions: QuizQuestion[] = [
+  {
+    question: "Which of these is a vector quantity?",
+    options: ["Distance", "Speed", "Velocity", "Mass"],
+    answer: 2,
+    why: "Velocity has both size and direction, so it is a vector. Distance, speed and mass have size only — they are scalars.",
+  },
+  {
+    question: "An object moves at constant velocity. What is the resultant force on it?",
+    options: ["Zero", "Equal to its weight", "In the direction of motion", "Increasing steadily"],
+    answer: 0,
+    why: "Constant velocity means no acceleration, so by F = ma the resultant force must be zero — the forces are balanced.",
+  },
+  {
+    question: "On the Moon (g ≈ 1.6 N/kg) compared with Earth, an astronaut's…",
+    options: ["mass and weight both decrease", "mass stays the same but weight decreases", "weight stays the same but mass decreases", "mass and weight both stay the same"],
+    answer: 1,
+    why: "Mass is the amount of matter and is the same everywhere. Weight = mg, and g is smaller on the Moon, so the weight decreases.",
+  },
+  {
+    question: "A steel ball sinks in water because…",
+    options: ["it is heavier than water", "it has a larger mass", "its density is greater than water's", "water has no upthrust on it"],
+    answer: 2,
+    why: "Floating or sinking is decided by density, not weight. Steel is denser than water, so it cannot displace enough water to support its weight.",
+  },
+  {
+    question: "At terminal velocity, a falling raindrop has…",
+    options: ["zero weight", "increasing acceleration", "a downward resultant force", "zero resultant force"],
+    answer: 3,
+    why: "At terminal velocity air resistance balances the weight, so the resultant force — and therefore the acceleration — is zero. The drop keeps falling at constant speed.",
+  },
+  {
+    question: "Doubling only the perpendicular distance of a force from a pivot will…",
+    options: ["halve the moment", "double the moment", "leave the moment unchanged", "double the force"],
+    answer: 1,
+    why: "Moment = force × perpendicular distance. Doubling the distance while keeping the force the same doubles the turning effect.",
+  },
+  {
+    question: "A 2 kg object at 3 m/s and a 3 kg object at 2 m/s have…",
+    options: ["the same kinetic energy", "the same momentum", "the same weight", "the same acceleration"],
+    answer: 1,
+    why: "Momentum p = mv: both are 6 kg·m/s. Their kinetic energies (½mv²) are 9 J and 6 J, so those differ.",
+  },
+  {
+    question: "Which statement about efficiency is correct?",
+    options: ["A machine can exceed 100% efficiency", "Efficiency = total input ÷ useful output", "Wasted energy is destroyed", "Efficiency = useful output ÷ total input"],
+    answer: 3,
+    why: "Efficiency = useful energy out ÷ total energy in. Energy is conserved, so it can never exceed 100%; the 'wasted' energy is transferred to the surroundings, not destroyed.",
+  },
+  {
+    question: "A sharp knife cuts more easily than a blunt one because it…",
+    options: ["exerts a larger force", "has a smaller contact area, giving a higher pressure", "has less mass", "reduces the pressure on the surface"],
+    answer: 1,
+    why: "For the same force, a smaller contact area gives a higher pressure (p = F/A). The sharp edge concentrates the force onto a tiny area.",
+  },
+  {
+    question: "The pressure at a point in a liquid depends on…",
+    options: ["the width of the container", "the depth, density and g", "the total volume of liquid", "the shape of the container"],
+    answer: 1,
+    why: "p = ρgΔh. Liquid pressure depends only on depth, density and gravitational field strength — not on the container's width, shape or total volume.",
+  },
+];
 
 type ExamQuestion = { tag: string; marks: number; question: string; scheme: string[] };
-const examQuestions: ExamQuestion[] = [];
+const examQuestions: ExamQuestion[] = [
+  {
+    tag: "1.1 Measurement", marks: 3,
+    question: "A student uses a stopwatch to time a pendulum. Explain why timing 20 complete swings and dividing by 20 gives a more reliable value for the period than timing a single swing.",
+    scheme: [
+      "The reaction-time error in starting/stopping is roughly fixed each time (a constant absolute uncertainty).",
+      "Timing 20 swings makes that error a much smaller fraction of the total measured time.",
+      "Dividing by 20 shares the same small error over each period, so the period is more reliable / has a smaller percentage uncertainty.",
+    ],
+  },
+  {
+    tag: "1.1 Vectors", marks: 3,
+    question: "A boat is driven due east at 3.0 m/s while a current carries it due north at 4.0 m/s. Determine the magnitude and direction of the boat's resultant velocity.",
+    scheme: [
+      "Recognise the two velocities are perpendicular, so combine by Pythagoras: v = √(3.0² + 4.0²).",
+      "v = √(9 + 16) = √25 = 5.0 m/s.",
+      "Direction: angle north of east = tan⁻¹(4.0/3.0) = 53° (i.e. 53° N of E / bearing 037°).",
+    ],
+  },
+  {
+    tag: "1.2 Motion graph", marks: 4,
+    question: "A car accelerates uniformly from rest to 20 m/s in 8.0 s, travels at 20 m/s for 12 s, then brakes to rest in 4.0 s. (a) Calculate the acceleration in the first stage. (b) Use the speed–time graph to find the total distance travelled.",
+    scheme: [
+      "(a) a = Δv/t = 20/8.0 = 2.5 m/s².",
+      "(b) Distance = area under the graph.",
+      "Stage 1 (triangle) = ½ × 8.0 × 20 = 80 m; middle (rectangle) = 20 × 12 = 240 m; braking (triangle) = ½ × 4.0 × 20 = 40 m.",
+      "Total distance = 80 + 240 + 40 = 360 m.",
+    ],
+  },
+  {
+    tag: "1.2 Free fall", marks: 3,
+    question: "A skydiver falls from a plane and after some time reaches terminal velocity. Explain, in terms of the forces acting, why her acceleration decreases to zero as she speeds up.",
+    scheme: [
+      "At first weight is much greater than air resistance, so there is a large resultant force downward and she accelerates.",
+      "As speed increases, air resistance (drag) increases.",
+      "Eventually drag equals weight, so the resultant force is zero; with no resultant force there is no acceleration and she falls at constant (terminal) velocity.",
+    ],
+  },
+  {
+    tag: "1.3–1.4 Density", marks: 4,
+    question: "A metal block has a mass of 780 g and measures 5.0 cm × 4.0 cm × 2.0 cm. (a) Calculate its density in g/cm³. (b) State, with a reason, whether it will float in water (density 1.0 g/cm³).",
+    scheme: [
+      "(a) Volume = 5.0 × 4.0 × 2.0 = 40 cm³.",
+      "Density = m/V = 780/40 = 19.5 g/cm³.",
+      "(b) It will sink.",
+      "Its density (19.5 g/cm³) is greater than that of water (1.0 g/cm³), so it cannot displace enough water to support its weight.",
+    ],
+  },
+  {
+    tag: "1.5 F = ma", marks: 3,
+    question: "A trolley of mass 1.5 kg is pushed with a resultant force of 6.0 N. (a) Calculate its acceleration. (b) The same force now acts on a 3.0 kg trolley. State and explain the effect on the acceleration.",
+    scheme: [
+      "(a) a = F/m = 6.0/1.5 = 4.0 m/s².",
+      "(b) The acceleration halves (to 2.0 m/s²).",
+      "For a fixed resultant force, acceleration is inversely proportional to mass (a = F/m), and the mass has doubled.",
+    ],
+  },
+  {
+    tag: "1.5 Moments", marks: 3,
+    question: "A uniform metre rule is pivoted at its centre. A 2.0 N weight hangs 40 cm from the pivot on the left. Calculate where a 4.0 N weight must hang on the right for the rule to balance.",
+    scheme: [
+      "Principle of moments: clockwise moment = anticlockwise moment for balance.",
+      "Anticlockwise moment = 2.0 × 0.40 = 0.80 N·m.",
+      "0.80 = 4.0 × d, so d = 0.20 m = 20 cm from the pivot.",
+    ],
+  },
+  {
+    tag: "1.6 Momentum", marks: 4,
+    question: "A 2.0 kg trolley moving at 3.0 m/s collides with a stationary 1.0 kg trolley and they stick together. (a) State the principle of conservation of momentum. (b) Calculate their common velocity after the collision.",
+    scheme: [
+      "(a) In a collision with no external resultant force, the total momentum before equals the total momentum after.",
+      "(b) Momentum before = (2.0 × 3.0) + (1.0 × 0) = 6.0 kg·m/s.",
+      "After: combined mass = 3.0 kg, so 6.0 = 3.0 × v.",
+      "v = 2.0 m/s (in the original direction).",
+    ],
+  },
+  {
+    tag: "1.7 Energy & power", marks: 4,
+    question: "A pump raises 300 kg of water through a height of 8.0 m in 20 s. (g = 9.8 N/kg) (a) Calculate the useful work done. (b) Calculate the useful power output. (c) The pump is supplied with 30 000 J of electrical energy in that time — calculate its efficiency.",
+    scheme: [
+      "(a) Useful work = mgΔh = 300 × 9.8 × 8.0 = 23 520 J (≈ 2.4 × 10⁴ J).",
+      "(b) Power = W/t = 23 520/20 = 1176 W (≈ 1.2 kW).",
+      "(c) Efficiency = useful output ÷ total input × 100% = 23 520/30 000 × 100%.",
+      "= 78% (2 s.f.).",
+    ],
+  },
+  {
+    tag: "1.8 Pressure", marks: 4,
+    question: "(a) A box weighing 240 N stands on a base of area 0.30 m². Calculate the pressure it exerts on the floor. (b) A diver descends to a depth of 12 m in seawater of density 1030 kg/m³. Calculate the pressure due to the water. (g = 9.8 N/kg)",
+    scheme: [
+      "(a) p = F/A = 240/0.30 = 800 Pa.",
+      "(b) p = ρgΔh = 1030 × 9.8 × 12.",
+      "= 121 128 Pa ≈ 1.2 × 10⁵ Pa.",
+      "Unit pascal (Pa) stated in both parts.",
+    ],
+  },
+];
 
 /* =====================================================================
    Page
@@ -260,7 +422,13 @@ export default function MotionForcesEnergyPage() {
             <p>Energy moves between stores — kinetic, gravitational, elastic and more — but the total is conserved. Work is energy transferred by a force, power is how fast, and efficiency is how much of it is useful.</p>
           </div>
         </div>
-        {/* Phase 4: EnergyStoresLab, EnergyCalcLab, ResourcesLab */}
+        <EnergyStoresLab />
+        <EnergyCalcLab />
+        <ResourcesLab />
+        <div className="micro-checks">
+          <QuickCheck statement="A machine can be more than 100% efficient if it is well designed." answer={false} explanation="Efficiency = useful output ÷ total input. Energy is conserved, so the output can never exceed the input — real machines always waste some energy, usually as heat." />
+          <QuickCheck statement="Doing the same job in less time requires more power." answer={true} explanation="Power is work done per second, P = W/t. The same work in a shorter time means a higher power." />
+        </div>
       </section>
 
       {/* 1.8 */}
@@ -273,7 +441,12 @@ export default function MotionForcesEnergyPage() {
             <p>Pressure p = F/A explains why a sharp point cuts and a wide base does not. In a liquid, pressure increases with depth and density as p = ρgh.</p>
           </div>
         </div>
-        {/* Phase 4: PressureLab, LiquidPressureLab */}
+        <PressureLab />
+        <LiquidPressureLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Standing on one foot instead of two roughly doubles the pressure on the floor." answer={true} explanation="Your weight (force) is unchanged but the contact area is halved, and p = F/A, so the pressure roughly doubles." />
+          <QuickCheck statement="Pressure in a liquid depends on the width of the container." answer={false} explanation="Liquid pressure is p = ρgΔh — it depends only on depth, density and g, not on the container's shape or width." />
+        </div>
       </section>
 
       {/* Exam practice */}
@@ -311,10 +484,18 @@ export default function MotionForcesEnergyPage() {
           <div>
             <span className="eyebrow">Retrieval map</span>
             <h2>Rebuild each branch from memory.</h2>
-            <p>Cover the page and try to reconstruct the branches, then check.</p>
+            <p>Cover the page and try to reconstruct the six branches, then check.</p>
           </div>
         </div>
-        {/* Phase 4: mindmap branches */}
+        <div className="mindmap">
+          <div className="mind-centre"><span>CHAPTER 1</span><b>Motion, forces &amp; energy</b></div>
+          <article className="branch b1"><span>Measure &amp; vectors</span><p>length, volume, time · average repeats · scalar = size · vector = size + direction · combine ⊥ vectors by scale drawing</p></article>
+          <article className="branch b2"><span>Motion</span><p>speed = d/t · velocity adds direction · a = Δv/t · d–t gradient = speed · v–t gradient = a, area = distance · free fall g ≈ 9.8 · terminal velocity</p></article>
+          <article className="branch b3"><span>Mass, weight, density</span><p>mass = matter &amp; inertia (kg) · W = mg · g ≈ 9.8 N/kg · ρ = m/V · float if less dense than fluid</p></article>
+          <article className="branch b4"><span>Forces</span><p>resultant → F = ma · balanced → constant v · Hooke F = kx to limit · friction opposes · moment = F×d · CoG &amp; stability</p></article>
+          <article className="branch b5"><span>Momentum &amp; energy</span><p>p = mv conserved · F = Δp/t · stores: KE ½mv², GPE mgΔh, elastic… · W = Fd · P = W/t · efficiency = useful/total</p></article>
+          <article className="branch b6"><span>Pressure</span><p>p = F/A (Pa) · small area → big pressure · in a liquid p = ρgΔh · increases with depth &amp; density · same in all directions</p></article>
+        </div>
       </section>
 
       {/* Checkpoint */}
