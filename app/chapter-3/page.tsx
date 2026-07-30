@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import WaveAnatomyLab from "./labs/WaveAnatomyLab";
+import DiffractionLab from "./labs/DiffractionLab";
+import ReflectionLab from "./labs/ReflectionLab";
+import RefractionLab from "./labs/RefractionLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -161,7 +165,8 @@ export default function WavesPage() {
             <p>A wave transfers energy without transferring matter. Describe it with wavelength, frequency, amplitude and speed, then classify it as transverse or longitudinal by the direction of its vibration.</p>
           </div>
         </div>
-        {/* Phase 2: WaveAnatomyLab, WaveBehaviourLab */}
+        <WaveAnatomyLab />
+        <DiffractionLab />
         <div className="micro-checks">
           <QuickCheck statement="In a wave, the medium travels along with the wave." answer={false} explanation="A wave transfers energy, not matter. The particles of the medium vibrate about fixed positions; they do not travel with the wave." />
           <QuickCheck statement="Sound is a longitudinal wave." answer={true} explanation="In sound the air particles vibrate back and forth along the same direction the wave travels, forming compressions and rarefactions — that is longitudinal." />
@@ -178,7 +183,11 @@ export default function WavesPage() {
             <p>Light reflects from a plane mirror so that the angle of incidence equals the angle of reflection, both measured from the normal. The image is upright, the same size, and as far behind the mirror as the object is in front.</p>
           </div>
         </div>
-        {/* Phase 2: ReflectionLab */}
+        <ReflectionLab />
+        <div className="micro-checks">
+          <QuickCheck statement="The angle of reflection is measured from the mirror surface." answer={false} explanation="Both the angle of incidence and the angle of reflection are measured from the normal — the line at 90° to the mirror — not from the surface." />
+          <QuickCheck statement="The image in a plane mirror is the same size as the object." answer={true} explanation="A plane-mirror image is upright, virtual, laterally inverted and exactly the same size as the object, as far behind the mirror as the object is in front." />
+        </div>
       </section>
 
       {/* 3.2.2 */}
@@ -191,7 +200,11 @@ export default function WavesPage() {
             <p>Light slows entering a denser medium and bends toward the normal, following n = sin i / sin r. Past the critical angle it cannot escape at all — total internal reflection, the principle behind optical fibres.</p>
           </div>
         </div>
-        {/* Phase 2: RefractionLab */}
+        <RefractionLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Light bends toward the normal when it enters a denser medium." answer={true} explanation="Entering a denser medium (e.g. air → glass) light slows down and bends toward the normal, so the angle of refraction is smaller than the angle of incidence." />
+          <QuickCheck statement="Total internal reflection can happen when light passes from air into glass." answer={false} explanation="TIR only occurs going from a denser to a less dense medium (glass → air) at angles beyond the critical angle. Going air → glass, light always refracts into the glass." />
+        </div>
       </section>
 
       {/* 3.2.3 */}
