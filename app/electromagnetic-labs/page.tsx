@@ -114,7 +114,7 @@ export default function ElectromagneticLabsPage() {
     <main className="advanced-labs-page">
       <header className="labs-topbar">
         <a href="../" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Advanced labs</small></span></a>
-        <nav><a href="#generator">Generator lab</a><a href="#motor">Motor lab</a><a href="../chapter-4/#effects">← Main lesson</a></nav>
+        <nav><a href="#generator">Generator lab</a><a href="#motor">Motor lab</a><a href="../#effects">← Main lesson</a></nav>
       </header>
 
       <section className="labs-hero">
@@ -155,7 +155,7 @@ export default function ElectromagneticLabsPage() {
 
       <footer>
         <div><i>Φ</i><b>Field Notes</b><span>Advanced electromagnetic-effects laboratories</span></div>
-        <p><a href="../chapter-4/#effects">Return to the complete Chapter 4 lesson</a></p>
+        <p><a href="../#effects">Return to the complete Chapter 4 lesson</a></p>
       </footer>
     </main>
   );

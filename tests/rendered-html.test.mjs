@@ -4,10 +4,10 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 
-test("exports the complete interactive Chapter 4 lesson", async () => {
+test("exports the complete interactive lesson", async () => {
   const [html, source] = await Promise.all([
-    readFile(new URL("out/chapter-4/index.html", root), "utf8"),
-    readFile(new URL("app/chapter-4/page.tsx", root), "utf8"),
+    readFile(new URL("out/index.html", root), "utf8"),
+    readFile(new URL("app/page.tsx", root), "utf8"),
   ]);
   assert.match(html, /Field Notes/);
   assert.match(html, /Electricity &amp; Magnetism|Electricity & Magnetism/);
@@ -41,21 +41,9 @@ test("includes GitHub Pages and social assets", async () => {
   assert.match(html, /twitter:card/);
 });
 
-test("home page is a Field Notes landing, not the Chapter 4 lesson", async () => {
-  const html = await readFile(new URL("out/index.html", root), "utf8");
-  assert.match(html, /Field Notes/);
-  assert.match(html, /Start with Chapter 1/);
-  assert.match(html, /Browse all chapters/);
-  assert.match(html, /chapter-1\//);
-  assert.match(html, /chapter-4\//);
-  assert.match(html, /chapter-6\//);
-  assert.doesNotMatch(html, /Begin the fieldwork/);
-  assert.doesNotMatch(html, /Coming soon/);
-});
-
 test("exports the separate generator and motor laboratory page", async () => {
   const [mainHtml, labsHtml, labsSource] = await Promise.all([
-    readFile(new URL("out/chapter-4/index.html", root), "utf8"),
+    readFile(new URL("out/index.html", root), "utf8"),
     readFile(new URL("out/electromagnetic-labs/index.html", root), "utf8"),
     readFile(new URL("app/electromagnetic-labs/page.tsx", root), "utf8"),
   ]);
@@ -68,13 +56,12 @@ test("exports the separate generator and motor laboratory page", async () => {
   assert.match(labsHtml, /slip rings/);
   assert.match(labsHtml, /split-ring commutator/);
   assert.match(labsHtml, /Return to the complete Chapter 4 lesson/);
-  assert.match(labsHtml, /chapter-4\/#effects/);
   assert.match(labsSource, /currentReversed !== fieldReversed/);
 });
 
 test("paper attraction requires a charged rod near the paper", async () => {
   const [source, css] = await Promise.all([
-    readFile(new URL("app/chapter-4/page.tsx", root), "utf8"),
+    readFile(new URL("app/page.tsx", root), "utf8"),
     readFile(new URL("app/globals.css", root), "utf8"),
   ]);
   assert.match(source, /const attracted = nearPaper && charge > 0/);
@@ -85,7 +72,7 @@ test("paper attraction requires a charged rod near the paper", async () => {
 
 test("electric-field mapper uses direct dragging and correct model boundaries", async () => {
   const [source, css] = await Promise.all([
-    readFile(new URL("app/chapter-4/page.tsx", root), "utf8"),
+    readFile(new URL("app/page.tsx", root), "utf8"),
     readFile(new URL("app/globals.css", root), "utf8"),
   ]);
   assert.match(source, /onPointerDown=\{startDrag\}/);
@@ -99,7 +86,7 @@ test("electric-field mapper uses direct dragging and correct model boundaries", 
 });
 
 test("circuit-symbol builder supports challenges and removal controls", async () => {
-  const source = await readFile(new URL("app/chapter-4/page.tsx", root), "utf8");
+  const source = await readFile(new URL("app/page.tsx", root), "utf8");
   assert.match(source, /Temperature indicator/);
   assert.match(source, /Light-level indicator/);
   assert.match(source, /Protected LED/);

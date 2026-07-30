@@ -274,7 +274,7 @@ export default function MotionForcesEnergyPage() {
         <div className="mobile-menu">
           {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
           <a href="../chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
-          <a href="../" onClick={() => setMenuOpen(false)}>Home →</a>
+          <a href="../" onClick={() => setMenuOpen(false)}>Chapter 4 lesson →</a>
         </div>
       )}
 
