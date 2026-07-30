@@ -1126,7 +1126,6 @@ export default function Home() {
           <div className="hero-actions">
             <a href="#overview" className="primary-button">Begin the fieldwork <span>↓</span></a>
             <a href="electromagnetic-labs/" className="advanced-labs-button">Generator &amp; Motor Labs <span>→</span></a>
-            <a href="chapter-5/" className="advanced-labs-button">Chapter 5 · Nuclear physics <span>→</span></a>
             <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
         </div>
