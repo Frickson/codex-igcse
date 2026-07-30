@@ -285,7 +285,6 @@ export default function MotionForcesEnergyPage() {
           <p>From a ruler reading to a spacecraft&apos;s momentum — build the whole mechanics toolkit with models where every slider changes real physics: motion graphs, Newton&apos;s laws, moments, energy and pressure.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
-            <a className="advanced-labs-button" href="../chapters/">All chapters <span>↗</span></a>
             <span className="time-note"><b>70–100 min</b> interactive lesson</span>
           </div>
         </div>
