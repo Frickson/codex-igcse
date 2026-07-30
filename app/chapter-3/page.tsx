@@ -8,6 +8,9 @@ import ReflectionLab from "./labs/ReflectionLab";
 import RefractionLab from "./labs/RefractionLab";
 import LensLab from "./labs/LensLab";
 import DispersionLab from "./labs/DispersionLab";
+import SpectrumLab from "./labs/SpectrumLab";
+import SoundLab from "./labs/SoundLab";
+import SoundMediumLab from "./labs/SoundMediumLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -53,12 +56,34 @@ function QuickCheck({ statement, answer, explanation }: { statement: string; ans
   );
 }
 
-/* ---------- assessment data (filled in a later build phase) ---------- */
+/* ---------- assessment data (original, exam-style) ---------- */
 type QuizQuestion = { question: string; options: string[]; answer: number; why: string };
-const quizQuestions: QuizQuestion[] = [];
+const quizQuestions: QuizQuestion[] = [
+  { question: "A wave has frequency 50 Hz and wavelength 6 m. What is its speed?", options: ["8.3 m/s", "56 m/s", "300 m/s", "0.12 m/s"], answer: 2, why: "v = fλ = 50 × 6 = 300 m/s." },
+  { question: "Which of these is a longitudinal wave?", options: ["Light", "A wave on a rope", "Sound in air", "A water-surface ripple"], answer: 2, why: "In sound the particles vibrate along the direction of travel, forming compressions and rarefactions — that is longitudinal. The others are transverse." },
+  { question: "In a plane mirror, the image is:", options: ["Real and inverted", "Virtual and the same size", "Real and magnified", "Virtual and smaller"], answer: 1, why: "A plane mirror forms a virtual, upright image the same size as the object, as far behind the mirror as the object is in front." },
+  { question: "Light passes from air into glass. It bends:", options: ["Away from the normal", "Toward the normal", "Along the boundary", "Not at all"], answer: 1, why: "Entering the denser glass the light slows and bends toward the normal, so the angle of refraction is smaller than the angle of incidence." },
+  { question: "A glass has refractive index 1.5. Its critical angle is closest to:", options: ["30°", "42°", "49°", "60°"], answer: 1, why: "sin c = 1/n = 1/1.5 = 0.667, so c = sin⁻¹(0.667) ≈ 42°." },
+  { question: "An object is placed inside the focal length of a converging lens. The image is:", options: ["Real, inverted, diminished", "Real, inverted, magnified", "Virtual, upright, magnified", "No image forms"], answer: 2, why: "Inside F the refracted rays diverge; traced back they give a virtual, upright, enlarged image — the magnifying-glass case." },
+  { question: "Which colour is refracted most as white light passes through a prism?", options: ["Red", "Green", "Yellow", "Violet"], answer: 3, why: "Violet has the highest refractive index in glass, so it slows most and is deviated most; red the least." },
+  { question: "Which electromagnetic waves have the highest frequency?", options: ["Radio", "Infrared", "Ultraviolet", "Gamma"], answer: 3, why: "Gamma rays sit at the high-frequency, short-wavelength end of the spectrum." },
+  { question: "Compared with light, all electromagnetic waves in a vacuum have the same:", options: ["Frequency", "Wavelength", "Speed", "Amplitude"], answer: 2, why: "Every EM wave travels at 3.0×10⁸ m/s in a vacuum; they differ in frequency and wavelength." },
+  { question: "Sound cannot travel through a vacuum because:", options: ["It travels too fast", "There are no particles to carry the vibration", "A vacuum absorbs sound", "Its frequency is too low"], answer: 1, why: "Sound is a mechanical wave needing a medium; a vacuum has no particles to pass the compressions and rarefactions along." },
+];
 
 type ExamQuestion = { tag: string; marks: number; question: string; scheme: string[] };
-const examQuestions: ExamQuestion[] = [];
+const examQuestions: ExamQuestion[] = [
+  { tag: "3.1 · Core", marks: 3, question: "A student watches waves on a pond. In 10 s, 8 complete waves pass a fixed post, and the distance between adjacent crests is 0.5 m. Calculate (a) the frequency and (b) the speed of the waves.", scheme: ["(a) frequency f = number of waves ÷ time = 8 ÷ 10 = 0.8 Hz (1)", "(b) v = fλ with λ = 0.5 m (1)", "v = 0.8 × 0.5 = 0.4 m/s, with unit (1)"] },
+  { tag: "3.1 · Supplement", marks: 3, question: "Explain, in terms of gap size and wavelength, why sound can be heard clearly around the edge of an open doorway but a clear image is not formed by light passing through the same doorway.", scheme: ["Diffraction (spreading) is greatest when the gap is comparable to the wavelength (1)", "Sound wavelengths (~m) are comparable to the doorway width, so sound diffracts/spreads a lot and is heard around the edge (1)", "Light wavelengths (~10⁻⁷ m) are far smaller than the doorway, so light barely diffracts and travels almost straight (1)"] },
+  { tag: "3.2.1 · Core", marks: 3, question: "A ray of light strikes a plane mirror at an angle of incidence of 35°. State the angle of reflection and describe two properties of the image formed of a small object placed in front of the mirror.", scheme: ["Angle of reflection = 35° (equal to the angle of incidence) (1)", "Image is virtual and upright / same size as the object (1)", "Image is as far behind the mirror as the object is in front / laterally inverted (1)"] },
+  { tag: "3.2.2 · Core", marks: 3, question: "A ray of light travels from air into a glass block with an angle of incidence of 40°. The angle of refraction is 25°. Calculate the refractive index of the glass and state what happens to the speed of the light as it enters the glass.", scheme: ["n = sin i / sin r = sin 40° / sin 25° (1)", "n = 0.643 / 0.423 = 1.52 (1)", "The light slows down on entering the (denser) glass (1)"] },
+  { tag: "3.2.2 · Supplement", marks: 4, question: "The refractive index of a glass fibre is 1.5. (a) Calculate the critical angle. (b) Explain how total internal reflection allows the fibre to carry a light signal along a curved path.", scheme: ["(a) sin c = 1/n = 1/1.5 = 0.667 (1)", "c = sin⁻¹(0.667) = 42° (1)", "(b) Light hits the fibre wall at an angle greater than the critical angle (1)", "so it is totally internally reflected (no light escapes) and stays inside the fibre, reflecting repeatedly along its length (1)"] },
+  { tag: "3.2.3 · Supplement", marks: 4, question: "An object 2.0 cm tall is placed 30 cm from a converging lens of focal length 10 cm. Using 1/v − 1/u with the given lens, the image forms 15 cm from the lens. (a) State the magnification. (b) Describe the image fully.", scheme: ["(a) m = v/u = 15/30 = 0.5 (1)", "image height = 0.5 × 2.0 = 1.0 cm (1)", "(b) Real and inverted (1)", "diminished (smaller than the object) and on the opposite side of the lens (1)"] },
+  { tag: "3.2.4 · Core", marks: 3, question: "White light is passed through a glass prism and a spectrum is seen on a screen. (a) Name the effect. (b) State which colour is deviated most and which least. (c) Explain why the colours are separated.", scheme: ["(a) Dispersion (1)", "(b) Violet is deviated most, red least (1)", "(c) Each colour has a different speed/refractive index in glass, so each is refracted by a different amount (1)"] },
+  { tag: "3.3 · Core", marks: 4, question: "(a) State the speed of electromagnetic waves in a vacuum. (b) A radio wave has frequency 100 MHz. Calculate its wavelength. (c) State one use and one danger of ultraviolet radiation.", scheme: ["(a) 3.0×10⁸ m/s (1)", "(b) λ = c/f = 3.0×10⁸ ÷ 1.0×10⁸ = 3.0 m (1)", "(c) Use: sterilising / security marking / fluorescent lamps (1)", "Danger: skin cancer / eye damage (1)"] },
+  { tag: "3.3 · Core", marks: 3, question: "List the seven regions of the electromagnetic spectrum in order of increasing frequency, and state which region is used for thermal imaging.", scheme: ["Radio, microwave, infrared, visible, ultraviolet, X-ray, gamma — correct order (2; 1 mark if one pair swapped)", "Infrared is used for thermal imaging (1)"] },
+  { tag: "3.4 · Core", marks: 4, question: "A student stands 660 m from a cliff, claps once, and hears the echo 4.0 s later. (a) Calculate the speed of sound in air. (b) Explain why the same clap heard through a long steel rail would arrive sooner.", scheme: ["(a) Sound travels to the cliff and back: distance = 2 × 660 = 1320 m (1)", "speed = distance ÷ time = 1320 ÷ 4.0 = 330 m/s (1)", "(b) Particles are closer together in a solid than in a gas (1)", "so sound travels faster in steel than in air and arrives sooner (1)"] },
+];
 
 /* =====================================================================
    Page
@@ -251,7 +276,11 @@ export default function WavesPage() {
             <p>All electromagnetic waves are transverse and travel at 3.0×10⁸ m/s in a vacuum. They differ only in frequency and wavelength — which sets each region&apos;s uses and its dangers.</p>
           </div>
         </div>
-        {/* Phase 4: SpectrumLab */}
+        <SpectrumLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Gamma rays travel faster than radio waves in a vacuum." answer={false} explanation="All electromagnetic waves travel at the same speed in a vacuum, 3.0×10⁸ m/s. They differ in frequency and wavelength, not speed." />
+          <QuickCheck statement="Ultraviolet radiation can cause skin cancer." answer={true} explanation="UV carries enough energy to damage cells; over-exposure can cause skin cancer and eye damage — which is why sunscreen and UV goggles matter." />
+        </div>
       </section>
 
       {/* 3.4 */}
@@ -264,7 +293,12 @@ export default function WavesPage() {
             <p>Sound is a longitudinal wave of compressions and rarefactions that cannot travel through a vacuum. Its frequency sets the pitch, its amplitude the loudness, and it travels fastest in solids.</p>
           </div>
         </div>
-        {/* Phase 4: SoundLab, SoundMediumLab */}
+        <SoundLab />
+        <SoundMediumLab />
+        <div className="micro-checks">
+          <QuickCheck statement="Making a sound louder raises its pitch." answer={false} explanation="Loudness depends on amplitude and pitch depends on frequency — they are independent. A louder sound has a bigger amplitude but the same pitch unless the frequency changes." />
+          <QuickCheck statement="Sound travels faster in water than in air." answer={true} explanation="Particles are closer together in liquids than gases, so sound travels faster in water (~1500 m/s) than in air (~340 m/s), and faster still in solids." />
+        </div>
       </section>
 
       {/* Exam practice */}
@@ -305,7 +339,15 @@ export default function WavesPage() {
             <p>Cover the page and try to reconstruct the six branches, then check.</p>
           </div>
         </div>
-        {/* Phase 4: mindmap branches */}
+        <div className="mindmap">
+          <div className="mind-centre"><span>CHAPTER 3</span><b>Waves</b></div>
+          <article className="branch b1"><span>Wave properties</span><p>transfers energy, not matter · λ, f, amplitude, speed · v = fλ · transverse ⟂ vs longitudinal ∥ · reflect · refract · diffract (spread most when gap ≈ λ)</p></article>
+          <article className="branch b2"><span>Reflection</span><p>angle i = angle r (from the normal) · plane-mirror image: virtual, upright, same size, as far behind as object in front, laterally inverted</p></article>
+          <article className="branch b3"><span>Refraction &amp; TIR</span><p>speed change → bends · into denser → toward normal · n = sin i / sin r · n = 1/sin c · past c → total internal reflection (optical fibres)</p></article>
+          <article className="branch b4"><span>Lenses &amp; dispersion</span><p>converging lens → principal focus F · beyond F: real, inverted · inside F: virtual, upright, magnified · m = v/u · prism splits white light; violet bends most, red least</p></article>
+          <article className="branch b5"><span>EM spectrum</span><p>radio · microwave · infrared · visible · UV · X-ray · gamma · all transverse, all 3.0×10⁸ m/s in vacuum · c = fλ · higher f = shorter λ = more energy/danger</p></article>
+          <article className="branch b6"><span>Sound</span><p>longitudinal, needs a medium (none in vacuum) · f = pitch, amplitude = loudness · audible ≈ 20 Hz–20 kHz · fastest in solids, slowest in gases · ultrasound &gt; 20 kHz</p></article>
+        </div>
       </section>
 
       {/* Checkpoint */}
