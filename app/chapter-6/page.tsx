@@ -6,6 +6,16 @@ import DayNightLab from "./labs/DayNightLab";
 import SeasonsLab from "./labs/SeasonsLab";
 import MoonPhasesLab from "./labs/MoonPhasesLab";
 import OrbitalSpeedLab from "./labs/OrbitalSpeedLab";
+import SolarSystemLab from "./labs/SolarSystemLab";
+import OrbitGravityLab from "./labs/OrbitGravityLab";
+import LightTravelLab from "./labs/LightTravelLab";
+import PlanetaryDataLab from "./labs/PlanetaryDataLab";
+import SunStarLab from "./labs/SunStarLab";
+import LightYearLab from "./labs/LightYearLab";
+import StarLifecycleLab from "./labs/StarLifecycleLab";
+import RedshiftLab from "./labs/RedshiftLab";
+import CMBRLab from "./labs/CMBRLab";
+import HubbleLab from "./labs/HubbleLab";
 
 /* ---------- scroll progress hook (shared convention) ---------- */
 function useScrollProgress() {
@@ -48,24 +58,173 @@ function QuickCheck({ statement, answer, explanation }: { statement: string; ans
   );
 }
 
-/* ---------- checkpoint / exam placeholders (filled in later phases) ---------- */
+/* ---------- checkpoint / exam ---------- */
 type QuizQuestion = { question: string; options: string[]; answer: number; why: string };
-const quizQuestions: QuizQuestion[] = [];
+const quizQuestions: QuizQuestion[] = [
+  {
+    question: "Day and night are caused mainly by",
+    options: ["Earth orbiting the Sun once a day", "Earth rotating on its axis", "The Moon blocking the Sun", "The Sun orbiting Earth"],
+    answer: 1,
+    why: "Earth rotates roughly once every 24 hours, so a given place moves into and out of sunlight.",
+  },
+  {
+    question: "Seasons happen mainly because",
+    options: ["Earth is much closer to the Sun in summer", "Earth's axis is tilted as it orbits the Sun", "The Moon's phases change", "The Sun's fusion rate changes each year"],
+    answer: 1,
+    why: "Tilt changes which hemisphere leans toward the Sun over the year — not primarily distance.",
+  },
+  {
+    question: "Which list is the correct order from the Sun?",
+    options: ["Venus, Mercury, Earth, Mars…", "Mercury, Venus, Earth, Mars…", "Mercury, Earth, Venus, Mars…", "Mars, Earth, Venus, Mercury…"],
+    answer: 1,
+    why: "Mercury, Venus, Earth, Mars, then the gas giants.",
+  },
+  {
+    question: "Average orbital speed is",
+    options: ["v = 2πr / T", "v = r / T", "v = 2πT / r", "v = T / 2πr"],
+    answer: 0,
+    why: "Distance in one orbit is about the circumference 2πr; divide by period T.",
+  },
+  {
+    question: "A light-year measures",
+    options: ["Time", "Speed", "Distance", "Temperature"],
+    answer: 2,
+    why: "It is the distance light travels in one year (~9.5×10¹⁵ m).",
+  },
+  {
+    question: "After the stable period, a Sun-like star typically becomes a",
+    options: ["Black hole directly", "Red giant then white dwarf", "Neutron star only", "Protostar again"],
+    answer: 1,
+    why: "Low/medium-mass path: red giant → planetary nebula + white dwarf.",
+  },
+  {
+    question: "Redshift of distant galaxies is evidence that",
+    options: ["Galaxies are getting bluer", "The Universe is expanding", "Stars are all cooling", "The Milky Way is the only galaxy"],
+    answer: 1,
+    why: "Longer observed wavelengths from recession support expansion / Big Bang.",
+  },
+  {
+    question: "CMBR is observed",
+    options: ["Only near the Sun", "Only in the galactic centre", "From all directions in space", "Only after supernovae"],
+    answer: 2,
+    why: "Supplement: microwave background fills the sky — stretched early radiation.",
+  },
+  {
+    question: "Hubble's constant is",
+    options: ["H₀ = v × d", "H₀ = v / d", "H₀ = d / v²", "H₀ = 2πr / T"],
+    answer: 1,
+    why: "H₀ = recessional speed divided by distance.",
+  },
+  {
+    question: "An estimate of the age of the Universe is",
+    options: ["H₀", "1 / H₀", "v × d", "2πr"],
+    answer: 1,
+    why: "Winding expansion back gives a timescale of order 1/H₀.",
+  },
+];
 
 type ExamQuestion = { tag: string; marks: number; question: string; scheme: string[] };
-const examQuestions: ExamQuestion[] = [];
-
-function LabPlaceholder({ label, title }: { label: string; title: string }) {
-  return (
-    <div className="lab-shell space" aria-label={`${title} — coming soon`}>
-      <div className="lab-header">
-        <div><span className="mini-label">{label}</span><h3>{title}</h3></div>
-        <div className="big-reading"><span>Status</span><strong>Soon</strong></div>
-      </div>
-      <p className="explain">Interactive model will be wired in a later build phase.</p>
-    </div>
-  );
-}
+const examQuestions: ExamQuestion[] = [
+  {
+    tag: "Q1 · calculate",
+    marks: 3,
+    question: "A moon orbits a planet with average radius 4.0 × 10⁸ m and period 2.0 × 10⁶ s. Calculate its average orbital speed.",
+    scheme: [
+      "v = 2πr / T (1)",
+      "v = 2π × 4.0×10⁸ / 2.0×10⁶ (1)",
+      "v = 1.3 × 10³ m/s (2 s.f. / consistent rounding) (1)",
+    ],
+  },
+  {
+    tag: "Q2 · explain",
+    marks: 3,
+    question: "Explain why it is summer in the Northern Hemisphere when it is winter in the Southern Hemisphere.",
+    scheme: [
+      "Earth's axis is tilted (1)",
+      "During northern summer the Northern Hemisphere leans toward the Sun (1)",
+      "The Southern Hemisphere then leans away / receives less direct sunlight / shorter days (1)",
+    ],
+  },
+  {
+    tag: "Q3 · describe",
+    marks: 3,
+    question: "Describe the differences between the four planets nearest the Sun and the four furthest, and link one difference to the accretion model.",
+    scheme: [
+      "Inner: rocky / smaller; outer: gaseous / larger (1)",
+      "Any second clear contrast (density, moons, rings, etc.) (1)",
+      "Nearer the Sun only rock/metal condensed / outer ices and gases could build giants (1)",
+    ],
+  },
+  {
+    tag: "Q4 · calculate",
+    marks: 2,
+    question: "Light travels at 3.0 × 10⁸ m/s. How long does light take to travel 1.5 × 10¹¹ m from the Sun to Earth?",
+    scheme: [
+      "t = d/c = 1.5×10¹¹ / 3.0×10⁸ (1)",
+      "t = 500 s (≈ 8.3 min) (1)",
+    ],
+  },
+  {
+    tag: "Q5 · explain",
+    marks: 3,
+    question: "Explain what keeps Earth in orbit around the Sun.",
+    scheme: [
+      "The Sun's gravitational attraction / gravity (1)",
+      "Sun holds most of the Solar System's mass (1)",
+      "Gravity provides the inward (centripetal) force for the orbit (1)",
+    ],
+  },
+  {
+    tag: "Q6 · describe",
+    marks: 4,
+    question: "Outline the life cycle of a star much more massive than the Sun, from nebula to remnant.",
+    scheme: [
+      "Nebula → protostar → stable massive star (1)",
+      "Red supergiant (1)",
+      "Supernova (1)",
+      "Neutron star or black hole (1)",
+    ],
+  },
+  {
+    tag: "Q7 · explain",
+    marks: 3,
+    question: "Explain how redshift of light from distant galaxies supports the Big Bang theory.",
+    scheme: [
+      "Observed wavelength longer / spectral lines shifted to red (1)",
+      "Suggests galaxies are receding / space expanding (1)",
+      "Winding expansion back → matter once closer / hot dense beginning (1)",
+    ],
+  },
+  {
+    tag: "Q8 · calculate",
+    marks: 3,
+    question: "A galaxy recedes at 6.6 × 10⁵ m/s and is 3.0 × 10²³ m away. Calculate H₀ = v/d and estimate the age of the Universe as 1/H₀.",
+    scheme: [
+      "H₀ = v/d = 6.6×10⁵ / 3.0×10²³ = 2.2×10⁻¹⁸ s⁻¹ (1)",
+      "Age = 1/H₀ = 4.5×10¹⁷ s (1)",
+      "≈ 1.4×10¹⁰ years (order-of-magnitude OK) (1)",
+    ],
+  },
+  {
+    tag: "Q9 · describe",
+    marks: 2,
+    question: "State what CMBR is and where it is detected.",
+    scheme: [
+      "Cosmic microwave background radiation / leftover early-Universe radiation now in microwave band (1)",
+      "Detected from all directions / everywhere in space around us (1)",
+    ],
+  },
+  {
+    tag: "Q10 · explain",
+    marks: 3,
+    question: "In an elliptical orbit, a planet moves faster when closer to the Sun. Explain in terms of energy.",
+    scheme: [
+      "Closer → lower gravitational potential energy (1)",
+      "Total energy conserved (1)",
+      "So kinetic energy / speed is greater near the Sun (1)",
+    ],
+  },
+];
 
 /* =====================================================================
    Page
@@ -118,7 +277,6 @@ export default function SpacePhysicsPage() {
           <p>From day and night on a tilted Earth to stellar life cycles, redshift and the Hubble age estimate — build Topic 6 with models where every control changes a real orbital, stellar or cosmological idea.</p>
           <div className="hero-actions">
             <a className="primary-button" href="#overview">Start the lesson <span>↓</span></a>
-            <a className="advanced-labs-button" href="../chapters/">All chapters <span>↗</span></a>
             <span className="time-note"><b>60–85 min</b> interactive lesson</span>
           </div>
         </div>
@@ -188,10 +346,10 @@ export default function SpacePhysicsPage() {
             <p>Name the planets in order, contrast rocky inner worlds with giant outer ones via accretion, and use the Sun&apos;s gravity to keep objects in orbit.</p>
           </div>
         </div>
-        <LabPlaceholder label="6.1.2 · Solar System" title="Build the planetary order" />
-        <LabPlaceholder label="6.1.2 · gravity & orbits" title="What force keeps a planet in orbit?" />
-        <LabPlaceholder label="6.1.2 · light travel" title="How long does sunlight take?" />
-        <LabPlaceholder label="6.1.2 · Supplement · planetary data" title="Read the planetary data table" />
+        <SolarSystemLab />
+        <OrbitGravityLab />
+        <LightTravelLab />
+        <PlanetaryDataLab />
         <div className="micro-checks">
           <QuickCheck statement="The four planets nearest the Sun are gaseous and large." answer={false} explanation="The four nearest are rocky and relatively small; the four furthest are gaseous and large — a pattern the accretion model helps explain." />
           <QuickCheck statement="The force that keeps Earth in orbit around the Sun is the Sun's gravitational attraction." answer={true} explanation="The Sun holds most of the Solar System's mass, so its gravity provides the centripetal force for planetary orbits." />
@@ -208,9 +366,9 @@ export default function SpacePhysicsPage() {
             <p>The Sun is mostly hydrogen and helium and radiates IR, visible and UV. Distances jump to light-years; massive and less-massive stars take different paths after the fuel runs out.</p>
           </div>
         </div>
-        <LabPlaceholder label="6.2.1 · the Sun" title="What kind of star is the Sun?" />
-        <LabPlaceholder label="6.2.2 · light-years" title="Measure distance in light-years" />
-        <LabPlaceholder label="6.2.2 · life cycle" title="Follow a star from nebula to remnant" />
+        <SunStarLab />
+        <LightYearLab />
+        <StarLifecycleLab />
         <div className="micro-checks">
           <QuickCheck statement="The Sun is a medium-sized star made mostly of hydrogen and helium." answer={true} explanation="That is the Core description: medium size, mostly H and He, radiating mainly in IR, visible and UV." />
           <QuickCheck statement="A light-year is a unit of time equal to one year." answer={false} explanation="A light-year is a distance — how far light travels in one year in vacuum (about 9.5 × 10¹⁵ m)." />
@@ -227,9 +385,9 @@ export default function SpacePhysicsPage() {
             <p>Distant galaxies look redshifted; that expansion, with CMBR and H₀ = v/d, supports the idea that the Universe began from a hot dense state.</p>
           </div>
         </div>
-        <LabPlaceholder label="6.2.3 · redshift" title="Stretch the wavelength — watch redshift" />
-        <LabPlaceholder label="6.2.3 · Supplement · CMBR" title="Why is the sky filled with microwaves?" />
-        <LabPlaceholder label="6.2.3 · Supplement · Hubble" title="H₀ = v/d and the age estimate" />
+        <RedshiftLab />
+        <CMBRLab />
+        <HubbleLab />
         <div className="micro-checks">
           <QuickCheck statement="Redshift means the observed wavelength of light from a receding galaxy is longer than when it was emitted." answer={true} explanation="Redshift is an increase in observed wavelength for receding sources — distant galaxies appear redshifted compared with light emitted on Earth." />
           <QuickCheck statement="CMBR is only detected near the Milky Way's centre." answer={false} explanation="Supplement: cosmic microwave background radiation is observed at all points in space around us — leftover radiation stretched into the microwave band as the Universe expanded." />
@@ -237,22 +395,21 @@ export default function SpacePhysicsPage() {
       </section>
 
       {/* Exam practice */}
-      <section className="lesson-section" id="practice">
+      <section className="lesson-section practice-section" id="practice">
         <div className="section-heading">
           <span className="section-number">06</span>
           <div>
-            <span className="eyebrow">Exam practice</span>
-            <h2>Original structured questions.</h2>
-            <p>Work in command-word mode. Reveal mark points only after you have attempted an answer. Full set arrives in the final build phase.</p>
+            <span className="eyebrow">Exam practice · space physics</span>
+            <h2>Answer, then reveal the mark points.</h2>
+            <p>Original questions written to match common assessment patterns. Plan an answer before revealing the scheme.</p>
           </div>
         </div>
         <div className="exam-list">
-          {examQuestions.length === 0 ? (
-            <article><span>Scaffold</span><h3>Exam questions will be added in the final phase.</h3><p>Expect calculate, describe and explain items covering orbital speed, planetary data, stellar life cycle, redshift and Hubble.</p></article>
-          ) : examQuestions.map((item, index) => (
-            <article key={item.tag}>
-              <span>{item.tag} · {item.marks} marks</span>
-              <h3>{item.question}</h3>
+          {examQuestions.map((item, index) => (
+            <article className="exam-card" key={item.tag}>
+              <div className="exam-meta"><span>{item.tag}</span><b>[{item.marks} marks]</b></div>
+              <p>{item.question}</p>
+              <textarea aria-label={`Answer for question ${index + 1}`} placeholder="Plan your answer here…" />
               <button onClick={() => setRevealed((old) => ({ ...old, [index]: !old[index] }))}>{revealed[index] ? "Hide mark points" : "Reveal mark points"}</button>
               {revealed[index] && <ol>{item.scheme.map((point) => <li key={point}>{point}</li>)}</ol>}
             </article>
@@ -272,7 +429,7 @@ export default function SpacePhysicsPage() {
           <div>
             <span className="eyebrow">Retrieval map</span>
             <h2>Rebuild each branch from memory.</h2>
-            <p>Cover the page and try to reconstruct the six branches, then check. Branch detail is completed in the final phase.</p>
+            <p>Cover the page and try to reconstruct the six branches, then check.</p>
           </div>
         </div>
         <div className="mindmap">
@@ -293,18 +450,16 @@ export default function SpacePhysicsPage() {
           <div>
             <span className="eyebrow">Final checkpoint</span>
             <h2>Ten questions. Instant feedback.</h2>
-            <p>Your answers are saved in this browser under <code>igcse-space-progress</code> so you can return later. Questions arrive in the final phase.</p>
+            <p>Your answers are saved in this browser so you can return later.</p>
           </div>
         </div>
         <div className="score-card">
-          <div><span>Checkpoint score</span><b>{score}<small>/{Math.max(quizQuestions.length, 10)}</small></b></div>
-          <div className="score-track"><i style={{ width: `${quizQuestions.length ? (score / quizQuestions.length) * 100 : 0}%` }} /></div>
+          <div><span>Checkpoint score</span><b>{score}<small>/{quizQuestions.length}</small></b></div>
+          <div className="score-track"><i style={{ width: `${(score / quizQuestions.length) * 100}%` }} /></div>
           <span>Misconception-focused — read the feedback on every answer.</span>
         </div>
         <div className="quiz-list">
-          {quizQuestions.length === 0 ? (
-            <article><span>Scaffold</span><h3>Checkpoint questions will be added in the final phase.</h3><p>Ten original multiple-choice items will cover Earth–Moon geometry, Solar System misconceptions, stellar life cycle and cosmology.</p></article>
-          ) : quizQuestions.map((question, index) => {
+          {quizQuestions.map((question, index) => {
             const answered = answers[index] !== undefined;
             return (
               <article key={question.question}>
