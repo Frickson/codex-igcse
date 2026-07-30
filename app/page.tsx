@@ -1105,12 +1105,14 @@ export default function Home() {
         <a href="#top" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Chapter 4</small></span></a>
         <nav aria-label="Lesson sections">
           {sections.slice(0, 5).map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}
+          <a href="chapter-5/">Chapter 5 →</a>
         </nav>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>Contents</button>
       </header>
       {menuOpen && (
         <div className="mobile-menu">
           {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          <a href="chapter-5/" onClick={() => setMenuOpen(false)}>Chapter 5 · Nuclear physics →</a>
         </div>
       )}
 
@@ -1122,6 +1124,7 @@ export default function Home() {
           <div className="hero-actions">
             <a href="#overview" className="primary-button">Begin the fieldwork <span>↓</span></a>
             <a href="electromagnetic-labs/" className="advanced-labs-button">Generator &amp; Motor Labs <span>→</span></a>
+            <a href="chapter-5/" className="advanced-labs-button">Chapter 5 · Nuclear physics <span>→</span></a>
             <span className="time-note"><b>45–70 min</b> interactive lesson</span>
           </div>
         </div>
