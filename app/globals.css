@@ -628,9 +628,17 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 
 /* ===================== Chapter 6 · Space physics ===================== */
 .space-stage { position: relative; min-height: 320px; display: grid; place-items: center; border-radius: 16px; background: #eef3f0; overflow: hidden; padding: 8px; }
-.space-stage svg, .space-stage canvas { display: block; width: 100%; height: auto; }
+.space-stage > svg, .space-stage > canvas { display: block; width: 100%; height: auto; }
 .space-stage.tall { min-height: 360px; }
 .space-stage.compact { min-height: 0; }
+.space-stage.planet-stage {
+  min-height: 0;
+  height: auto;
+  overflow: visible;
+  place-items: stretch;
+  align-content: start;
+}
+.space-stage.planet-stage svg { width: auto; height: auto; display: inline-block; }
 .space select { font: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
 .space .num-field { display: inline-flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 800; }
 .space .num-field input[type="number"] { width: 96px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
@@ -641,3 +649,22 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .space .planet-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: white; font-size: 12px; font-weight: 700; cursor: grab; touch-action: none; }
 .space .orbit-slot { min-height: 44px; border: 1px dashed var(--line); border-radius: 12px; padding: 8px; background: #f7faf8; }
 .space .spectrum-bar { height: 18px; border-radius: 999px; background: linear-gradient(90deg, #7b2d8e, #2b6cb0, #22a06b, #e8b339, #d94826); }
+.space .planet-board { width: 100%; padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.space .planet-sun { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #a85f17; }
+.space .planet-drop { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 56px; cursor: pointer; transition: border-color .15s, background .15s; }
+.space .planet-drop.over, .space .planet-drop.primed { border-color: var(--teal); background: #e7f3ef; }
+.space .orbit-index { font-size: 11px; font-weight: 800; color: #5a6a72; flex: 0 0 auto; }
+.space .drop-hint { font-size: 12px; color: #8b97a8; }
+.space .planet-pool { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.space .planet-token {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  min-width: 56px; min-height: 56px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 14px;
+  background: white; cursor: grab; touch-action: none; color: var(--navy);
+}
+.space .planet-token:active { cursor: grabbing; }
+.space .planet-token.selected { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(28,139,116,.18); }
+.space .planet-token.placed { border-style: solid; cursor: pointer; background: #fff; }
+.space .planet-token small { font-size: 10px; font-weight: 800; letter-spacing: .02em; }
+@media (max-width: 700px) {
+  .space .planet-drop { flex-wrap: wrap; }
+}
