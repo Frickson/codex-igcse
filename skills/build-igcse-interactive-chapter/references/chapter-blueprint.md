@@ -24,6 +24,8 @@ Do not start implementation until every in-scope objective has a destination.
 
 Split advanced practicals onto a separate route when they would make the main lesson unwieldy. Add a prominent main-page link to every separate lab page.
 
+The hero call-to-action row should carry only a single primary "Start the lesson" button plus the lesson-time note — do not add an "All chapters" (or similar) redirect button beside it. Cross-chapter navigation already lives in the top nav bar and the prev/next `ChapterNav` at the foot of the page, so a hero redirect is redundant.
+
 ## Interaction acceptance criteria
 
 For every interactive model, record:
