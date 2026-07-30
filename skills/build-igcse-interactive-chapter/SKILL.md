@@ -28,7 +28,12 @@ Create a teaching chapter that connects concise explanations, direct manipulatio
 
 - **Phase 1 — Scaffold:** syllabus map (`docs/chapter-N-syllabus-map.md`), route, `layout.tsx` metadata, `chapters.ts` entry, navigation, and the `page.tsx` shell (hero, route-map, section headings, nav) with empty lab slots. Commit.
 - **Phases 2–4 — Content:** implement the sections in contiguous groups (roughly 2–4 subtopics per phase), one lab component file at a time, wiring each into the page. Commit after each group.
-- **Final phase — Validate & publish:** add `tests/chapter-N.test.mjs`, update the `test` script, run lint/build/test, do browser visual QA at desktop and mobile widths, then open the PR and verify deployment. Commit.
+- **Validation & publish — split into separately committed phases** so a slow test or QA run that hits an API timeout can never lose committed progress:
+  - **Phase 5a — Automated checks:** add `tests/chapter-N.test.mjs`, update the `test` script, run lint/build/test until green. Commit.
+  - **Phase 5b — Browser QA:** live visual + interaction testing at desktop and mobile widths (drag, tap, keyboard, reset, wrong/correct answers, overflow at extremes). Fix and re-run until clean, then commit any fixes. Remove any QA-only tooling (e.g. a Playwright devDependency and its lockfile entries) before the final commit.
+  - **Phase 5c — Publish:** open the PR, present it, and only after explicit approval merge and verify deployment.
+
+Treat any step that can be slow — installing browsers, running the full browser QA sweep, large builds — as its own phase with its own commit; never bundle slow work behind an already-verified checkpoint, or a timeout mid-run discards work you have already proven good.
 
 Work on a dedicated feature branch throughout.
 
