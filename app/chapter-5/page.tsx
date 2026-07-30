@@ -1009,7 +1009,7 @@ export default function NuclearPhysicsPage() {
         <div className="mobile-menu">
           {sections.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
           <a href="../chapters/" onClick={() => setMenuOpen(false)}>All chapters</a>
-          <a href="../chapter-4/" onClick={() => setMenuOpen(false)}>← Chapter 4 lesson</a>
+          <a href="../" onClick={() => setMenuOpen(false)}>← Chapter 4 lesson</a>
         </div>
       )}
 
@@ -1258,7 +1258,7 @@ export default function NuclearPhysicsPage() {
 
       <footer>
         <div><i>Φ</i><b>Field Notes</b><span>Chapter 5 · Nuclear physics · Cambridge IGCSE Physics 0625 (2026–2028)</span></div>
-        <p>Independent educational resource, not endorsed by Cambridge International Education. Interactive models are qualitative teaching aids. <a href="../chapter-4/">Return to the Chapter 4 lesson</a></p>
+        <p>Independent educational resource, not endorsed by Cambridge International Education. Interactive models are qualitative teaching aids. <a href="../">Return to the Chapter 4 lesson</a></p>
       </footer>
     </main>
   );

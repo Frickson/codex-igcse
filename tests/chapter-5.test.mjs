@@ -33,12 +33,12 @@ test("Chapter 5 route carries social + metadata and relative links only", async 
   assert.match(html, /og:image/);
   assert.match(html, /twitter:card/);
   // back-links to Chapter 4 must be relative (no leading-slash absolute paths that break under basePath)
-  assert.match(html, /href="\.\.\/chapter-4\/"/);
+  assert.match(html, /href="\.\.\/"/);
   assert.doesNotMatch(html, /href="\/chapter-5/);
 });
 
-test("Chapter 4 lesson links to Chapter 5", async () => {
-  const html = await readFile(new URL("out/chapter-4/index.html", root), "utf8");
+test("Chapter 4 home links to Chapter 5", async () => {
+  const html = await readFile(new URL("out/index.html", root), "utf8");
   assert.match(html, /chapter-5\//);
   assert.match(html, /Nuclear physics/);
 });
