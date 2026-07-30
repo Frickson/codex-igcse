@@ -24,6 +24,14 @@ Create a teaching chapter that connects concise explanations, direct manipulatio
 3. Preserve unrelated user changes; leave earlier chapters' content untouched and treat them only as templates.
 4. Each chapter is its own route; only trivial chapters belong inline on the home page.
 
+**Build large chapters in phases, and commit after each phase** so a timeout or crash can never lose more than one phase of work. A full syllabus topic (many subtopics, Core + Supplement) is too large to write in one pass. Split the work and keep **one** public chapter page whose laboratories live in **small, per-lab component files** (e.g. `app/chapter-N/labs/DensityLab.tsx`) that the page imports — never a single multi-thousand-line `page.tsx`. A typical phasing:
+
+- **Phase 1 — Scaffold:** syllabus map (`docs/chapter-N-syllabus-map.md`), route, `layout.tsx` metadata, `chapters.ts` entry, navigation, and the `page.tsx` shell (hero, route-map, section headings, nav) with empty lab slots. Commit.
+- **Phases 2–4 — Content:** implement the sections in contiguous groups (roughly 2–4 subtopics per phase), one lab component file at a time, wiring each into the page. Commit after each group.
+- **Final phase — Validate & publish:** add `tests/chapter-N.test.mjs`, update the `test` script, run lint/build/test, do browser visual QA at desktop and mobile widths, then open the PR and verify deployment. Commit.
+
+Work on a dedicated feature branch throughout.
+
 Read [chapter-blueprint.md](references/chapter-blueprint.md) before planning a new chapter or major chapter expansion.
 
 ## 3. Design the learning sequence
