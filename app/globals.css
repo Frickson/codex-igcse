@@ -577,8 +577,8 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .directory-card h2 { margin: 12px 0 0; font: 700 27px var(--serif); color: var(--navy-2); }
 .directory-card p { margin: 0; color: var(--muted); font-size: 14px; flex: 1; }
 .directory-card .dc-go { margin-top: 8px; color: var(--teal); font-weight: 800; font-size: 13px; }
-.directory-card.soon { background: transparent; border-style: dashed; }
-.directory-card.soon .dc-num { background: #ece7db; color: var(--muted); }
+.home-hero { padding-bottom: 28px; }
+.home-chapters { padding-top: 10px; padding-bottom: 90px; }
 
 @media (max-width: 650px) {
   .chapter-nav { grid-template-columns: 1fr; padding-top: 44px; }
