@@ -27,27 +27,27 @@ test("directory carries its own metadata", async () => {
   assert.match(html, /Chapter directory|IGCSE Physics chapters/);
 });
 
-test("home page chapter nav links previous to Chapter 2 and next to Chapter 5", async () => {
+test("home page chapter nav links previous to Chapter 3 and next to Chapter 5", async () => {
   const html = await read("out/index.html");
   assert.match(html, /Chapter navigation/);
   assert.match(html, /Previous/);
-  assert.match(html, /Thermal physics/);
+  assert.match(html, /Waves/);            // Chapter 3 now precedes Chapter 4 (home)
   assert.match(html, /Next/);
   assert.match(html, /Nuclear physics/);
   assert.match(html, /href="chapters\/"/);
-  assert.match(html, /href="chapter-2\/"/);
+  assert.match(html, /href="chapter-3\/"/);
   assert.match(html, /href="chapter-5\/"/);
 });
 
-test("Chapter 2 nav links previous to Chapter 1 and next to Chapter 4", async () => {
+test("Chapter 2 nav links previous to Chapter 1 and next to Chapter 3", async () => {
   const html = await read("out/chapter-2/index.html");
   assert.match(html, /Chapter navigation/);
   assert.match(html, /Previous/);
   assert.match(html, /Motion, forces/);
   assert.match(html, /Next/);
-  assert.match(html, /Electricity &(amp;)? magnetism/);
+  assert.match(html, /Waves/);            // Chapter 3 now follows Chapter 2
   assert.match(html, /href="\.\.\/chapter-1\/"/);
-  assert.match(html, /href="\.\.\/"/);
+  assert.match(html, /href="\.\.\/chapter-3\/"/);
 });
 
 test("Chapter 5 has previous-chapter nav pointing back to Chapter 4 and next to Chapter 6", async () => {

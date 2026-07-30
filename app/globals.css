@@ -601,6 +601,19 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .motion .drag-handle { cursor: grab; touch-action: none; }
 .motion .drag-handle:active { cursor: grabbing; }
 
+/* ===================== Chapter 3 · Waves ===================== */
+.waves-stage { position: relative; min-height: 320px; display: grid; place-items: center; border-radius: 16px; background: #eef3f0; overflow: hidden; padding: 8px; }
+.waves-stage svg, .waves-stage canvas { display: block; width: 100%; height: auto; }
+.waves-stage.tall { min-height: 360px; }
+.waves-stage.compact { min-height: 0; }
+.waves select { font: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
+.waves .num-field { display: inline-flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 800; }
+.waves .num-field input[type="number"] { width: 96px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
+.waves .num-field.wide { width: 100%; }
+.waves .num-field input[type="range"] { width: 100%; accent-color: var(--teal); }
+.waves .drag-handle { cursor: grab; touch-action: none; }
+.waves .drag-handle:active { cursor: grabbing; }
+
 /* ===================== Chapter 2 · Thermal physics ===================== */
 .thermal-hero-badge {
   position: relative; z-index: 3; width: 128px; height: 128px; border-radius: 50%;
