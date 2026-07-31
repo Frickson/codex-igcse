@@ -252,7 +252,7 @@ export default function SpacePhysicsPage() {
   };
 
   return (
-    <main id="top">
+    <main id="top" className="space-page">
       <div className="scroll-progress" style={{ width: `${progress}%` }} />
       <header className="topbar">
         <a href="#top" className="brand"><i>Φ</i><span>Field Notes<small>IGCSE Physics · Chapter 6</small></span></a>
