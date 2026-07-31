@@ -320,8 +320,17 @@ function ElectrostaticLab() {
   const [material, setMaterial] = useState<"insulator" | "conductor">("insulator");
   const [rubs, setRubs] = useState(0);
   const [nearPaper, setNearPaper] = useState(false);
+  const [rubbing, setRubbing] = useState(false);
   const charge = material === "insulator" ? Math.min(rubs, 6) : 0;
   const attracted = nearPaper && charge > 0;
+
+  const rubWithCloth = () => {
+    if (rubbing) return;
+    setNearPaper(false);
+    setRubbing(true);
+    setRubs((value) => Math.min(6, value + 1));
+    window.setTimeout(() => setRubbing(false), 900);
+  };
 
   return (
     <div className="lab-shell electrostatic-lab">
@@ -332,8 +341,9 @@ function ElectrostaticLab() {
           <button className={material === "conductor" ? "active" : ""} aria-pressed={material === "conductor"} onClick={() => { setMaterial("conductor"); setRubs(0); }}>Metal in hand</button>
         </div>
       </div>
-      <div className={`static-stage ${nearPaper ? "testing" : ""} ${attracted ? "attracting" : ""}`} data-charge={charge} data-attracted={attracted}>
+      <div className={`static-stage ${nearPaper ? "testing" : ""} ${attracted ? "attracting" : ""} ${rubbing ? "rubbing" : ""}`} data-charge={charge} data-attracted={attracted}>
         <div className="cloth"><span>cloth</span><i /></div>
+        {rubbing && <div className="electron-transfer" aria-label="Electrons transferring from the cloth to the rod">{Array.from({ length: 3 }, (_, index) => <i key={index}>−</i>)}</div>}
         <div className={`charged-rod ${charge ? "charged" : ""}`}>
           {Array.from({ length: charge }, (_, index) => <i key={index}>−</i>)}
           <b>{material === "insulator" ? "plastic rod" : "metal rod"}</b>
@@ -341,11 +351,13 @@ function ElectrostaticLab() {
         <div className="paper-bits">{Array.from({ length: 6 }, (_, index) => <i key={index} />)}<span>paper</span></div>
       </div>
       <div className="lab-action-row">
-        <button onClick={() => setRubs((value) => Math.min(6, value + 1))}>Rub with cloth</button>
+        <button onClick={rubWithCloth} disabled={rubbing}>{rubbing ? "Transferring electrons…" : "Rub with cloth"}</button>
         <button onClick={() => setNearPaper((value) => !value)}>{nearPaper ? "Move rod away" : "Move near paper"}</button>
         <button className="secondary-action" onClick={() => { setRubs(0); setNearPaper(false); }}>Reset</button>
       </div>
-      <p className="lab-note">
+      <p className="lab-note" aria-live="polite">
+        {rubbing ? "Electrons are moving from the cloth onto the rod…" : null}
+        {!rubbing && " "}
         {material === "conductor"
           ? rubs > 0
             ? "Rubbing can transfer electrons, but the metal is held in your hand, so the charge immediately flows through your body to Earth. The rod stays neutral and the paper stays still."
