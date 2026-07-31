@@ -98,7 +98,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .section-heading { display: grid; grid-template-columns: 70px 1fr; gap: 28px; margin-bottom: 48px; }
 .section-number { font: italic 24px var(--serif); color: var(--copper); padding-top: 19px; }
 .section-heading h2 { max-width: 760px; margin: 6px 0 10px; font: 700 clamp(34px, 4.5vw, 56px)/1.02 var(--serif); letter-spacing: -.03em; color: var(--navy-2); }
-.section-heading p { max-width: 720px; margin: 0; color: var(--muted); font-size: 16px; }
+.section-heading p { max-width: 720px; margin: 0; color: var(--muted); font: 400 16px/1.6 var(--sans); }
 
 .syllabus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .syllabus-grid article { min-height: 215px; padding: 25px; background: var(--cream); border: 1px solid var(--line); border-radius: 18px; transition: .22s ease; }
