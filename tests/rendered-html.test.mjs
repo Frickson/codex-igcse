@@ -78,8 +78,12 @@ test("paper attraction requires a charged rod near the paper", async () => {
     readFile(new URL("app/globals.css", root), "utf8"),
   ]);
   assert.match(source, /const attracted = nearPaper && charge > 0/);
+  assert.match(source, /Electrons are moving from the cloth onto the rod/);
+  assert.match(source, /className=\"electron-transfer\"/);
   assert.match(source, /data-attracted=\{attracted\}/);
   assert.match(css, /\.attracting \.paper-bits i/);
+  assert.match(css, /@keyframes electron-flight/);
+  assert.match(css, /\.static-stage\.rubbing \.cloth/);
   assert.doesNotMatch(css, /\.testing \.paper-bits i/);
 });
 
