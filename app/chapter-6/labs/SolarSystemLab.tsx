@@ -12,7 +12,7 @@ type Planet = (typeof ORDER)[number];
 const META: Record<Planet, { rocky: boolean; size: number; fill: string; ring?: boolean; bands?: boolean }> = {
   Mercury: { rocky: true, size: 18, fill: "#9aa3ad" },
   Venus: { rocky: true, size: 24, fill: "#d4b483" },
-  Earth: { rocky: true, size: 26, fill: "#3d8f7a" },
+  Earth: { rocky: true, size: 26, fill: "#347fc4" },
   Mars: { rocky: true, size: 22, fill: "#c45c3e" },
   Jupiter: { rocky: false, size: 40, fill: "#d4924a", bands: true },
   Saturn: { rocky: false, size: 36, fill: "#e0c070", ring: true },
@@ -61,8 +61,26 @@ function PlanetIcon({ name, selected }: { name: Planet; selected?: boolean }) {
           <path d={`M${box / 2 - s / 2 + 2} ${box / 2 + 4} Q ${box / 2} ${box / 2 + 1}, ${box / 2 + s / 2 - 2} ${box / 2 + 5}`} fill="none" stroke="#f0d0a0" strokeWidth={2} opacity={0.6} />
         </>
       )}
+      {name === "Mercury" && (
+        <>
+          <circle cx={box / 2 - 3} cy={box / 2 - 2} r={2} fill="#717982" opacity={0.75} />
+          <circle cx={box / 2 + 4} cy={box / 2 + 4} r={1.5} fill="#717982" opacity={0.65} />
+        </>
+      )}
+      {name === "Venus" && (
+        <path d={`M${box / 2 - 8} ${box / 2 + 1} Q ${box / 2} ${box / 2 - 5}, ${box / 2 + 8} ${box / 2}`} fill="none" stroke="#f3d59f" strokeWidth={2.5} opacity={0.8} />
+      )}
       {name === "Earth" && (
-        <path d={`M${box / 2 - 4} ${box / 2 - 2} q 4 -5 8 0 q -2 6 -8 4 z`} fill="#2f6b9a" opacity={0.85} />
+        <>
+          <path d={`M${box / 2 - 7} ${box / 2 - 3} q 4 -6 8 -1 q -1 5 -5 6 z`} fill="#62a56f" />
+          <path d={`M${box / 2 + 2} ${box / 2 + 1} q 5 -2 6 3 q -4 5 -7 2 z`} fill="#62a56f" />
+        </>
+      )}
+      {name === "Mars" && (
+        <>
+          <circle cx={box / 2 - 4} cy={box / 2 + 2} r={2} fill="#8d3d2e" opacity={0.65} />
+          <path d={`M${box / 2 - 5} ${box / 2 - s / 2 + 3} q 5 -3 10 0`} fill="none" stroke="#f0c7b7" strokeWidth={2} />
+        </>
       )}
     </svg>
   );
@@ -130,52 +148,64 @@ export default function SolarSystemLab() {
         <div><span className="mini-label">6.1.2 · Solar System</span><h3>Build the planetary order</h3></div>
         <div className="big-reading"><span>Order from Sun</span><strong>{correct ? "Correct" : filled ? "Check again" : `${slots.filter(Boolean).length}/8`}</strong></div>
       </div>
-      <div className="lab-grid">
+      <div className="solar-system-layout">
         <div className="space-stage planet-stage" aria-label="Eight orbital slots from the Sun outward">
           <div className="planet-board">
+            <div className="solar-orbits" aria-hidden="true">
+              {ORDER.map((planet) => <i key={planet} />)}
+            </div>
             <div className="planet-sun" aria-hidden="true">
-              <svg width={36} height={36} viewBox="0 0 36 36"><circle cx={18} cy={18} r={14} fill="#e8b339" /><circle cx={18} cy={18} r={14} fill="#fff" opacity={0.15} /></svg>
+              <svg width={126} height={126} viewBox="0 0 126 126">
+                <defs>
+                  <radialGradient id="sun-core">
+                    <stop offset="0" stopColor="#fff5a8" />
+                    <stop offset=".5" stopColor="#ffc43d" />
+                    <stop offset="1" stopColor="#e66b18" />
+                  </radialGradient>
+                </defs>
+                <circle cx={63} cy={63} r={56} fill="url(#sun-core)" />
+                <circle cx={63} cy={63} r={59} fill="none" stroke="#ffb52e" strokeWidth={5} opacity={0.35} />
+              </svg>
               <span>Sun</span>
             </div>
-            {slots.map((name, i) => (
-              <div
-                key={i}
-                className={`orbit-slot planet-drop${dragOver === i ? " over" : ""}${picked ? " primed" : ""}`}
-                role="button"
-                tabIndex={0}
-                aria-label={name ? `Orbit ${i + 1}: ${name}. Activate to remove.` : `Orbit ${i + 1}: empty. Drop or place a planet here.`}
-                onDragOver={(e) => { e.preventDefault(); setDragOver(i); }}
-                onDragLeave={() => setDragOver((d) => (d === i ? null : d))}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const n = (e.dataTransfer.getData("text/planet") || dragName.current) as Planet | null;
-                  if (n && ORDER.includes(n)) place(n, i);
-                  dragName.current = null;
-                }}
-                onClick={() => onSlotActivate(i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+            <div className="solar-planet-row">
+              {slots.map((name, i) => (
+                <div
+                  key={i}
+                  className={`orbit-slot planet-drop${dragOver === i ? " over" : ""}${picked ? " primed" : ""}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={name ? `Orbit ${i + 1}: ${name}. Activate to remove.` : `Orbit ${i + 1}: empty. Drop or place a planet here.`}
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(i); }}
+                  onDragLeave={() => setDragOver((d) => (d === i ? null : d))}
+                  onDrop={(e) => {
                     e.preventDefault();
-                    onSlotActivate(i);
-                  }
-                }}
-              >
-                <span className="orbit-index">Orbit {i + 1}</span>
-                {name ? (
-                  <div className="planet-token placed">
-                    <PlanetIcon name={name} />
-                    {(showNames || correct) && <small>{name}</small>}
-                  </div>
-                ) : (
-                  <span className="drop-hint">{picked ? "Tap to place" : "Drop here"}</span>
-                )}
-              </div>
-            ))}
+                    const n = (e.dataTransfer.getData("text/planet") || dragName.current) as Planet | null;
+                    if (n && ORDER.includes(n)) place(n, i);
+                    dragName.current = null;
+                  }}
+                  onClick={() => onSlotActivate(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSlotActivate(i);
+                    }
+                  }}
+                >
+                  <span className="orbit-index">{i + 1}</span>
+                  <span className="planet-position">
+                    {name ? <PlanetIcon name={name} /> : <i className="empty-orbit" />}
+                  </span>
+                  <small>{name && (showNames || correct) ? name : picked ? "Place" : `Orbit ${i + 1}`}</small>
+                </div>
+              ))}
+            </div>
+            <span className="diagram-scale-note">Planet sizes and orbit spacing are illustrative, not to scale.</span>
           </div>
         </div>
         <div className="side">
           <p className="explain" style={{ marginBottom: 8 }}>
-            Drag a planet onto an orbit, or tap a planet then tap a slot. Outer icons are larger gas giants; inner ones are smaller and rockier.
+            Drag each planet into the diagram from the Sun outward. On touch screens, tap a planet and then tap its orbit. Keyboard users can select and place with Enter or Space.
           </p>
           <div className="planet-pool" role="group" aria-label="Planets still to place">
             {pool.map((p) => (
@@ -215,6 +245,9 @@ export default function SolarSystemLab() {
             accretion near the Sun left rock/metal solids, while farther out ices and gases built giants.
           </p>
           {correct && <p className="explain" style={{ marginTop: 8, color: "#146653" }}>Order matches the syllabus list from the Sun outward. Names reveal automatically when correct.</p>}
+          <span className="sr-only" aria-live="polite">
+            {correct ? "Correct planetary order." : filled ? "All orbits filled. Check the order again." : `${slots.filter(Boolean).length} of 8 planets placed.`}
+          </span>
         </div>
       </div>
     </div>
