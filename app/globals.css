@@ -327,10 +327,10 @@ input[type="range"] { display: block; width: 100%; height: 44px; margin-top: 2px
 .force-prediction { margin-top: 18px; display: grid; grid-template-columns: auto auto auto 1fr; gap: 10px; align-items: center; padding: 15px; border-radius: 13px; background: #eef3f0; }.force-prediction > span { color: var(--navy); font-size: 10px; font-weight: 900; }.force-prediction button { border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; background: white; color: var(--navy); font-size: 9px; font-weight: 900; }.force-prediction button.selected { border-color: var(--teal); background: var(--mint); }.force-prediction p { margin: 0; color: var(--muted); font-size: 9px; }
 
 .static-stage { position: relative; height: 250px; border-radius: 18px; background: #eef3f0; overflow: hidden; }
-.cloth { position: absolute; left: 8%; top: 48px; width: 115px; height: 130px; border-radius: 45% 55% 50% 45%; background: #e7b85f; transform: rotate(-8deg); display: grid; place-items: center; color: #76521f; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.cloth { position: absolute; left: 6%; top: 48px; width: 125px; height: 130px; border-radius: 45% 55% 50% 45%; background: #e7b85f; transform: rotate(-8deg); display: grid; place-items: center; color: #76521f; font-size: 10px; font-weight: 900; text-transform: uppercase; }
 .cloth i { position: absolute; inset: 12px; border: 2px dashed rgba(118,82,31,.35); border-radius: inherit; }
 .static-stage.rubbing .cloth { animation: cloth-rub .9s ease-in-out; }
-.charged-rod { position: absolute; z-index: 3; left: 29%; top: 93px; width: 45%; height: 36px; border-radius: 999px; background: var(--navy); color: white; transition: transform .45s; box-shadow: 0 9px 18px rgba(16,42,56,.18); }
+.charged-rod { position: absolute; z-index: 3; left: 26%; top: 93px; width: 45%; height: 36px; border-radius: 999px; background: var(--navy); color: white; transition: transform .45s; box-shadow: 0 9px 18px rgba(16,42,56,.18); }
 .static-stage.rubbing .charged-rod { animation: rod-rub .9s ease-in-out; }
 .static-stage.testing .charged-rod { transform: translateX(24%); }
 .charged-rod > b { position: absolute; left: 50%; top: 42px; transform: translateX(-50%); white-space: nowrap; color: var(--muted); font-size: 9px; text-transform: uppercase; }
@@ -338,8 +338,8 @@ input[type="range"] { display: block; width: 100%; height: 44px; margin-top: 2px
 .electron-transfer { position: absolute; z-index: 4; left: 24%; top: 94px; width: 150px; height: 28px; pointer-events: none; }
 .electron-transfer i { position: absolute; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--mint); color: var(--teal); font-style: normal; font-weight: 900; animation: electron-flight .9s cubic-bezier(.3,.8,.4,1) both; }
 .electron-transfer i:nth-child(2) { animation-delay: .1s; }.electron-transfer i:nth-child(3) { animation-delay: .2s; }
-@keyframes cloth-rub { 0%,100% { transform: rotate(-8deg) translateX(0); } 25% { transform: rotate(-4deg) translateX(24px); } 55% { transform: rotate(-11deg) translateX(5px); } 78% { transform: rotate(-4deg) translateX(22px); } }
-@keyframes rod-rub { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-16px); } 55% { transform: translateX(0); } 78% { transform: translateX(-12px); } }
+@keyframes cloth-rub { 0%,100% { transform: rotate(-8deg) translateX(0); } 25% { transform: rotate(-4deg) translateX(18px); } 55% { transform: rotate(-11deg) translateX(2px); } 78% { transform: rotate(-4deg) translateX(16px); } }
+@keyframes rod-rub { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 55% { transform: translateX(2px); } 78% { transform: translateX(-8px); } }
 @keyframes electron-flight { 0% { left: 0; top: 12px; opacity: 0; transform: scale(.7); } 18% { opacity: 1; } 100% { left: 132px; top: 3px; opacity: 0; transform: scale(1); } }
 .paper-bits { position: absolute; right: 6%; top: 65px; width: 110px; height: 130px; }
 .paper-bits i { position: absolute; width: 22px; height: 14px; background: white; border: 1px solid var(--line); transform: rotate(12deg); transition: transform .4s; }
