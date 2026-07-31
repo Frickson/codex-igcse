@@ -330,7 +330,7 @@ input[type="range"] { display: block; width: 100%; height: 44px; margin-top: 2px
 .cloth { position: absolute; left: 6%; top: 48px; width: 125px; height: 130px; border-radius: 45% 55% 50% 45%; background: #e7b85f; transform: rotate(-8deg); display: grid; place-items: center; color: #76521f; font-size: 10px; font-weight: 900; text-transform: uppercase; }
 .cloth i { position: absolute; inset: 12px; border: 2px dashed rgba(118,82,31,.35); border-radius: inherit; }
 .static-stage.rubbing .cloth { animation: cloth-rub .9s ease-in-out; }
-.charged-rod { position: absolute; z-index: 3; left: 26%; top: 93px; width: 45%; height: 36px; border-radius: 999px; background: var(--navy); color: white; transition: transform .45s; box-shadow: 0 9px 18px rgba(16,42,56,.18); }
+.charged-rod { position: absolute; z-index: 3; left: 20%; top: 93px; width: 45%; height: 36px; border-radius: 999px; background: var(--navy); color: white; transition: transform .45s; box-shadow: 0 9px 18px rgba(16,42,56,.18); }
 .static-stage.rubbing .charged-rod { animation: rod-rub .9s ease-in-out; }
 .static-stage.testing .charged-rod { transform: translateX(24%); }
 .charged-rod > b { position: absolute; left: 50%; top: 42px; transform: translateX(-50%); white-space: nowrap; color: var(--muted); font-size: 9px; text-transform: uppercase; }
@@ -491,7 +491,7 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
   .formula-grid { grid-template-columns: 1fr 1fr; }.formula-grid b { font-size: 21px; }
   .circuit-stage { height: 250px; }.battery { left: 14px; }.series .path-one { inset: 42px 30px; }.parallel .path-one { inset: 35px 30px 130px; }.parallel .path-two { inset: 130px 30px 35px; }.bulb { right: 70px; }.series .bulb-two { right: 190px; }
   .assembly-board { height: 390px; display: grid; grid-template-columns: 1fr 1fr; padding: 38px 28px 120px; }.assembly-wire { inset: 58px 9% 70px; }.drop-socket { width: 100%; min-width: 0; }.drop-socket:nth-of-type(3) { grid-column: 1 / -1; }.assembly-bulb { bottom: 26px; }.assembly-footer { grid-template-columns: 1fr 1fr; }.assembly-footer p { grid-column: 1 / -1; margin-left: 0; }
-  .static-stage.testing .charged-rod { transform: translateX(12%); }.cloth { left: 3%; width: 105px; }.charged-rod { left: 20%; width: 48%; }.static-stage.rubbing .cloth { animation-name: cloth-rub; }.static-stage.rubbing .charged-rod { animation-name: rod-rub; }.paper-bits { right: 1%; }
+  .static-stage.testing .charged-rod { transform: translateX(12%); }.cloth { left: 3%; width: 105px; }.charged-rod { left: 14%; width: 48%; }.static-stage.rubbing .cloth { animation-name: cloth-rub; }.static-stage.rubbing .charged-rod { animation-name: rod-rub; }.paper-bits { right: 1%; }
   .electric-field-stage { height: 270px; }
   .meter-circuit { height: 340px; }.meter-wire { inset: 55px 8%; }.series-slot { left: 12%; }.parallel-slot { right: 9%; bottom: 28px; }.meter-lamp { right: 16%; top: 112px; }
   .iv-workbench { grid-template-columns: 1fr; }.iv-workbench svg { max-height: 330px; }
