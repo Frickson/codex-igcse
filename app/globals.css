@@ -658,11 +658,14 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .space-stage.tall { min-height: 360px; }
 .space-stage.compact { min-height: 0; }
 .space-stage.planet-stage {
-  min-height: 0;
-  height: auto;
-  overflow: visible;
+  min-height: 390px;
+  overflow-x: auto;
+  overflow-y: hidden;
   place-items: stretch;
   align-content: start;
+  padding: 0;
+  background: #071827;
+  scrollbar-color: #5e879e #0c2435;
 }
 .space-stage.planet-stage svg { width: auto; height: auto; display: inline-block; }
 .space select { font: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: white; color: var(--navy); font-weight: 700; }
@@ -675,12 +678,67 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .space .planet-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: white; font-size: 12px; font-weight: 700; cursor: grab; touch-action: none; }
 .space .orbit-slot { min-height: 44px; border: 1px dashed var(--line); border-radius: 12px; padding: 8px; background: #f7faf8; }
 .space .spectrum-bar { height: 18px; border-radius: 999px; background: linear-gradient(90deg, #7b2d8e, #2b6cb0, #22a06b, #e8b339, #d94826); }
-.space .planet-board { width: 100%; padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
-.space .planet-sun { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #a85f17; }
-.space .planet-drop { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 56px; cursor: pointer; transition: border-color .15s, background .15s; }
-.space .planet-drop.over, .space .planet-drop.primed { border-color: var(--teal); background: #e7f3ef; }
-.space .orbit-index { font-size: 11px; font-weight: 800; color: #5a6a72; flex: 0 0 auto; }
-.space .drop-hint { font-size: 12px; color: #8b97a8; }
+.space .solar-system-layout { display: grid; gap: 18px; }
+.space .planet-board {
+  position: relative; width: 100%; min-width: 900px; height: 390px; overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 73% 27%, rgba(255,255,255,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 38% 78%, rgba(160,210,238,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 87% 69%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+    linear-gradient(145deg, #06131f, #0b2940 58%, #071827);
+  background-size: 83px 79px, 119px 103px, 137px 127px, 173px 151px, auto;
+}
+.space .planet-sun {
+  position: absolute; z-index: 3; left: -45px; top: 50%; width: 150px; transform: translateY(-50%);
+  display: grid; justify-items: center; color: #ffd978; font-size: 11px; font-weight: 800;
+  text-shadow: 0 1px 10px #000;
+}
+.space .planet-sun svg { filter: drop-shadow(0 0 22px rgba(255,170,36,.65)); }
+.space .solar-orbits { position: absolute; inset: 0; pointer-events: none; }
+.space .solar-orbits i {
+  position: absolute; left: -165px; top: 50%; border: 1px solid rgba(173,205,220,.27);
+  border-radius: 50%; transform: translateY(-50%) rotate(-4deg);
+}
+.space .solar-orbits i:nth-child(1) { width: 330px; height: 118px; }
+.space .solar-orbits i:nth-child(2) { width: 500px; height: 164px; }
+.space .solar-orbits i:nth-child(3) { width: 680px; height: 210px; }
+.space .solar-orbits i:nth-child(4) { width: 870px; height: 256px; }
+.space .solar-orbits i:nth-child(5) { width: 1080px; height: 306px; }
+.space .solar-orbits i:nth-child(6) { width: 1280px; height: 346px; }
+.space .solar-orbits i:nth-child(7) { width: 1480px; height: 382px; }
+.space .solar-orbits i:nth-child(8) { width: 1680px; height: 420px; }
+.space .solar-planet-row {
+  position: absolute; z-index: 4; inset: 68px 18px 52px 96px;
+  display: grid; grid-template-columns: repeat(8, minmax(82px, 1fr)); align-items: center;
+}
+.space .planet-drop {
+  position: relative; min-width: 0; min-height: 168px; padding: 12px 3px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  border: 1px dashed transparent; border-radius: 42px; background: transparent; cursor: pointer;
+  color: white; transition: border-color .15s, background .15s, transform .15s;
+}
+.space .planet-drop:nth-child(2n) { transform: translateY(18px); }
+.space .planet-drop:nth-child(3n) { transform: translateY(-14px); }
+.space .planet-drop.over, .space .planet-drop.primed {
+  border-color: rgba(123,218,191,.72); background: rgba(62,151,127,.18);
+}
+.space .planet-drop.over { transform: scale(1.04); }
+.space .orbit-index {
+  position: absolute; top: 7px; width: 23px; height: 23px; display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,.35); border-radius: 50%;
+  color: #d8e8ef; font-size: 10px; font-weight: 800;
+}
+.space .planet-position { min-height: 64px; display: grid; place-items: center; }
+.space .planet-drop > small { min-height: 18px; color: #d7e7ee; font-size: 10px; font-weight: 800; text-shadow: 0 1px 7px #000; }
+.space .empty-orbit {
+  width: 38px; height: 38px; border: 2px dashed rgba(219,237,244,.6); border-radius: 50%;
+  background: rgba(255,255,255,.04); box-shadow: 0 0 0 7px rgba(255,255,255,.025);
+}
+.space .diagram-scale-note {
+  position: absolute; z-index: 5; right: 18px; bottom: 13px; color: #9eb7c4;
+  font-size: 9px; font-style: italic;
+}
 .space .planet-pool { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .space .planet-token {
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
@@ -692,5 +750,7 @@ footer > div { display: grid; grid-template-columns: 36px auto; gap: 0 12px; ali
 .space .planet-token.placed { border-style: solid; cursor: pointer; background: #fff; }
 .space .planet-token small { font-size: 10px; font-weight: 800; letter-spacing: .02em; }
 @media (max-width: 700px) {
-  .space .planet-drop { flex-wrap: wrap; }
+  .space-stage.planet-stage { min-height: 350px; }
+  .space .planet-board { height: 350px; }
+  .space .solar-planet-row { top: 48px; }
 }
