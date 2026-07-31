@@ -72,3 +72,11 @@ test("orbital speed and Hubble models compute from inputs", async () => {
   const page = await readFile(new URL("app/chapter-6/page.tsx", root), "utf8");
   assert.match(page, /igcse-space-progress/);
 });
+
+
+test("Chapter 6 Solar System controls share one aligned button row", async () => {
+  const css = await readFile(new URL("app/globals.css", root), "utf8");
+  assert.match(css, /\.space \.chip-row \{ align-items: center; \}/);
+  assert.match(css, /\.space \.chip-row \.reset-button \{ margin: 0; \}/);
+  assert.doesNotMatch(css, /\\n$/);
+});
