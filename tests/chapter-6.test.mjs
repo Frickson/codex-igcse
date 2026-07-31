@@ -78,5 +78,7 @@ test("Chapter 6 Solar System controls share one aligned button row", async () =>
   const css = await readFile(new URL("app/globals.css", root), "utf8");
   assert.match(css, /\.space \.chip-row \{ align-items: center; \}/);
   assert.match(css, /\.space \.chip-row \.reset-button \{ margin: 0; \}/);
+  assert.match(css, /\.space \.explain \{/);
+  assert.match(css, /\.space \.inline-controls button \{/);
   assert.doesNotMatch(css, /\\n$/);
 });
