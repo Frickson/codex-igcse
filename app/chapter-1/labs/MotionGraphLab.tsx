@@ -16,7 +16,7 @@ export default function MotionGraphLab() {
   const [t1, setT1] = useState(8);    // accelerate 0→v1 (s)
   const [t2, setT2] = useState(10);   // constant (s)
   const [t3, setT3] = useState(4);    // decelerate v1→0 (s)
-  const [view, setView] = useState<"vt" | "dt">("vt");
+  const [view, setView] = useState<"vt" | "dt">("dt");
 
   const tEnd = t1 + t2 + t3;
   const aUp = t1 > 0 ? v1 / t1 : 0;
@@ -78,11 +78,18 @@ export default function MotionGraphLab() {
   return (
     <div className="lab-shell motion">
       <div className="lab-header">
-        <div><span className="mini-label">1.2 · motion graphs</span><h3>Read speed, acceleration and distance from a graph</h3></div>
+        <div><span className="mini-label">1.2 · motion graphs</span><h3>Connect the journey to the graph shape</h3></div>
         <div className="rad-select" role="group" aria-label="Graph type">
           <button className={view === "vt" ? "active" : ""} onClick={() => setView("vt")}>Speed–time</button>
           <button className={view === "dt" ? "active" : ""} onClick={() => setView("dt")}>Distance–time</button>
         </div>
+      </div>
+      <div className="graph-reading-banner" aria-live="polite">
+        {view === "dt" ? (
+          <><b>Distance–time:</b><span>read the gradient as speed</span><span>horizontal = at rest</span><span>steeper = faster</span></>
+        ) : (
+          <><b>Speed–time:</b><span>gradient = acceleration</span><span>area = distance</span><span>downward gradient = deceleration</span></>
+        )}
       </div>
       <div className="lab-grid">
         <div className="motion-stage tall"><canvas ref={canvasRef} width={W} height={H} aria-label={`${view === "vt" ? "Speed" : "Distance"}–time graph of a journey lasting ${tEnd} seconds`} /></div>
@@ -105,7 +112,7 @@ export default function MotionGraphLab() {
           <p className="field-note" aria-live="polite">On a speed–time graph the <b>gradient</b> is acceleration ({aUp.toFixed(2)} m/s² while speeding up) and the <b>area</b> underneath is the distance ({dist.toFixed(0)} m). Phase 3&apos;s gradient is negative ({aDown.toFixed(2)} m/s²) — that is deceleration.</p>
         </div>
       </div>
-      <p className="lab-note">Switch to the distance–time view: the same journey now curves upward where the object accelerates and runs straight where the speed is constant, because distance is the running total of the area under the speed–time graph.</p>
+      <p className="lab-note">Both views describe the same journey. Distance–time shows how quickly distance accumulates; speed–time shows how speed changes and lets you recover distance from the area underneath.</p>
     </div>
   );
 }
