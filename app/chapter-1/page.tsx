@@ -6,6 +6,8 @@ import MeasurementLab from "./labs/MeasurementLab";
 import VectorLab from "./labs/VectorLab";
 import MotionGraphLab from "./labs/MotionGraphLab";
 import FreeFallLab from "./labs/FreeFallLab";
+import MeasurementFoundations from "./MeasurementFoundations";
+import MotionFoundations from "./MotionFoundations";
 import MassWeightLab from "./labs/MassWeightLab";
 import DensityLab from "./labs/DensityLab";
 import HookeLab from "./labs/HookeLab";
@@ -332,9 +334,10 @@ export default function MotionForcesEnergyPage() {
           <div>
             <span className="eyebrow">1.1 · physical quantities &amp; measurement</span>
             <h2>Good numbers start with good measurement.</h2>
-            <p>Measure length, volume and time with the right instrument, and average repeats to reduce error. Then separate scalars (size only) from vectors (size and direction).</p>
+            <p>Choose the correct instrument, read it properly and understand what measurement error means. Then distinguish scalars from vectors before combining perpendicular vectors.</p>
           </div>
         </div>
+        <MeasurementFoundations />
         <MeasurementLab />
         <VectorLab />
         <div className="micro-checks">
@@ -349,10 +352,11 @@ export default function MotionForcesEnergyPage() {
           <span className="section-number">03</span>
           <div>
             <span className="eyebrow">1.2 · motion</span>
-            <h2>Speed, velocity, acceleration — read from graphs.</h2>
-            <p>Speed is distance per time; velocity adds direction; acceleration is the rate of change of velocity. Distance–time and speed–time graphs make each one visible as a gradient or an area.</p>
+            <h2>Define the motion first. Then let the graph show it.</h2>
+            <p>Compare speed with velocity, build acceleration from change in velocity, then learn what the shape, gradient and area of each motion graph mean.</p>
           </div>
         </div>
+        <MotionFoundations />
         <MotionGraphLab />
         <FreeFallLab />
         <div className="micro-checks">

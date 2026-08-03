@@ -19,6 +19,7 @@ export default function VectorLab() {
 
   const mag = Math.hypot(fx, fy);
   const angle = mag === 0 ? null : (Math.atan2(fy, fx) * 180) / Math.PI; // above the east axis
+  const angleFromNorth = angle === null ? null : 90 - angle;
 
   const headX = ox + fx * scale;
   const headY = oy - fy * scale;
@@ -41,6 +42,11 @@ export default function VectorLab() {
         <div><span className="mini-label">1.1 · vectors · Supplement</span><h3>Combine two forces at right angles</h3></div>
         <div className="big-reading"><span>Resultant</span><strong>{mag.toFixed(1)} N</strong></div>
       </div>
+      <div className="lab-method">
+        <span><b>1 · Draw</b> the two components head-to-tail at 90°.</span>
+        <span><b>2 · Join</b> the start to the final point: this is the resultant.</span>
+        <span><b>3 · Calculate</b> its magnitude and state the angle from a named direction.</span>
+      </div>
       <div className="lab-grid">
         <div className="motion-stage" role="img" aria-label={`Two perpendicular forces of ${fx} newtons east and ${fy} newtons north and their resultant`}>
           <svg
@@ -58,8 +64,8 @@ export default function VectorLab() {
             {/* axes */}
             <line x1={ox} y1={oy} x2={W - 12} y2={oy} stroke="#c4d2cd" />
             <line x1={ox} y1={oy} x2={ox} y2={12} stroke="#c4d2cd" />
-            <text x={W - 16} y={oy + 18} fill="#8b97a8" fontSize={11} textAnchor="end">east (x)</text>
-            <text x={ox - 6} y={20} fill="#8b97a8" fontSize={11} textAnchor="end">north (y)</text>
+            <text x={W - 16} y={oy + 18} fill="#8b97a8" fontSize={11} textAnchor="end">east component Fₓ</text>
+            <text x={ox - 6} y={20} fill="#8b97a8" fontSize={11} textAnchor="end">north Fᵧ</text>
             {/* components */}
             {fx > 0 && <line x1={ox} y1={oy} x2={headX} y2={oy} stroke="#8b97a8" strokeWidth={2} strokeDasharray="5 4" markerEnd="url(#vArrowC)" />}
             {fy > 0 && <line x1={headX} y1={oy} x2={headX} y2={headY} stroke="#8b97a8" strokeWidth={2} strokeDasharray="5 4" markerEnd="url(#vArrowC)" />}
@@ -86,27 +92,32 @@ export default function VectorLab() {
         </div>
         <div className="side">
           <div className="inline-controls">
-            <label className="num-field">East Fₓ (N)
+            <label className="num-field">East F<sub>x</sub> (N)
               <input type="number" min={0} max={45} value={fx} onChange={(e) => setFx(Math.max(0, Math.min(45, +e.target.value)))} />
             </label>
-            <label className="num-field">North F_y (N)
+            <label className="num-field">North F<sub>y</sub> (N)
               <input type="number" min={0} max={38} value={fy} onChange={(e) => setFy(Math.max(0, Math.min(38, +e.target.value)))} />
             </label>
           </div>
           {mag > 0 ? (
             <>
-              <p className="eqn-line" style={{ fontSize: 18 }} aria-live="polite">√({fx}² + {fy}²) = <b>{mag.toFixed(1)} N</b></p>
+              <div className="vector-working" aria-live="polite">
+                <p><span>Magnitude · Pythagoras</span><b>R = √(Fₓ² + Fᵧ²) = √({fx}² + {fy}²) = {mag.toFixed(1)} N</b></p>
+                <p><span>Angle · TOA</span><b>{fx === 0 ? "Fₓ = 0, so the resultant is due north: θ = 90.0° from east" : `tan θ = Fᵧ ÷ Fₓ = ${fy} ÷ ${fx} → θ = ${angle!.toFixed(1)}°`}</b></p>
+                <small>Check with SOH: sin θ = Fᵧ/R · Check with CAH: cos θ = Fₓ/R</small>
+              </div>
               <table className="data-table">
                 <tbody>
-                  <tr><th>Magnitude √(Fₓ² + F_y²)</th><td className="num">{mag.toFixed(1)} N</td></tr>
-                  <tr><th>Direction (° above east)</th><td className="num">{angle!.toFixed(1)}°</td></tr>
+                  <tr><th>Magnitude √(Fₓ² + Fᵧ²)</th><td className="num">{mag.toFixed(1)} N</td></tr>
+                  <tr><th>Direction from east</th><td className="num">{angle!.toFixed(1)}° north of east</td></tr>
+                  <tr><th>Equivalent direction from north</th><td className="num">{angleFromNorth!.toFixed(1)}° east of north</td></tr>
                 </tbody>
               </table>
             </>
           ) : (
             <p className="field-note zero" aria-live="polite">Both components are zero, so the resultant has zero magnitude and no defined direction — there is no arrow to draw.</p>
           )}
-          <p className="field-note">A vector needs a size <em>and</em> a direction. Two perpendicular vectors combine to a resultant whose length is the diagonal of the rectangle they form: magnitude by Pythagoras, direction by trigonometry.</p>
+          <p className="field-note">The angle must include a reference direction. “53.1°” alone is incomplete; “53.1° north of east” and “36.9° east of north” describe the same resultant from different starting axes.</p>
         </div>
       </div>
       <p className="lab-note">Drag the green head (or use the arrow keys / number boxes). The resultant is always computed from the real components, so it lengthens and turns exactly as they change.</p>

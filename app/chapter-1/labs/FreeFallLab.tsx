@@ -103,6 +103,11 @@ export default function FreeFallLab() {
         <div><span className="mini-label">1.2 · 1.5.4 · free fall &amp; terminal velocity</span><h3>What happens to a falling body?</h3></div>
         <div className="big-reading"><span>Speed now</span><strong>{vN.toFixed(1)} m/s</strong></div>
       </div>
+      <div className="lab-method">
+        <span><b>Just released</b> speed = 0, so air resistance is zero and weight accelerates the body downward.</span>
+        <span><b>Speed increases</b> so air resistance increases; the resultant force and acceleration become smaller.</span>
+        <span><b>Terminal velocity</b> air resistance = weight, so resultant force = 0 and speed stays constant.</span>
+      </div>
       <div className="lab-grid">
         <div className="motion-stage tall"><canvas ref={canvasRef} width={W} height={H} aria-label="Speed–time graph of a falling body" /></div>
         <div className="side">
