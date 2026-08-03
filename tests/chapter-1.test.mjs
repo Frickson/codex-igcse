@@ -10,19 +10,23 @@ test("exports the Chapter 1 motion, forces & energy lesson", async () => {
   assert.match(html, /Cambridge IGCSE Physics 0625/);
   assert.match(html, /Motion, forces &amp; energy/);
   // one lab heading per subtopic 1.1–1.8
-  assert.match(html, /A measurement is a number with a unit/);
+  assert.match(html, /A number alone is <em>not<\/em> a measurement/);
+  assert.match(html, /THINK FIRST/);
+  assert.match(html, /ANDREW&#x27;S TIP/);
   assert.match(html, /Length/);
   assert.match(html, /Volume/);
-  assert.match(html, /Random error/);
-  assert.match(html, /Systematic error/);
+  assert.match(html, /RANDOM ERROR/);
+  assert.match(html, /SYSTEMATIC ERROR/);
   assert.match(html, /Magnitude only/);
-  assert.match(html, /Magnitude and direction/);
+  assert.match(html, /Magnitude \+ direction/);
   assert.match(html, /Why measure many, then divide\?/);        // 1.1 measurement
   assert.match(html, /Combine two forces at right angles/);      // 1.1 vectors
   assert.match(html, /Speed/);
   assert.match(html, /Velocity/);
   assert.match(html, /Acceleration/);
-  assert.match(html, /Deceleration/);
+  assert.match(html, /DECELERATION/);
+  assert.match(html, /A speedometer tells only <em>half<\/em> the story/);
+  assert.match(html, /CAMBRIDGE EXAM FOCUS/);
   assert.match(html, /Distance–time graph/);
   assert.match(html, /Speed–time graph/);
   assert.match(html, /Connect the journey to the graph shape/); // 1.2
