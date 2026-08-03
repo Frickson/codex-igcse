@@ -12,11 +12,13 @@ Checkpoint answers persist under `localStorage` key **`igcse-motion-progress`**.
 
 | Objective | Core/Supp | Explanation on page | Interaction | Retrieval |
 |---|---|---|---|---|
-| **1.1** Measure length, volume, time; multiple readings; use rules, measuring cylinders, clocks | Core | §measurement | MeasurementLab (readings, mean of oscillations) | QuickCheck, checkpoint |
-| 1.1 Scalars vs vectors; examples; combine vectors at right angles | Core / **Supp** (perpendicular addition + graphical/calculation) | §measurement | VectorLab (drag components, resultant by Pythagoras + angle) | QuickCheck, exam |
-| **1.2** Speed, velocity, acceleration; `v = s/t`; distinguish speed/velocity | Core | §motion | MotionGraphLab | checkpoint |
+| **1.1** Measure length, volume and time with suitable instruments and correct reading technique | Core | §measurement · MeasurementFoundations (ruler/tape/calipers, measuring cylinder/displacement, clock/stopwatch; zero and parallax checks) | MeasurementLab | QuickCheck, checkpoint |
+| 1.1 Determine average small distances / short times by measuring multiples; distinguish random uncertainty from systematic error | Core | §measurement · MeasurementFoundations error panel | MeasurementLab (pendulum and paper stack; total and per-item uncertainty) | QuickCheck, checkpoint |
+| 1.1 Scalar = magnitude only; vector = magnitude + direction; required syllabus examples | **Supp** | §measurement · MeasurementFoundations comparison | VectorLab | QuickCheck, exam |
+| 1.1 Resultant of perpendicular forces/velocities by calculation or graphically | **Supp** | §measurement · VectorLab three-step method | VectorLab (drag components, Pythagoras, TOA/SOH/CAH, directions from east and north) | QuickCheck, exam |
+| **1.2** Define speed and velocity; `v = s/t`; average speed from whole-journey totals | Core | §motion · MotionFoundations | MotionGraphLab | checkpoint |
+| 1.2 Define acceleration `a = Δv/Δt`; deceleration is negative acceleration | **Supp** | §motion · MotionFoundations | MotionGraphLab | checkpoint |
 | 1.2 Distance–time & speed–time graphs: describe/interpret, area = distance, gradient = speed/accel | Core / **Supp** (calc accel from gradient, distance from area incl. non-uniform qualitative) | §motion | MotionGraphLab (build a journey, read gradient & area) | exam |
-| 1.2 Acceleration `a = Δv/Δt`; deceleration negative | Core / **Supp** | §motion | MotionGraphLab | checkpoint |
 | 1.2 Free fall: `g ≈ 9.8 m/s²` near Earth; air resistance & terminal velocity | Core / **Supp** (terminal velocity explanation) | §motion | FreeFallLab (with/without air resistance) | QuickCheck |
 | **1.3** Mass, inertia; weight `W = mg`; gravitational field strength `g = W/m`; measure with balances | Core | §matter | MassWeightLab (change planet g, compare mass vs weight) | checkpoint |
 | **1.4** Density `ρ = m/V`; measure density of solids/liquids; float/sink prediction | Core | §matter | DensityLab (measure regular/irregular solid & liquid; float test) | QuickCheck, exam |
