@@ -10,9 +10,22 @@ test("exports the Chapter 1 motion, forces & energy lesson", async () => {
   assert.match(html, /Cambridge IGCSE Physics 0625/);
   assert.match(html, /Motion, forces &amp; energy/);
   // one lab heading per subtopic 1.1–1.8
+  assert.match(html, /A measurement is a number with a unit/);
+  assert.match(html, /Length/);
+  assert.match(html, /Volume/);
+  assert.match(html, /Random error/);
+  assert.match(html, /Systematic error/);
+  assert.match(html, /Magnitude only/);
+  assert.match(html, /Magnitude and direction/);
   assert.match(html, /Why measure many, then divide\?/);        // 1.1 measurement
   assert.match(html, /Combine two forces at right angles/);      // 1.1 vectors
-  assert.match(html, /Read speed, acceleration and distance from a graph/); // 1.2
+  assert.match(html, /Speed/);
+  assert.match(html, /Velocity/);
+  assert.match(html, /Acceleration/);
+  assert.match(html, /Deceleration/);
+  assert.match(html, /Distance–time graph/);
+  assert.match(html, /Speed–time graph/);
+  assert.match(html, /Connect the journey to the graph shape/); // 1.2
   assert.match(html, /What happens to a falling body\?/);        // 1.2 free fall
   assert.match(html, /Does it float\? Compare the densities/);   // 1.3–1.4
   assert.match(html, /Turn a resultant force into acceleration/);// 1.5 F = ma
@@ -52,6 +65,21 @@ test("free fall is honest: a = (mg − drag)/m, terminal velocity when drag = mg
   const source = await readFile(new URL("app/chapter-1/labs/FreeFallLab.tsx", root), "utf8");
   assert.match(source, /Math\.sqrt\(\(mass \* g\) \/ c\)/);  // v_t = √(mg/c)
   assert.match(source, /if \(!drag\) return g \* t;/);        // no drag → a = g
+});
+
+test("measurement and vector models explain uncertainty and direction honestly", async () => {
+  const measurement = await readFile(new URL("app/chapter-1/labs/MeasurementLab.tsx", root), "utf8");
+  assert.match(measurement, /perUnitUncertainty = m\.err \/ n/);
+  assert.match(measurement, /systematic error/);
+  assert.match(measurement, /stackHeight/);
+
+  const vector = await readFile(new URL("app/chapter-1/labs/VectorLab.tsx", root), "utf8");
+  assert.match(vector, /Math\.hypot\(fx, fy\)/);
+  assert.match(vector, /Math\.atan2\(fy, fx\)/);
+  assert.match(vector, /north of east/);
+  assert.match(vector, /east of north/);
+  assert.match(vector, /SOH/);
+  assert.match(vector, /CAH/);
 });
 
 test("density decides floating: ρ = m/V compared with the fluid", async () => {
