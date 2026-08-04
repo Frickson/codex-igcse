@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 
 type QuizQuestion = {
   question: string;
@@ -1193,6 +1194,7 @@ export default function Home() {
           <span className="section-number">02</span>
           <div><span className="eyebrow">4.1 · simple phenomena of magnetism</span><h2>A field is not a drawing. It is a region of force.</h2><p>Field lines are a model: their direction shows the force on a north pole; their spacing represents relative strength.</p></div>
         </div>
+        <AcademyMoment question="Why does a compass turn even though it is not touching the magnet?" from="A magnet creates a field" change="The compass north pole experiences a force" to="The needle aligns with field direction" steps={["A field is a region where a force can act.", "Direction is defined using a north pole.", "Closer field lines represent a stronger field."]} label="COMMON MISTAKE" note="Field lines are not physical strings. They are a model showing direction and relative strength." />
         <div className="concept-grid">
           <article><span className="concept-symbol">N ↔ S</span><h3>Unlike poles attract</h3><p>Like poles repel. Magnetic materials can be attracted without already being magnets.</p></article>
           <article><span className="concept-symbol">Fe</span><h3>Induced magnetism</h3><p>A magnetic material becomes magnetised in a field. Soft iron loses this magnetism readily; steel tends to retain it.</p></article>
@@ -1210,6 +1212,7 @@ export default function Home() {
           <span className="section-number">03</span>
           <div><span className="eyebrow">4.2–4.3 · quantities and circuits</span><h2>Charge first. Then make it flow.</h2><p>Begin with electrostatics and fields, then measure current, p.d. and component behaviour in complete circuits.</p></div>
         </div>
+        <AcademyMoment tone="amber" question="When a lamp lights, is electric current being used up inside it?" from="Charge flows around a complete circuit" change="The lamp transfers electrical energy" to="Same steady current leaves the component" steps={["Current is charge flow per second.", "Charge is conserved at the component.", "Energy—not current—is transferred to light and thermal stores."]} label="ANDREW'S TIP" note="Use the water-flow analogy only for current continuity. Do not say a battery stores current or a lamp consumes current." />
         <ElectrostaticLab />
         <ElectricFieldLab />
         <div className="formula-grid">
@@ -1235,6 +1238,7 @@ export default function Home() {
           <span className="section-number">04</span>
           <div><span className="eyebrow">4.5 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
         </div>
+        <AcademyMoment tone="coral" question="What must change before a generator can produce an induced e.m.f.?" from="A conductor and magnetic field" change="Flux linkage changes" to="An induced e.m.f. appears" steps={["Relative motion must cut field lines or change flux linkage.", "Faster change gives a larger induced e.m.f.", "Reversing motion or field reverses the induced direction."]} label="CAMBRIDGE EXAM FOCUS" note="A magnet merely sitting inside a coil produces no continuous e.m.f. The magnetic flux linkage must change." />
         <InductionDragLab />
         <div className="advanced-labs-cta">
           <div><span className="mini-label">Separate practical page</span><h3>Explore the generator and motor in depth</h3><p>Synchronise a rotating coil with its a.c. waveform, predict motor-force direction and investigate the split-ring commutator.</p></div>
@@ -1257,6 +1261,7 @@ export default function Home() {
           <span className="section-number">05</span>
           <div><span className="eyebrow">4.4 · electrical safety</span><h2>Protection works by controlling the path.</h2><p>Electric shock needs current through the body. Good design prevents contact, provides a safer path, or disconnects the supply quickly.</p></div>
         </div>
+        <AcademyMoment tone="blue" question="Why must a fuse be placed in the live wire rather than the neutral wire?" from="A dangerous fault current" change="Fuse melts in the live path" to="Appliance disconnects from high potential" steps={["The live wire supplies the dangerous potential.", "A protective device must break that connection.", "Earthing provides a low-resistance fault path so protection operates quickly."]} label="COMMON MISTAKE" note="A fuse in the neutral wire could open while the appliance remains connected to live and therefore still dangerous." />
         <div className="safety-flow">
           <article><span>fault</span><b>Live wire touches metal case</b></article>
           <i>→</i>
