@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 import WaveAnatomyLab from "./labs/WaveAnatomyLab";
 import DiffractionLab from "./labs/DiffractionLab";
 import ReflectionLab from "./labs/ReflectionLab";
@@ -191,6 +192,7 @@ export default function WavesPage() {
             <p>A wave transfers energy without transferring matter. Describe it with wavelength, frequency, amplitude and speed, then classify it as transverse or longitudinal by the direction of its vibration.</p>
           </div>
         </div>
+        <AcademyMoment question="If a water wave moves across a pond, do the water particles travel all the way to the bank?" from="Particles vibrate locally" change="The disturbance passes from particle to particle" to="Energy travels; matter does not" steps={["Identify the vibration direction.", "Compare it with the wave-travel direction.", "Use v = fλ to connect the measurable quantities."]} label="COMMON MISTAKE" note="Do not draw particles travelling with the wave. They oscillate about fixed positions while energy is transferred." />
         <WaveAnatomyLab />
         <DiffractionLab />
         <div className="micro-checks">
@@ -226,6 +228,7 @@ export default function WavesPage() {
             <p>Light slows entering a denser medium and bends toward the normal, following n = sin i / sin r. Past the critical angle it cannot escape at all — total internal reflection, the principle behind optical fibres.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Why does a ray bend at a glass boundary but not when it enters along the normal?" from="Light reaches a boundary" change="Its speed changes in the new medium" to="Direction changes unless i = 0°" steps={["Draw the normal first.", "Compare the optical density of the media.", "Toward the normal means slower; away means faster."]} label="ANDREW'S TIP" note="Never memorise left or right. Judge the bend relative to the normal and the change in speed." />
         <RefractionLab />
         <div className="micro-checks">
           <QuickCheck statement="Light bends toward the normal when it enters a denser medium." answer={true} explanation="Entering a denser medium (e.g. air → glass) light slows down and bends toward the normal, so the angle of refraction is smaller than the angle of incidence." />
@@ -243,6 +246,7 @@ export default function WavesPage() {
             <p>A converging lens bends parallel rays to a principal focus. Where the object sits relative to the focal length decides whether the image is real or virtual, enlarged or diminished, upright or inverted.</p>
           </div>
         </div>
+        <AcademyMoment tone="amber" question="Why can the same converging lens make a real image in one setup and a virtual image in another?" from="Move the object relative to F" change="Emerging rays converge or diverge" to="Image type and size change" steps={["Use the parallel ray through F.", "Use the central ray undeviated.", "Where real rays meet gives a real image; traced-back rays give a virtual image."]} label="CAMBRIDGE EXAM FOCUS" note="Image properties come from ray geometry. State real/virtual, upright/inverted and enlarged/same size/diminished." />
         <LensLab />
         <div className="micro-checks">
           <QuickCheck statement="An object placed inside the focal length of a converging lens gives a real image." answer={false} explanation="Inside the focal length the refracted rays diverge, so no real image forms. Tracing them back gives a virtual, upright, enlarged image — the magnifying-glass case." />
@@ -276,6 +280,7 @@ export default function WavesPage() {
             <p>All electromagnetic waves are transverse and travel at 3.0×10⁸ m/s in a vacuum. They differ only in frequency and wavelength — which sets each region&apos;s uses and its dangers.</p>
           </div>
         </div>
+        <AcademyMoment tone="coral" question="Do gamma rays travel faster than radio waves because they have more energy?" from="All EM waves in vacuum" change="Frequency and wavelength trade off" to="Same speed c = 3.0 × 10⁸ m/s" steps={["All are transverse electromagnetic waves.", "Use c = fλ.", "Higher frequency means shorter wavelength, not higher vacuum speed."]} label="COMMON MISTAKE" note="The regions differ in frequency, wavelength, uses and hazards—but not their speed in a vacuum." />
         <SpectrumLab />
         <div className="micro-checks">
           <QuickCheck statement="Gamma rays travel faster than radio waves in a vacuum." answer={false} explanation="All electromagnetic waves travel at the same speed in a vacuum, 3.0×10⁸ m/s. They differ in frequency and wavelength, not speed." />
@@ -293,6 +298,7 @@ export default function WavesPage() {
             <p>Sound is a longitudinal wave of compressions and rarefactions that cannot travel through a vacuum. Its frequency sets the pitch, its amplitude the loudness, and it travels fastest in solids.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Can sound from an explosion reach an astronaut through empty space?" from="A vibrating source" change="Nearby particles form compressions and rarefactions" to="No particles means no sound transmission" steps={["Sound is a mechanical wave.", "Its vibration is parallel to travel direction.", "A solid, liquid or gas must pass the disturbance on."]} label="REAL LIFE CONNECTION" note="Space-film explosions are dramatic storytelling. In a vacuum, an outside observer would not hear them directly." />
         <SoundLab />
         <SoundMediumLab />
         <div className="micro-checks">

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 import MeasurementLab from "./labs/MeasurementLab";
 import VectorLab from "./labs/VectorLab";
 import MotionGraphLab from "./labs/MotionGraphLab";
@@ -375,6 +376,7 @@ export default function MotionForcesEnergyPage() {
             <p>Mass measures the amount of matter and its inertia; weight is the gravitational force W = mg. Density ρ = m/V decides whether an object floats or sinks.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Why does the same astronaut weigh less on the Moon but still have the same mass?" from="Same amount of matter" change="Gravitational field strength changes" to="Mass stays; weight changes" steps={["Mass measures matter and inertia.", "Weight is the force W = mg.", "Smaller g gives smaller weight, not smaller mass."]} label="COMMON MISTAKE" note="Mass is measured in kg. Weight is a force measured in N. Never use the words interchangeably." />
         <MassWeightLab />
         <DensityLab />
         <div className="micro-checks">
@@ -393,6 +395,7 @@ export default function MotionForcesEnergyPage() {
             <p>A resultant force changes motion (F = ma); balanced forces do not. Springs obey Hooke&apos;s law up to a limit, forces turn objects about a pivot (moments), and the centre of gravity governs stability.</p>
           </div>
         </div>
+        <AcademyMoment tone="coral" question="If a car moves at constant velocity, must a forward force still be bigger than the resistive forces?" from="Forces balance" change="Resultant force = 0" to="No acceleration; velocity stays constant" steps={["Combine all forces with direction.", "Only the resultant changes velocity.", "Zero resultant allows rest or constant velocity."]} label="ANDREW'S TIP" note="Before using F = ma, find the resultant force—not just one force shown in the diagram." />
         <NewtonsSecondLab />
         <HookeLab />
         <MomentsLab />
@@ -414,6 +417,7 @@ export default function MotionForcesEnergyPage() {
             <p>Momentum p = mv measures mass in motion. In a collision with no external force, total momentum is conserved — the basis for analysing impacts and recoil.</p>
           </div>
         </div>
+        <AcademyMoment tone="amber" question="During a collision, where does the momentum lost by one object go?" from="Total momentum before" change="Objects exert equal and opposite forces" to="Same total momentum after" steps={["Choose a positive direction first.", "Give opposite motion a negative sign.", "Set total before equal to total after."]} label="CAMBRIDGE EXAM FOCUS" note="Momentum is a vector. A correct calculation can still lose marks if opposite directions are not given opposite signs." />
         <MomentumLab />
         <div className="micro-checks">
           <QuickCheck statement="In a collision with no external force, total momentum stays the same." answer={true} explanation="Momentum is conserved: the momentum lost by one object equals that gained by the other." />
@@ -431,6 +435,7 @@ export default function MotionForcesEnergyPage() {
             <p>Energy moves between stores — kinetic, gravitational, elastic and more — but the total is conserved. Work is energy transferred by a force, power is how fast, and efficiency is how much of it is useful.</p>
           </div>
         </div>
+        <AcademyMoment question="When a moving car stops, has its kinetic energy disappeared?" from="Energy in one store" change="Forces transfer energy" to="Energy enters other stores" steps={["Identify the starting store.", "Name the transfer pathway, such as mechanical work.", "Account for useful and dissipated stores."]} label="COMMON MISTAKE" note="Energy is not used up or destroyed. It becomes less useful when spread into the thermal stores of the surroundings." />
         <EnergyStoresLab />
         <EnergyCalcLab />
         <ResourcesLab />
@@ -450,6 +455,7 @@ export default function MotionForcesEnergyPage() {
             <p>Pressure p = F/A explains why a sharp point cuts and a wide base does not. In a liquid, pressure increases with depth and density as p = ρgh.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Why does a sharp knife cut more easily even when your hand pushes with the same force?" from="Same force" change="Contact area becomes smaller" to="Pressure becomes larger" steps={["Pressure is force per unit area.", "A smaller denominator raises F/A.", "The concentrated force produces a greater effect."]} label="REAL LIFE CONNECTION" note="This same idea explains snowshoes, wide tractor tyres, drawing pins and high-heeled shoes." />
         <PressureLab />
         <LiquidPressureLab />
         <div className="micro-checks">

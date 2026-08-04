@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 
 /* ---------- element data + helpers ---------- */
 const SYM = ["", "H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca",
@@ -1070,6 +1071,7 @@ export default function NuclearPhysicsPage() {
             <p>An atom has a tiny, positively charged nucleus containing almost all the mass, with negative electrons in orbit around it. Gaining or losing electrons forms ions.</p>
           </div>
         </div>
+        <AcademyMoment question="What did Rutherford's rare large deflections reveal that the plum-pudding model could not explain?" from="Most alpha particles pass straight through" change="A few meet a tiny concentrated positive region" to="Atom is mostly empty space with a dense nucleus" steps={["Most pass through: most of the atom is empty.", "Some deflect: positive charge is concentrated.", "Very few rebound: the nucleus is tiny, dense and massive."]} label="CAMBRIDGE EXAM FOCUS" note="Link each observation to one conclusion. Cambridge often awards separate marks for 'most', 'some' and 'very few'." />
         <AtomBuilderLab />
         <ScatteringLab />
         <div className="micro-checks">
@@ -1088,6 +1090,7 @@ export default function NuclearPhysicsPage() {
             <p>The nucleus is made of protons (+1) and neutrons (0); electrons are −1. Proton number Z and nucleon number A fix the composition, charge and mass.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Two atoms have the same proton number but different nucleon numbers. Are they different elements?" from="Same proton number Z" change="Neutron number differs" to="Same element; different isotope" steps={["Z identifies the element.", "A counts protons + neutrons.", "Neutrons = A − Z."]} label="ANDREW'S TIP" note="Read nuclide notation in this order: symbol identifies the element, lower number gives protons, upper minus lower gives neutrons." />
         <div className="concept-grid">
           <article><span className="concept-symbol">Z</span><h3>Proton number</h3><p>Number of protons. It defines the element and equals the relative nuclear charge (+Z).</p></article>
           <article><span className="concept-symbol">A</span><h3>Nucleon number</h3><p>Protons + neutrons. It equals the relative nuclear mass. Neutrons = A − Z.</p></article>
@@ -1112,6 +1115,7 @@ export default function NuclearPhysicsPage() {
             <p>Background radiation is always present. Emission from a nucleus is spontaneous and random in direction, as α, β or γ — differing in nature, ionising effect and penetration.</p>
           </div>
         </div>
+        <AcademyMoment tone="coral" question="Why is alpha strongly ionising but weakly penetrating?" from="A heavy +2 particle" change="Strong interactions transfer energy quickly" to="Many ions formed; particle stops soon" steps={["Nature and charge control interaction strength.", "More ionisation means faster energy loss.", "Fast energy loss produces a short range."]} label="COMMON MISTAKE" note="Ionising ability and penetration move in opposite order: alpha is most ionising/least penetrating; gamma is least ionising/most penetrating." />
         <BackgroundLab />
         <PenetrationLab />
         <DeflectionLab />
@@ -1132,6 +1136,7 @@ export default function NuclearPhysicsPage() {
             <p>α and β decay change the element; γ changes only energy. The half-life is the time for half the nuclei in a sample to decay.</p>
           </div>
         </div>
+        <AcademyMoment tone="amber" question="After one half-life, have exactly half the nuclei in every tiny sample decayed?" from="Each nucleus decays randomly" change="Large populations follow a stable probability pattern" to="Expected count halves each half-life" steps={["Individual decay is unpredictable.", "The decay probability per unit time stays constant.", "Half-life describes the statistical behaviour of a large sample."]} label="COMMON MISTAKE" note="Half-life is not the time for all nuclei to decay, and temperature or pressure does not change it." />
         <div className="formula-grid">
           <article><span>Alpha decay</span><b>A−4, Z−2</b><p>emits a helium nucleus ⁴₂He; becomes a new element.</p></article>
           <article><span>Beta⁻ decay</span><b>A same, Z+1</b><p>neutron → proton + electron; electron emitted.</p></article>
@@ -1154,6 +1159,7 @@ export default function NuclearPhysicsPage() {
             <p>Ionising radiation can cause cell death, mutations and cancer. Reduce dose by cutting time, increasing distance and adding shielding; store sources safely.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="How can the same radiation be useful in medicine yet dangerous to living tissue?" from="Ionising radiation deposits energy" change="Dose depends on time, distance and shielding" to="Controlled exposure gives benefit; excess causes harm" steps={["Choose a radiation suited to the task.", "Minimise exposure time and maximise distance.", "Use shielding and safe storage to reduce dose."]} label="REAL LIFE CONNECTION" note="Risk depends on dose and exposure route. 'Radioactive' does not automatically mean unusable; it means the risk must be controlled." />
         <div className="safety-grid">
           <article><b>Cell death</b><p>High doses kill living cells directly.</p></article>
           <article><b>Mutation</b><p>Radiation can damage DNA and cause mutations.</p></article>

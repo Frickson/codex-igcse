@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 import StatesOfMatterLab from "./labs/StatesOfMatterLab";
 import ParticleTempLab from "./labs/ParticleTempLab";
 import BrownianLab from "./labs/BrownianLab";
@@ -323,6 +324,7 @@ export default function ThermalPhysicsPage() {
             <p>Solids, liquids and gases differ in how tightly particles pack and how freely they move. Temperature tracks particle kinetic energy — down to absolute zero.</p>
           </div>
         </div>
+        <AcademyMoment question="When ice melts, do its particles become a different substance?" from="Same particles" change="Energy changes their motion and separation" to="State changes; substance stays the same" steps={["Particles exist in every state.", "Heating raises kinetic energy or overcomes attractions.", "Arrangement and freedom of motion explain properties."]} label="COMMON MISTAKE" note="The particles themselves do not expand, melt or disappear. Their spacing, motion and arrangement change." />
         <StatesOfMatterLab />
         <ParticleTempLab />
         <BrownianLab />
@@ -343,6 +345,7 @@ export default function ThermalPhysicsPage() {
             <p>Warm a fixed-volume gas and particles hit the walls harder and more often. Squeeze the volume at fixed temperature and the same mass collides more frequently — pressure rises.</p>
           </div>
         </div>
+        <AcademyMoment tone="coral" question="Why does pressure rise when a sealed gas is heated at fixed volume?" from="Temperature rises" change="Particles move faster" to="Harder, more frequent wall collisions" steps={["Temperature tracks average kinetic energy.", "Faster particles change momentum more rapidly at the wall.", "Greater force per area means greater pressure."]} label="CAMBRIDGE EXAM FOCUS" note="For gas-pressure explanations, always connect temperature → particle speed → collision frequency/force → pressure." />
         <GasPressureLab />
         <div className="micro-checks">
           <QuickCheck statement="Halving the volume of a fixed mass of gas at constant temperature roughly doubles its pressure." answer={true} explanation="Supplement: pV = constant at fixed temperature, so half the volume means twice the pressure — more frequent wall collisions." />
@@ -360,6 +363,7 @@ export default function ThermalPhysicsPage() {
             <p>Energy can stretch particle spacing (expansion), raise average kinetic energy (temperature), or break attractions during melting and boiling without a temperature rise.</p>
           </div>
         </div>
+        <AcademyMoment tone="amber" question="Why can energy enter boiling water without increasing its temperature?" from="At the boiling point" change="Energy overcomes particle attractions" to="State changes at constant temperature" steps={["Temperature depends on average kinetic energy.", "During the plateau, energy increases potential energy instead.", "Particles separate into the gas state."]} label="COMMON MISTAKE" note="A flat heating-curve section does not mean no energy is supplied. It means the energy is changing state, not temperature." />
         <ExpansionLab />
         <SpecificHeatLab />
         <PhaseChangeLab />
@@ -381,6 +385,7 @@ export default function ThermalPhysicsPage() {
             <p>Energy leaves hot objects through particle vibration and free electrons, density-driven fluid currents, and infrared radiation that needs no medium.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Which method can transfer thermal energy through empty space?" from="A temperature difference" change="Infrared radiation is emitted" to="Energy crosses without particles" steps={["Conduction needs neighbouring particles or electrons.", "Convection needs moving fluid.", "Radiation is an electromagnetic wave and needs no medium."]} label="ANDREW'S TIP" note="First ask whether matter is present and moving. That quickly separates conduction, convection and radiation." />
         <ConductionLab />
         <ConvectionLab />
         <RadiationLab />

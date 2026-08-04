@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ChapterNav from "../ChapterNav";
+import AcademyMoment from "../AcademyMoment";
 import DayNightLab from "./labs/DayNightLab";
 import SeasonsLab from "./labs/SeasonsLab";
 import MoonPhasesLab from "./labs/MoonPhasesLab";
@@ -326,6 +327,7 @@ export default function SpacePhysicsPage() {
             <p>Earth rotates once in about 24 hours on a tilted axis, orbits the Sun in about 365 days, and the Moon takes about a month to orbit Earth — producing day/night, seasons and phases.</p>
           </div>
         </div>
+        <AcademyMoment question="If Earth is closer to the Sun in January than July, why is January still winter in the Northern Hemisphere?" from="Earth's axis is tilted" change="Sun angle and daylight duration change during orbit" to="Each hemisphere receives different energy per unit area" steps={["Rotation produces day and night.", "Tilt changes the height of the Sun and day length.", "The orbit changes which hemisphere tilts toward the Sun."]} label="COMMON MISTAKE" note="Seasons are caused by axial tilt, not by Earth being dramatically nearer or farther from the Sun." />
         <DayNightLab />
         <SeasonsLab />
         <MoonPhasesLab />
@@ -346,6 +348,7 @@ export default function SpacePhysicsPage() {
             <p>Name the planets in order, contrast rocky inner worlds with giant outer ones via accretion, and use the Sun&apos;s gravity to keep objects in orbit.</p>
           </div>
         </div>
+        <AcademyMoment tone="blue" question="Why does a planet keep falling toward the Sun without crashing into it?" from="Planet has sideways velocity" change="Gravity continually bends its path inward" to="A curved orbit forms" steps={["Gravity supplies the centripetal force.", "Velocity is tangent to the orbit.", "The planet continuously falls around the Sun."]} label="ANDREW'S TIP" note="An orbit does not mean gravity has disappeared. Gravity is exactly what keeps changing the direction of velocity." />
         <SolarSystemLab />
         <OrbitGravityLab />
         <LightTravelLab />
@@ -366,6 +369,7 @@ export default function SpacePhysicsPage() {
             <p>The Sun is mostly hydrogen and helium and radiates IR, visible and UV. Distances jump to light-years; massive and less-massive stars take different paths after the fuel runs out.</p>
           </div>
         </div>
+        <AcademyMoment tone="amber" question="What single property decides whether a star becomes a white dwarf or eventually a neutron star/black hole?" from="A star forms from a nebula" change="Initial mass controls pressure, fuel use and core collapse" to="Different stellar life-cycle branch" steps={["Gravity compresses the protostar.", "Fusion balances gravity on the main sequence.", "When fuel runs out, mass determines the final stages."]} label="CAMBRIDGE EXAM FOCUS" note="Do not memorise one long life cycle. Split it at stellar mass: Sun-like and massive stars share the early stages, then diverge." />
         <SunStarLab />
         <LightYearLab />
         <StarLifecycleLab />
@@ -385,6 +389,7 @@ export default function SpacePhysicsPage() {
             <p>Distant galaxies look redshifted; that expansion, with CMBR and H₀ = v/d, supports the idea that the Universe began from a hot dense state.</p>
           </div>
         </div>
+        <AcademyMoment tone="coral" question="Why does redshift support expansion rather than simply proving galaxies are red?" from="Known spectral lines are emitted" change="The whole pattern shifts to longer wavelength" to="Galaxy is receding; distant galaxies recede faster" steps={["Match the observed and laboratory line patterns.", "Measure the fractional wavelength increase.", "Combine v with distance through H₀ = v/d."]} label="COMMON MISTAKE" note="Redshift is a shift of identifiable spectral lines, not merely a red-looking photograph. It is evidence of recession and cosmic expansion." />
         <RedshiftLab />
         <CMBRLab />
         <HubbleLab />

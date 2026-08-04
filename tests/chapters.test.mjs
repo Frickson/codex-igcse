@@ -31,6 +31,15 @@ test("directory carries its own metadata", async () => {
   assert.match(html, /Chapter directory|IGCSE Physics chapters/);
 });
 
+test("every chapter uses the Andrew Academy predict-cause-explain rhythm", async () => {
+  for (let chapter = 1; chapter <= 6; chapter += 1) {
+    const html = await read(`out/chapter-${chapter}/index.html`);
+    assert.match(html, /THINK FIRST/, `Chapter ${chapter} should ask for a prediction`);
+    assert.match(html, /WHAT CHANGES\?/, `Chapter ${chapter} should visualise the causal change`);
+    assert.match(html, /CAMBRIDGE EXAM FOCUS|ANDREW&#x27;S TIP|COMMON MISTAKE|REAL LIFE CONNECTION/, `Chapter ${chapter} should include a signature teaching box`);
+  }
+});
+
 test("Chapter 4 lesson nav links previous to Chapter 3 and next to Chapter 5", async () => {
   const html = await read("out/chapter-4/index.html");
   assert.match(html, /Chapter navigation/);
