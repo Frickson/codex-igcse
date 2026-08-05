@@ -58,12 +58,19 @@ test("Fleming film autoplays physically consistent left- and right-hand directio
   assert.match(source, /onKeyDown=\{rotateWithKeyboard\}/);
   assert.match(source, /Drag to inspect in 3D/);
   assert.match(source, /Press Home to reset/);
+  assert.match(source, /fleming-left-real\.png/);
+  assert.match(source, /fleming-right-real\.png/);
+  assert.match(source, /className="real-hand-photo"/);
   assert.match(css, /@keyframes flemingDigitPulse/);
   assert.match(css, /\.fleming-film/);
+  assert.match(css, /\.real-hand-model/);
+  assert.match(css, /\.real-hand-photo/);
   assert.match(css, /perspective:760px/);
   assert.match(css, /rotateX\(var\(--hand-rx\)\) rotateY\(var\(--hand-ry\)\)/);
   assert.match(css, /touch-action:none/);
   assert.match(css, /@media \(max-width:650px\)[^{]*\{[^}]*\.fleming-rule-tabs/s);
+  await access(new URL("public/images/fleming-left-real.png", root));
+  await access(new URL("public/images/fleming-right-real.png", root));
 });
 
 test("includes GitHub Pages and social assets", async () => {
