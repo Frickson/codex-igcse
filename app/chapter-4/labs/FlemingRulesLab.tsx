@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 
 type Rule = "left" | "right";
 
@@ -18,74 +18,152 @@ const RIGHT_STEPS = [
   { label: "REVERSE", title: "Reverse motion — induced current reverses", copy: "Move the conductor upward instead and the induced conventional current flips into the page: ⊗." },
 ] as const;
 
-function HandDiagram({ rule, localStep }: { rule: Rule; localStep: number }) {
+function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: number; onInteract: () => void }) {
+  const [rotation, setRotation] = useState({ x: -7, y: rule === "left" ? -10 : 10 });
+  const drag = useRef<{ pointerId: number; x: number; y: number; startX: number; startY: number } | null>(null);
   const reverse = localStep === 3;
   const fieldActive = localStep === 0;
   const inputActive = localStep === 1 || reverse;
   const resultActive = localStep === 2 || reverse;
   const secondRole = rule === "left" ? "CURRENT" : "INDUCED CURRENT";
   const thumbRole = rule === "left" ? "FORCE / MOTION" : "MOTION";
+  const gradientId = `hand-skin-${rule}`;
+  const highlightId = `hand-highlight-${rule}`;
+  const shadowId = `hand-shadow-${rule}`;
+
+  const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+  const resetRotation = () => setRotation({ x: -7, y: rule === "left" ? -10 : 10 });
+  const beginDrag = (event: PointerEvent<HTMLDivElement>) => {
+    drag.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, startX: rotation.x, startY: rotation.y };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    onInteract();
+  };
+  const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || drag.current.pointerId !== event.pointerId) return;
+    setRotation({
+      x: clamp(drag.current.startX - (event.clientY - drag.current.y) * 0.22, -24, 24),
+      y: clamp(drag.current.startY + (event.clientX - drag.current.x) * 0.28, -38, 38),
+    });
+  };
+  const endDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (drag.current?.pointerId === event.pointerId) drag.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+  const rotateWithKeyboard = (event: KeyboardEvent<HTMLDivElement>) => {
+    const moves: Partial<Record<string, { x: number; y: number }>> = {
+      ArrowUp: { x: 4, y: 0 }, ArrowDown: { x: -4, y: 0 }, ArrowLeft: { x: 0, y: -5 }, ArrowRight: { x: 0, y: 5 },
+    };
+    if (event.key === "Home") {
+      event.preventDefault();
+      resetRotation();
+      onInteract();
+      return;
+    }
+    const move = moves[event.key];
+    if (!move) return;
+    event.preventDefault();
+    setRotation((value) => ({ x: clamp(value.x + move.x, -24, 24), y: clamp(value.y + move.y, -38, 38) }));
+    onInteract();
+  };
 
   return (
     <div className={`fleming-hand-card ${rule}`}>
-      <span className="hand-badge">{rule === "left" ? "LEFT HAND · MOTOR" : "RIGHT HAND · GENERATOR"}</span>
-      <svg viewBox="0 0 380 300" role="img" aria-label={`${rule === "left" ? "Left" : "Right"} hand showing field, ${rule === "left" ? "current and force" : "motion and induced current"}`}>
-        <g className={`hand-anatomy ${rule}`} aria-hidden="true">
-          <path className="hand-index-finger" d="M159 96 L307 96 Q327 96 327 114 Q327 132 307 132 L159 132 Z" />
-          <path className={rule === "left" ? "hand-thumb" : "hand-second-finger"} d="M141 153 C119 153 101 143 85 124 C74 111 60 106 50 115 C39 125 45 141 57 151 L112 197 Z" />
-          <path className="hand-palm" d="M113 164 Q125 143 153 140 L199 140 Q231 140 244 166 L261 202 Q269 220 258 238 L242 266 L114 266 L104 216 Q99 184 113 164 Z" />
-          <path className={rule === "left" ? "hand-middle-finger" : "hand-thumb-down"} d={rule === "left" ? "M147 151 Q147 136 165 136 Q183 136 183 151 L183 238 Q183 258 165 258 Q147 258 147 238 Z" : "M142 163 Q142 145 166 145 Q190 145 190 163 L190 214 Q190 237 166 237 Q142 237 142 214 Z"} />
-          <path className="hand-wrist" d="M121 258 L234 258 L241 294 L116 294 Z" />
-          <path className="hand-nail depth-nail" d="M48 120 Q58 110 69 119 Q77 127 68 137 Q58 145 49 137 Q41 130 48 120 Z" />
-          <path className="hand-nail index-nail" d="M294 102 Q315 101 316 113 Q315 125 294 125 Z" />
-          <path className="hand-nail vertical-nail" d="M154 226 Q165 218 176 226 L176 244 Q165 252 154 244 Z" />
-          <path className="hand-crease" d="M126 201 Q163 178 217 195 M193 216 Q224 216 243 204 M119 226 Q152 212 178 218" />
-          <path className="hand-folded-fingers" d="M207 149 Q231 158 236 181 Q217 174 200 180 M219 184 Q245 191 248 213 Q225 205 205 213" />
-        </g>
+      <div className="hand-card-heading">
+        <span className="hand-badge">{rule === "left" ? "LEFT HAND · MOTOR" : "RIGHT HAND · GENERATOR"}</span>
+        <button type="button" className="hand-reset" onClick={() => { resetRotation(); onInteract(); }}>Reset view</button>
+      </div>
+      <div
+        className="hand-drag-stage"
+        role="img"
+        tabIndex={0}
+        aria-label={`${rule === "left" ? "Left" : "Right"} hand 3D model showing field, ${rule === "left" ? "current and force" : "motion and induced current"}. Drag to tilt, or use arrow keys. Press Home to reset.`}
+        onPointerDown={beginDrag}
+        onPointerMove={moveDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onKeyDown={rotateWithKeyboard}
+      >
+        <svg
+          viewBox="0 0 380 300"
+          aria-hidden="true"
+          style={{ "--hand-rx": `${rotation.x}deg`, "--hand-ry": `${rotation.y}deg` } as CSSProperties}
+        >
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ffe2c7" />
+              <stop offset="0.48" stopColor="#eeb88e" />
+              <stop offset="1" stopColor="#bd7851" />
+            </linearGradient>
+            <radialGradient id={highlightId} cx="35%" cy="24%" r="80%">
+              <stop offset="0" stopColor="#ffe9d5" />
+              <stop offset="0.62" stopColor="#efbd96" />
+              <stop offset="1" stopColor="#cd8961" />
+            </radialGradient>
+            <filter id={shadowId} x="-30%" y="-30%" width="170%" height="180%">
+              <feDropShadow dx="8" dy="13" stdDeviation="9" floodColor="#56351f" floodOpacity=".3" />
+            </filter>
+          </defs>
+          <ellipse className="hand-ground-shadow" cx="180" cy="273" rx="108" ry="16" />
+          <g className={`hand-anatomy ${rule}`} aria-hidden="true" filter={`url(#${shadowId})`}>
+          <path className="hand-index-finger" d="M153 82 L306 82 Q329 82 329 102 Q329 122 306 122 L153 122 Q138 122 138 107 L138 97 Q138 82 153 82 Z" />
+          <path className="hand-palm" d="M114 145 Q127 122 154 119 L201 119 Q234 120 248 148 L266 191 Q274 214 261 236 L244 263 L111 263 L101 211 Q96 172 114 145 Z" />
+          <path className={rule === "left" ? "hand-middle-finger" : "hand-thumb-down"} d={rule === "left" ? "M144 139 Q144 121 165 121 Q186 121 186 139 L186 236 Q186 260 165 260 Q144 260 144 236 Z" : "M142 143 Q142 124 166 124 Q190 124 190 143 L190 224 Q190 249 166 249 Q142 249 142 224 Z"} />
+          <path className={rule === "left" ? "hand-thumb hand-depth-digit" : "hand-second-finger hand-depth-digit"} d="M151 142 C132 137 117 126 107 113 C99 102 84 97 73 104 C60 113 62 131 75 140 L112 170 Q129 180 144 169 Q157 158 151 142 Z" />
+          <ellipse className="hand-depth-pad" cx="78" cy="113" rx="18" ry="16" />
+          <path className="hand-depth-pad-shine" d="M67 106 Q77 98 88 106" />
+          <path className="hand-wrist" d="M119 255 L238 255 L246 294 L112 294 Z" />
+          <path className="hand-nail index-nail" d="M294 89 Q317 88 318 101 Q317 115 294 115 Z" />
+          <path className="hand-nail vertical-nail" d={rule === "left" ? "M153 228 Q165 219 177 228 L177 246 Q165 255 153 246 Z" : "M153 215 Q166 206 179 215 L179 232 Q166 242 153 232 Z"} />
+          <path className="hand-crease" d="M119 191 Q160 164 218 183 M192 207 Q226 205 248 193 M115 220 Q150 201 179 208" />
+          <path className="hand-folded-fingers" d="M205 130 Q236 142 240 172 Q218 163 197 169 M218 174 Q250 183 253 211 Q226 201 202 210" />
+          <path className="hand-specular" d="M171 91 L296 91 M119 157 Q151 132 198 132 M125 265 L229 265" />
+          </g>
 
         <g className={`hand-digit field ${fieldActive ? "active" : ""}`}>
-          <path d="M174 114 L309 114" />
-          <path className="arrow-tip" d="M309 114 L292 104 M309 114 L292 124" />
-          <text x="205" y="70">FIRST FINGER</text>
-          <text x="205" y="84">FIELD · B · N → S</text>
+          <path d="M169 102 L308 102" />
+          <path className="arrow-tip" d="M308 102 L291 92 M308 102 L291 112" />
+          <text x="202" y="54">FIRST FINGER</text>
+          <text x="202" y="68">FIELD · B · N → S</text>
         </g>
 
         {rule === "left" ? (
           <>
             <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
-              <path d={reverse ? "M165 243 L165 153" : "M165 153 L165 243"} />
-              <path className="arrow-tip" d={reverse ? "M165 153 L155 171 M165 153 L175 171" : "M165 243 L155 225 M165 243 L175 225"} />
-              <text x="187" y="249">SECOND FINGER</text>
-              <text x="187" y="263">CURRENT · I</text>
+              <path d={reverse ? "M165 242 L165 139" : "M165 139 L165 242"} />
+              <path className="arrow-tip" d={reverse ? "M165 139 L155 157 M165 139 L175 157" : "M165 242 L155 224 M165 242 L175 224"} />
+              <text x="190" y="232">SECOND FINGER</text>
+              <text x="190" y="246">CURRENT · I</text>
             </g>
             <g className={`hand-depth result ${resultActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
-              <path className="thumb-guide" d="M118 166 L73 128" />
-              <circle cx="50" cy="75" r="23" />
-              <text x="50" y="83">{reverse ? "×" : "•"}</text>
-              <text className="depth-label" x="82" y="68">THUMB</text>
-              <text className="depth-label" x="82" y="82">FORCE · F</text>
-              <text className="depth-note" x="82" y="96">{reverse ? "into page" : "out of page"}</text>
+              <path className="thumb-guide" d="M75 91 L78 102" />
+              <circle cx="65" cy="58" r="23" />
+              <text x="65" y="66">{reverse ? "×" : "•"}</text>
+              <text className="depth-label" x="96" y="52">THUMB</text>
+              <text className="depth-label" x="96" y="66">FORCE · F</text>
+              <text className="depth-note" x="96" y="80">{reverse ? "into page" : "out of page"}</text>
             </g>
           </>
         ) : (
           <>
             <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
-              <path d={reverse ? "M166 225 L166 161" : "M166 161 L166 225"} />
-              <path className="arrow-tip" d={reverse ? "M166 161 L156 179 M166 161 L176 179" : "M166 225 L156 207 M166 225 L176 207"} />
-              <text x="198" y="224">THUMB</text>
-              <text x="198" y="238">MOTION · v</text>
+              <path d={reverse ? "M166 232 L166 142" : "M166 142 L166 232"} />
+              <path className="arrow-tip" d={reverse ? "M166 142 L156 160 M166 142 L176 160" : "M166 232 L156 214 M166 232 L176 214"} />
+              <text x="196" y="218">THUMB</text>
+              <text x="196" y="232">MOTION · v</text>
             </g>
             <g className={`hand-depth result ${resultActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
-              <path className="thumb-guide" d="M118 166 L73 128" />
-              <circle cx="50" cy="75" r="23" />
-              <text x="50" y="83">{reverse ? "×" : "•"}</text>
-              <text className="depth-label" x="82" y="68">SECOND FINGER</text>
-              <text className="depth-label" x="82" y="82">INDUCED I</text>
-              <text className="depth-note" x="82" y="96">{reverse ? "into page" : "out of page"}</text>
+              <path className="thumb-guide" d="M75 91 L78 102" />
+              <circle cx="65" cy="58" r="23" />
+              <text x="65" y="66">{reverse ? "×" : "•"}</text>
+              <text className="depth-label" x="96" y="52">SECOND FINGER</text>
+              <text className="depth-label" x="96" y="66">INDUCED I</text>
+              <text className="depth-note" x="96" y="80">{reverse ? "into page" : "out of page"}</text>
             </g>
           </>
         )}
-      </svg>
+        </svg>
+        <span className="hand-drag-hint"><b>↔</b> Drag to inspect in 3D</span>
+      </div>
       <div className="hand-key" aria-hidden="true">
         <span><i className="field" /> First = FIELD</span>
         <span><i className="input" /> {rule === "left" ? `Second = ${secondRole}` : `Thumb = ${thumbRole}`}</span>
@@ -173,7 +251,7 @@ export default function FlemingRulesLab() {
             <span>{rule === "left" ? "movement output" : "electrical output"}</span>
           </div>
         </div>
-        <HandDiagram rule={rule} localStep={localStep} />
+        <HandDiagram key={rule} rule={rule} localStep={localStep} onInteract={() => setPlaying(false)} />
         <DirectionScene rule={rule} localStep={localStep} />
       </div>
 

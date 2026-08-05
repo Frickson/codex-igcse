@@ -53,8 +53,16 @@ test("Fleming film autoplays physically consistent left- and right-hand directio
   assert.match(source, /Field is defined N → S/);
   assert.match(source, /const resultOut = !reverse/);
   assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /onPointerDown=\{beginDrag\}/);
+  assert.match(source, /onPointerMove=\{moveDrag\}/);
+  assert.match(source, /onKeyDown=\{rotateWithKeyboard\}/);
+  assert.match(source, /Drag to inspect in 3D/);
+  assert.match(source, /Press Home to reset/);
   assert.match(css, /@keyframes flemingDigitPulse/);
   assert.match(css, /\.fleming-film/);
+  assert.match(css, /perspective:760px/);
+  assert.match(css, /rotateX\(var\(--hand-rx\)\) rotateY\(var\(--hand-ry\)\)/);
+  assert.match(css, /touch-action:none/);
   assert.match(css, /@media \(max-width:650px\)[^{]*\{[^}]*\.fleming-rule-tabs/s);
 });
 
