@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import leftHandPhoto from "../../../public/images/fleming-left-real.png";
+import rightHandPhoto from "../../../public/images/fleming-right-real.png";
 
 type Rule = "left" | "right";
 
@@ -27,9 +30,6 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
   const resultActive = localStep === 2 || reverse;
   const secondRole = rule === "left" ? "CURRENT" : "INDUCED CURRENT";
   const thumbRole = rule === "left" ? "FORCE / MOTION" : "MOTION";
-  const gradientId = `hand-skin-${rule}`;
-  const highlightId = `hand-highlight-${rule}`;
-  const shadowId = `hand-shadow-${rule}`;
 
   const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
   const resetRotation = () => setRotation({ x: -7, y: rule === "left" ? -10 : 10 });
@@ -83,85 +83,34 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
         onPointerCancel={endDrag}
         onKeyDown={rotateWithKeyboard}
       >
-        <svg
-          viewBox="0 0 380 300"
-          aria-hidden="true"
+        <div
+          className="real-hand-model"
           style={{ "--hand-rx": `${rotation.x}deg`, "--hand-ry": `${rotation.y}deg` } as CSSProperties}
         >
-          <defs>
-            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#ffe2c7" />
-              <stop offset="0.48" stopColor="#eeb88e" />
-              <stop offset="1" stopColor="#bd7851" />
-            </linearGradient>
-            <radialGradient id={highlightId} cx="35%" cy="24%" r="80%">
-              <stop offset="0" stopColor="#ffe9d5" />
-              <stop offset="0.62" stopColor="#efbd96" />
-              <stop offset="1" stopColor="#cd8961" />
-            </radialGradient>
-            <filter id={shadowId} x="-30%" y="-30%" width="170%" height="180%">
-              <feDropShadow dx="8" dy="13" stdDeviation="9" floodColor="#56351f" floodOpacity=".3" />
-            </filter>
-          </defs>
-          <ellipse className="hand-ground-shadow" cx="180" cy="273" rx="108" ry="16" />
-          <g className={`hand-anatomy ${rule}`} aria-hidden="true" filter={`url(#${shadowId})`}>
-          <path className="hand-index-finger" d="M153 82 L306 82 Q329 82 329 102 Q329 122 306 122 L153 122 Q138 122 138 107 L138 97 Q138 82 153 82 Z" />
-          <path className="hand-palm" d="M114 145 Q127 122 154 119 L201 119 Q234 120 248 148 L266 191 Q274 214 261 236 L244 263 L111 263 L101 211 Q96 172 114 145 Z" />
-          <path className={rule === "left" ? "hand-middle-finger" : "hand-thumb-down"} d={rule === "left" ? "M144 139 Q144 121 165 121 Q186 121 186 139 L186 236 Q186 260 165 260 Q144 260 144 236 Z" : "M142 143 Q142 124 166 124 Q190 124 190 143 L190 224 Q190 249 166 249 Q142 249 142 224 Z"} />
-          <path className={rule === "left" ? "hand-thumb hand-depth-digit" : "hand-second-finger hand-depth-digit"} d="M151 142 C132 137 117 126 107 113 C99 102 84 97 73 104 C60 113 62 131 75 140 L112 170 Q129 180 144 169 Q157 158 151 142 Z" />
-          <ellipse className="hand-depth-pad" cx="78" cy="113" rx="18" ry="16" />
-          <path className="hand-depth-pad-shine" d="M67 106 Q77 98 88 106" />
-          <path className="hand-wrist" d="M119 255 L238 255 L246 294 L112 294 Z" />
-          <path className="hand-nail index-nail" d="M294 89 Q317 88 318 101 Q317 115 294 115 Z" />
-          <path className="hand-nail vertical-nail" d={rule === "left" ? "M153 228 Q165 219 177 228 L177 246 Q165 255 153 246 Z" : "M153 215 Q166 206 179 215 L179 232 Q166 242 153 232 Z"} />
-          <path className="hand-crease" d="M119 191 Q160 164 218 183 M192 207 Q226 205 248 193 M115 220 Q150 201 179 208" />
-          <path className="hand-folded-fingers" d="M205 130 Q236 142 240 172 Q218 163 197 169 M218 174 Q250 183 253 211 Q226 201 202 210" />
-          <path className="hand-specular" d="M171 91 L296 91 M119 157 Q151 132 198 132 M125 265 L229 265" />
-          </g>
-
-        <g className={`hand-digit field ${fieldActive ? "active" : ""}`}>
-          <path d="M169 102 L308 102" />
-          <path className="arrow-tip" d="M308 102 L291 92 M308 102 L291 112" />
-          <text x="202" y="54">FIRST FINGER</text>
-          <text x="202" y="68">FIELD · B · N → S</text>
-        </g>
-
-        {rule === "left" ? (
-          <>
+          <Image className="real-hand-photo" src={rule === "left" ? leftHandPhoto : rightHandPhoto} alt="" aria-hidden="true" priority />
+          <svg className="real-hand-overlay" viewBox="0 0 100 100" aria-hidden="true">
+            <g className={`hand-digit field ${fieldActive ? "active" : ""}`}>
+              <path d="M48 31 L89 31" />
+              <path className="arrow-tip" d="M89 31 L84 27 M89 31 L84 35" />
+              <text x="59" y="18">FIRST FINGER</text>
+              <text x="59" y="22">FIELD · B</text>
+            </g>
             <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
-              <path d={reverse ? "M165 242 L165 139" : "M165 139 L165 242"} />
-              <path className="arrow-tip" d={reverse ? "M165 139 L155 157 M165 139 L175 157" : "M165 242 L155 224 M165 242 L175 224"} />
-              <text x="190" y="232">SECOND FINGER</text>
-              <text x="190" y="246">CURRENT · I</text>
+              {rule === "left" ? (
+                <><path d={reverse ? "M45 84 L45 58" : "M45 58 L45 84"} /><path className="arrow-tip" d={reverse ? "M45 58 L41 64 M45 58 L49 64" : "M45 84 L41 78 M45 84 L49 78"} /><text x="51" y="77">SECOND FINGER</text><text x="51" y="81">CURRENT · I</text></>
+              ) : (
+                <><path d={reverse ? "M56 83 L56 59" : "M56 59 L56 83"} /><path className="arrow-tip" d={reverse ? "M56 59 L52 65 M56 59 L60 65" : "M56 83 L52 77 M56 83 L60 77"} /><text x="63" y="75">THUMB</text><text x="63" y="79">MOTION · v</text></>
+              )}
             </g>
             <g className={`hand-depth result ${resultActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
-              <path className="thumb-guide" d="M75 91 L78 102" />
-              <circle cx="65" cy="58" r="23" />
-              <text x="65" y="66">{reverse ? "×" : "•"}</text>
-              <text className="depth-label" x="96" y="52">THUMB</text>
-              <text className="depth-label" x="96" y="66">FORCE · F</text>
-              <text className="depth-note" x="96" y="80">{reverse ? "into page" : "out of page"}</text>
+              <path className="thumb-guide" d={rule === "left" ? "M30 40 L47 48" : "M31 39 L52 43"} />
+              <circle cx="22" cy="35" r="8" />
+              <text x="22" y="38">{reverse ? "×" : "•"}</text>
+              <text className="depth-label" x="6" y="52">{rule === "left" ? "THUMB · FORCE" : "SECOND · CURRENT"}</text>
+              <text className="depth-note" x="6" y="56">{reverse ? "into page" : "out of page"}</text>
             </g>
-          </>
-        ) : (
-          <>
-            <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
-              <path d={reverse ? "M166 232 L166 142" : "M166 142 L166 232"} />
-              <path className="arrow-tip" d={reverse ? "M166 142 L156 160 M166 142 L176 160" : "M166 232 L156 214 M166 232 L176 214"} />
-              <text x="196" y="218">THUMB</text>
-              <text x="196" y="232">MOTION · v</text>
-            </g>
-            <g className={`hand-depth result ${resultActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
-              <path className="thumb-guide" d="M75 91 L78 102" />
-              <circle cx="65" cy="58" r="23" />
-              <text x="65" y="66">{reverse ? "×" : "•"}</text>
-              <text className="depth-label" x="96" y="52">SECOND FINGER</text>
-              <text className="depth-label" x="96" y="66">INDUCED I</text>
-              <text className="depth-note" x="96" y="80">{reverse ? "into page" : "out of page"}</text>
-            </g>
-          </>
-        )}
-        </svg>
+          </svg>
+        </div>
         <span className="hand-drag-hint"><b>↔</b> Drag to inspect in 3D</span>
       </div>
       <div className="hand-key" aria-hidden="true">
