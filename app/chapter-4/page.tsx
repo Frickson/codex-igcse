@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent } from "react";
 import ChapterNav from "../ChapterNav";
 import AcademyMoment from "../AcademyMoment";
+import FlemingRulesLab from "./labs/FlemingRulesLab";
 
 type QuizQuestion = {
   question: string;
@@ -1239,6 +1240,7 @@ export default function Home() {
           <div><span className="eyebrow">4.5 · electromagnetic effects</span><h2>One relationship, run in two directions.</h2><p>Current can produce motion; motion through a magnetic field can produce an e.m.f.</p></div>
         </div>
         <AcademyMoment tone="coral" question="What must change before a generator can produce an induced e.m.f.?" from="A conductor and magnetic field" change="Flux linkage changes" to="An induced e.m.f. appears" steps={["Relative motion must cut field lines or change flux linkage.", "Faster change gives a larger induced e.m.f.", "Reversing motion or field reverses the induced direction."]} label="CAMBRIDGE EXAM FOCUS" note="A magnet merely sitting inside a coil produces no continuous e.m.f. The magnetic flux linkage must change." />
+        <FlemingRulesLab />
         <InductionDragLab />
         <div className="advanced-labs-cta">
           <div><span className="mini-label">Separate practical page</span><h3>Explore the generator and motor in depth</h3><p>Synchronise a rotating coil with its a.c. waveform, predict motor-force direction and investigate the split-ring commutator.</p></div>
