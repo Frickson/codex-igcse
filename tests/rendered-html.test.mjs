@@ -26,11 +26,36 @@ test("exports the complete interactive Chapter 4 lesson", async () => {
   assert.match(html, /Transformer calculator/);
   assert.match(html, /Drag-and-drop circuit/);
   assert.match(html, /Drag-to-induce lab/);
+  assert.match(html, /Let the hands explain the direction/);
+  assert.match(html, /LEFT HAND/);
+  assert.match(html, /RIGHT HAND/);
+  assert.match(html, /Field \+ current/);
+  assert.match(html, /Field \+ motion/);
   assert.match(html, /Fuse drop challenge/);
   assert.match(html, /Past-paper patterns/);
   assert.match(html, /Final checkpoint/);
   assert.doesNotMatch(html, /Digital electronics|Logic gates/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+});
+
+test("Fleming film autoplays physically consistent left- and right-hand direction stories", async () => {
+  const [source, page, css] = await Promise.all([
+    readFile(new URL("app/chapter-4/labs/FlemingRulesLab.tsx", root), "utf8"),
+    readFile(new URL("app/chapter-4/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+  assert.match(page, /<FlemingRulesLab \/>/);
+  assert.match(source, /setInterval\(\(\) => setStep\(\(value\) => \(value \+ 1\) % 8\), 2400\)/);
+  assert.match(source, /First finger follows the field/);
+  assert.match(source, /Second finger follows conventional current/);
+  assert.match(source, /Thumb follows the conductor’s motion/);
+  assert.match(source, /induced conventional current/);
+  assert.match(source, /Field is defined N → S/);
+  assert.match(source, /const resultOut = !reverse/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(css, /@keyframes flemingDigitPulse/);
+  assert.match(css, /\.fleming-film/);
+  assert.match(css, /@media \(max-width:650px\)[^{]*\{[^}]*\.fleming-rule-tabs/s);
 });
 
 test("includes GitHub Pages and social assets", async () => {
