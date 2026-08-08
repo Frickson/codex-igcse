@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 /**
  * 6.1.2.1–6.1.2.2 — Solar System order via drag-and-drop (also tap-to-place
@@ -19,6 +19,20 @@ const META: Record<Planet, { rocky: boolean; size: number; fill: string; ring?: 
   Uranus: { rocky: false, size: 30, fill: "#6bb7c9" },
   Neptune: { rocky: false, size: 30, fill: "#3a6fbf" },
 };
+
+const PLANET_DATA: Record<Planet, { type: string; intro: string; distance: number; period: string; speed: number; gravity: number; density: number; temperature: number }> = {
+  Mercury: { type: "rocky planet", intro: "Smallest and closest to the Sun, with a heavily cratered surface.", distance: 0.39, period: "88 days", speed: 47.4, gravity: 3.70, density: 5.43, temperature: 167 },
+  Venus: { type: "rocky planet", intro: "Similar in size to Earth, but its thick atmosphere traps intense heat.", distance: 0.72, period: "225 days", speed: 35.0, gravity: 8.87, density: 5.24, temperature: 464 },
+  Earth: { type: "rocky planet", intro: "Our home planet, with liquid surface water and one natural satellite.", distance: 1.00, period: "365.25 days", speed: 29.8, gravity: 9.81, density: 5.51, temperature: 15 },
+  Mars: { type: "rocky planet", intro: "A cold, iron-rich world with a thin atmosphere and two small moons.", distance: 1.52, period: "1.88 years", speed: 24.1, gravity: 3.71, density: 3.93, temperature: -65 },
+  Jupiter: { type: "gas giant", intro: "The largest planet; its powerful gravity acts above a deep atmosphere.", distance: 5.20, period: "11.86 years", speed: 13.1, gravity: 24.79, density: 1.33, temperature: -110 },
+  Saturn: { type: "gas giant", intro: "A low-density giant surrounded by a broad system of icy rings.", distance: 9.58, period: "29.45 years", speed: 9.7, gravity: 10.44, density: 0.69, temperature: -140 },
+  Uranus: { type: "ice giant", intro: "A blue-green giant that rotates on a strongly tilted axis.", distance: 19.2, period: "84 years", speed: 6.8, gravity: 8.69, density: 1.27, temperature: -195 },
+  Neptune: { type: "ice giant", intro: "The most distant planet, with a deep blue atmosphere and fast winds.", distance: 30.05, period: "164.8 years", speed: 5.4, gravity: 11.15, density: 1.64, temperature: -200 },
+};
+
+const ORBIT_SIZES = [18, 28, 38, 48, 59, 70, 82, 94];
+const ORBIT_DURATIONS = [5, 7, 9.5, 12, 17, 22, 28, 34];
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -92,7 +106,13 @@ export default function SolarSystemLab() {
   const [picked, setPicked] = useState<Planet | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const [showNames, setShowNames] = useState(false);
+  const [orbitPlaying, setOrbitPlaying] = useState(true);
+  const [selectedPlanet, setSelectedPlanet] = useState<Planet>("Earth");
   const dragName = useRef<Planet | null>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setOrbitPlaying(false);
+  }, []);
 
   const place = (name: Planet, index: number) => {
     setSlots((prev) => {
@@ -108,7 +128,10 @@ export default function SolarSystemLab() {
     });
     setPicked(null);
     setDragOver(null);
+    setOrbitPlaying(true);
   };
+
+  const selectedData = PLANET_DATA[selectedPlanet];
 
   const remove = (index: number) => {
     setSlots((prev) => {
@@ -250,6 +273,47 @@ export default function SolarSystemLab() {
           </span>
         </div>
       </div>
+      {correct && (
+        <section className="solar-unlocked" aria-labelledby="solar-unlocked-title">
+          <div className="solar-unlocked-heading">
+            <div>
+              <span className="mini-label">ORDER CORRECT · ORBITS UNLOCKED</span>
+              <h4 id="solar-unlocked-title">Now let the Solar System move</h4>
+              <p>The Sun’s gravity continually changes each planet’s direction, keeping it in orbit. Notice the syllabus pattern: <strong>the farther a planet is from the Sun, the lower its average orbital speed.</strong></p>
+            </div>
+            <button type="button" className="orbit-play-button" aria-pressed={orbitPlaying} onClick={() => setOrbitPlaying((value) => !value)}>{orbitPlaying ? "Pause orbits" : "Play orbits"}</button>
+          </div>
+          <div className={`live-orbit-stage${orbitPlaying ? " playing" : " paused"}`} role="group" aria-label="Animated model of eight planets orbiting the Sun; inner planets move faster than outer planets">
+            <div className="live-sun" aria-hidden="true"><i /><span>Sun</span></div>
+            {ORDER.map((planet, index) => (
+              <div className="live-orbit-track" key={planet} style={{ "--orbit-size": `${ORBIT_SIZES[index]}%`, "--orbit-duration": `${ORBIT_DURATIONS[index]}s`, "--orbit-delay": `${-index * 1.7}s` } as CSSProperties}>
+                <div className="live-orbit-runner">
+                  <button type="button" className={`live-orbit-planet ${selectedPlanet === planet ? "selected" : ""}`} title={`Explore ${planet}`} aria-label={`Explore ${planet}`} onClick={() => setSelectedPlanet(planet)}><PlanetIcon name={planet} /><span>{planet}</span></button>
+                </div>
+              </div>
+            ))}
+            <span className="live-orbit-note">Time is compressed. Sizes, spacing and speed ratios are illustrative.</span>
+          </div>
+
+          <div className="planet-explorer">
+            <div className="planet-explorer-heading">
+              <div><span className="mini-label">SYLLABUS DATA EXPLORER</span><h4>Meet the planets</h4></div>
+              <div className="planet-tabs" role="tablist" aria-label="Choose a planet to explore">{ORDER.map((planet) => <button key={planet} type="button" role="tab" aria-selected={selectedPlanet === planet} className={selectedPlanet === planet ? "active" : ""} onClick={() => setSelectedPlanet(planet)}>{planet}</button>)}</div>
+            </div>
+            <article className="planet-profile" aria-live="polite">
+              <div className="planet-profile-title"><PlanetIcon name={selectedPlanet} /><div><span>{selectedData.type}</span><h5>{selectedPlanet}</h5><p>{selectedData.intro}</p></div></div>
+              <dl>
+                <div><dt>Average distance</dt><dd>{selectedData.distance} AU</dd></div><div><dt>Orbital period</dt><dd>{selectedData.period}</dd></div><div><dt>Average orbital speed</dt><dd>{selectedData.speed} km/s</dd></div><div><dt>Surface gravity, g</dt><dd>{selectedData.gravity} N/kg</dd></div><div><dt>Mean density</dt><dd>{selectedData.density} g/cm³</dd></div><div><dt>Average temperature</dt><dd>{selectedData.temperature} °C</dd></div>
+              </dl>
+            </article>
+            <div className="planet-patterns">
+              <article><span>ORBITAL SPEED · FAST → SLOW</span><div className="planet-ranking speed-ranking">{ORDER.map((planet) => <i key={planet} style={{ "--rank": PLANET_DATA[planet].speed / 47.4 } as CSSProperties}><b>{planet}</b><small>{PLANET_DATA[planet].speed} km/s</small></i>)}</div><p>Farther planets move more slowly on average because the Sun’s gravitational field is weaker at greater distance.</p></article>
+              <article><span>SURFACE g · HIGH → LOW</span><div className="gravity-ranking">{([...ORDER].sort((a, b) => PLANET_DATA[b].gravity - PLANET_DATA[a].gravity)).map((planet) => <b key={planet}>{planet}<small>{PLANET_DATA[planet].gravity}</small></b>)}</div><p><strong>Mass stays the same; weight changes.</strong> A 1 kg mass weighs {selectedData.gravity} N on {selectedPlanet}, because W = mg.</p></article>
+            </div>
+            <p className="model-caption">Data are rounded mean values for comparison. Gas and ice giants do not have a solid surface, so “surface gravity” uses a defined atmospheric level.</p>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

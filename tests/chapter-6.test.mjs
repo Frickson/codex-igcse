@@ -68,6 +68,12 @@ test("orbital speed and Hubble models compute from inputs", async () => {
   assert.match(solar, /solar-orbits/);
   assert.match(solar, /illustrative, not to scale/);
   assert.match(solar, /aria-live="polite"/);
+  assert.match(solar, /ORDER CORRECT · ORBITS UNLOCKED/);
+  assert.match(solar, /live-orbit-runner/);
+  assert.match(solar, /Pause orbits/);
+  assert.match(solar, /Average orbital speed/);
+  assert.match(solar, /Surface gravity, g/);
+  assert.match(solar, /Mass stays the same; weight changes/);
 
   const page = await readFile(new URL("app/chapter-6/page.tsx", root), "utf8");
   assert.match(page, /igcse-space-progress/);
@@ -80,5 +86,7 @@ test("Chapter 6 Solar System controls share one aligned button row", async () =>
   assert.match(css, /\.space \.chip-row \.reset-button \{ margin: 0; \}/);
   assert.match(css, /\.space \.explain \{/);
   assert.match(css, /\.space \.inline-controls button \{/);
+  assert.match(css, /@keyframes solarOrbit/);
+  assert.match(css, /\.space \.live-orbit-stage/);
   assert.doesNotMatch(css, /\\n$/);
 });
