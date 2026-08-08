@@ -51,7 +51,11 @@ test("Fleming film autoplays physically consistent left- and right-hand directio
   assert.match(source, /Thumb follows the conductor’s motion/);
   assert.match(source, /induced conventional current/);
   assert.match(source, /Field is defined N → S/);
-  assert.match(source, /const resultOut = rule === "left" \? !reverse : reverse/);
+  assert.match(source, /const forceOut = !reverse/);
+  assert.match(source, /MIDDLE FINGER/);
+  assert.match(source, /THUMB · MOTION/);
+  assert.match(source, /motion out of the page give induced conventional current down the wire/);
+  assert.match(source, /scene-depth-motion/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /onPointerDown=\{beginDrag\}/);
   assert.match(source, /onPointerMove=\{moveDrag\}/);

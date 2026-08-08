@@ -16,9 +16,9 @@ const LEFT_STEPS = [
 
 const RIGHT_STEPS = [
   { label: "FIELD", title: "First finger follows the field", copy: "This is a true right hand. Here N is on the right, so the magnetic field points right → left." },
-  { label: "MOTION", title: "Thumb follows the conductor’s motion", copy: "The conductor is moved downward across the magnetic field. Motion must cut field lines." },
-  { label: "INDUCED CURRENT", title: "The second finger reveals induced current", copy: "Field left and motion down give induced conventional current into the page: ⊗." },
-  { label: "REVERSE", title: "Reverse motion — induced current reverses", copy: "Move the conductor upward instead and the induced conventional current flips out of the page: ⊙." },
+  { label: "MOTION", title: "Thumb follows the conductor’s motion", copy: "Point the thumb out of the page, towards you: ⊙. The conductor moves across the magnetic field lines." },
+  { label: "INDUCED CURRENT", title: "The middle finger reveals induced current", copy: "Field left and motion out of the page give induced conventional current down the wire." },
+  { label: "REVERSE", title: "Reverse motion — induced current reverses", copy: "Move the conductor into the page instead: ⊗. The middle finger — and induced current — now points up." },
 ] as const;
 
 function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: number; onInteract: () => void }) {
@@ -28,6 +28,8 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
   const fieldActive = localStep === 0;
   const inputActive = localStep === 1 || reverse;
   const resultActive = localStep === 2 || reverse;
+  const verticalActive = rule === "left" ? inputActive : resultActive;
+  const depthActive = rule === "left" ? resultActive : inputActive;
   const secondRole = rule === "left" ? "CURRENT" : "INDUCED CURRENT";
   const thumbRole = rule === "left" ? "FORCE / MOTION" : "MOTION";
 
@@ -94,18 +96,18 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
               <path className="arrow-tip" d={rule === "left" ? "M89 31 L84 27 M89 31 L84 35" : "M11 31 L16 27 M11 31 L16 35"} />
               <text x={rule === "left" ? "59" : "13"} y="18">FIRST FINGER</text><text x={rule === "left" ? "59" : "13"} y="22">FIELD · B</text>
             </g>
-            <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
+            <g className={`hand-digit ${rule === "left" ? "input" : "result"} ${verticalActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
               {rule === "left" ? (
                 <><path d={reverse ? "M45 84 L45 58" : "M45 58 L45 84"} /><path className="arrow-tip" d={reverse ? "M45 58 L41 64 M45 58 L49 64" : "M45 84 L41 78 M45 84 L49 78"} /><text x="51" y="77">SECOND FINGER</text><text x="51" y="81">CURRENT · I</text></>
               ) : (
-                <><path d={reverse ? "M56 83 L56 59" : "M56 59 L56 83"} /><path className="arrow-tip" d={reverse ? "M56 59 L52 65 M56 59 L60 65" : "M56 83 L52 77 M56 83 L60 77"} /><text x="63" y="75">THUMB</text><text x="63" y="79">MOTION · v</text></>
+                <><path d={reverse ? "M56 83 L56 59" : "M56 59 L56 83"} /><path className="arrow-tip" d={reverse ? "M56 59 L52 65 M56 59 L60 65" : "M56 83 L52 77 M56 83 L60 77"} /><text x="63" y="75">MIDDLE FINGER</text><text x="63" y="79">INDUCED CURRENT · I</text></>
               )}
             </g>
-            <g className={`hand-depth result ${resultActive ? "active" : ""} ${(rule === "left" ? reverse : !reverse) ? "into" : "out"}`}>
+            <g className={`hand-depth ${rule === "left" ? "result" : "input"} ${depthActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
               <path className="thumb-guide" d={rule === "left" ? "M30 40 L47 48" : "M70 40 L53 48"} />
               <circle cx={rule === "left" ? "22" : "78"} cy="35" r="8" />
-              <text x={rule === "left" ? "22" : "78"} y="38">{(rule === "left" ? reverse : !reverse) ? "×" : "•"}</text>
-              <text className="depth-label" x={rule === "left" ? "6" : "60"} y="52">{rule === "left" ? "THUMB · FORCE" : "SECOND · CURRENT"}</text><text className="depth-note" x={rule === "left" ? "6" : "64"} y="56">{(rule === "left" ? reverse : !reverse) ? "into page" : "out of page"}</text>
+              <text x={rule === "left" ? "22" : "78"} y="38">{reverse ? "×" : "•"}</text>
+              <text className="depth-label" x={rule === "left" ? "6" : "60"} y="52">{rule === "left" ? "THUMB · FORCE" : "THUMB · MOTION"}</text><text className="depth-note" x={rule === "left" ? "6" : "64"} y="56">{reverse ? "into page" : "out of page"}</text>
             </g>
           </svg>
         </div>
@@ -125,27 +127,34 @@ function DirectionScene({ rule, localStep }: { rule: Rule; localStep: number }) 
   const showInput = localStep >= 1;
   const showResult = localStep >= 2;
   const fieldLeft = rule === "right";
-  const resultOut = rule === "left" ? !reverse : reverse;
+  const forceOut = !reverse;
 
   return (
     <div className={`fleming-scene ${rule} step-${localStep}`}>
       <div className={`scene-magnet ${fieldLeft ? "south" : "north"}`}><b>{fieldLeft ? "S" : "N"}</b><span>{fieldLeft ? "south" : "north"}</span></div>
       <div className={`scene-field ${fieldLeft ? "field-left" : "field-right"}`} aria-label={`Magnetic field from north to south, ${fieldLeft ? "right to left" : "left to right"}`}><i /><i /><i /><b>magnetic field B</b></div>
       <div className={`scene-magnet ${fieldLeft ? "north" : "south"}`}><b>{fieldLeft ? "N" : "S"}</b><span>{fieldLeft ? "north" : "south"}</span></div>
-      <div className={`scene-wire ${showResult ? "reacting" : ""} ${resultOut ? "out" : "into"}`}>
+      <div className={`scene-wire ${rule === "left" && showResult ? "reacting" : ""} ${forceOut ? "out" : "into"}`}>
         <i />
         <span>conductor</span>
       </div>
-      {showInput && (
+      {showInput && rule === "left" && (
         <div className={`scene-input ${reverse ? "up" : "down"}`}>
           <b>{reverse ? "↑" : "↓"}</b>
-          <span>{rule === "left" ? "conventional current I" : "motion v"}</span>
+          <span>conventional current I</span>
         </div>
       )}
-      {showResult && (
-        <div className={`scene-result ${resultOut ? "out" : "into"}`} aria-live="polite">
-          <b>{resultOut ? "⊙" : "⊗"}</b>
-          <span>{rule === "left" ? "force" : "induced current"}<small>{resultOut ? "out of page" : "into page"}</small></span>
+      {showInput && rule === "right" && (
+        <div className={`scene-depth-motion ${reverse ? "into" : "out"}`}><b>{reverse ? "⊗" : "⊙"}</b><span>motion v<small>{reverse ? "into page" : "out of page"}</small></span></div>
+      )}
+      {showResult && rule === "left" && (
+        <div className={`scene-result ${forceOut ? "out" : "into"}`} aria-live="polite">
+          <b>{forceOut ? "⊙" : "⊗"}</b><span>force<small>{forceOut ? "out of page" : "into page"}</small></span>
+        </div>
+      )}
+      {showResult && rule === "right" && (
+        <div className={`scene-result current-direction ${reverse ? "up" : "down"}`} aria-live="polite">
+          <b>{reverse ? "↑" : "↓"}</b><span>induced current<small>{reverse ? "up the wire" : "down the wire"}</small></span>
         </div>
       )}
       <div className="depth-reminder"><b>⊙</b> arrow towards you <span>·</span> <b>⊗</b> arrow away from you</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 
 /**
  * 6.1.2.1–6.1.2.2 — Solar System order via drag-and-drop (also tap-to-place
@@ -109,10 +109,6 @@ export default function SolarSystemLab() {
   const [orbitPlaying, setOrbitPlaying] = useState(true);
   const [selectedPlanet, setSelectedPlanet] = useState<Planet>("Earth");
   const dragName = useRef<Planet | null>(null);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setOrbitPlaying(false);
-  }, []);
 
   const place = (name: Planet, index: number) => {
     setSlots((prev) => {
