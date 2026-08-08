@@ -51,7 +51,7 @@ test("Fleming film autoplays physically consistent left- and right-hand directio
   assert.match(source, /Thumb follows the conductor’s motion/);
   assert.match(source, /induced conventional current/);
   assert.match(source, /Field is defined N → S/);
-  assert.match(source, /const resultOut = !reverse/);
+  assert.match(source, /const resultOut = rule === "left" \? !reverse : reverse/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /onPointerDown=\{beginDrag\}/);
   assert.match(source, /onPointerMove=\{moveDrag\}/);
@@ -60,11 +60,13 @@ test("Fleming film autoplays physically consistent left- and right-hand directio
   assert.match(source, /Press Home to reset/);
   assert.match(source, /fleming-left-real\.png/);
   assert.match(source, /fleming-right-real\.png/);
-  assert.match(source, /className="real-hand-photo"/);
+  assert.match(source, /right-hand-photo/);
+  assert.match(source, /right → left/);
   assert.match(css, /@keyframes flemingDigitPulse/);
   assert.match(css, /\.fleming-film/);
   assert.match(css, /\.real-hand-model/);
   assert.match(css, /\.real-hand-photo/);
+  assert.match(css, /\.right-hand-photo \{ transform:scaleX\(-1\); \}/);
   assert.match(css, /perspective:760px/);
   assert.match(css, /rotateX\(var\(--hand-rx\)\) rotateY\(var\(--hand-ry\)\)/);
   assert.match(css, /touch-action:none/);

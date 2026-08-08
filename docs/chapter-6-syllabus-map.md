@@ -23,8 +23,8 @@ Checkpoint answers persist under `localStorage` key **`igcse-space-progress`**.
 | **6.1.2.5** Sun holds most mass → planets orbit the Sun | Core | §solar | OrbitGravityLab | QuickCheck |
 | **6.1.2.6** Gravity of the Sun keeps objects in orbit | Core | §solar | OrbitGravityLab | exam |
 | **6.1.2.7** Elliptical orbits; Sun not at centre (except ≈circular) | **Supp** | §solar | OrbitGravityLab | checkpoint |
-| **6.1.2.8** Analyse planetary data (distance, period, density, surface T, surface g) | **Supp** | §solar | PlanetaryDataLab | exam |
-| **6.1.2.9** Sun’s gravitational field & orbital speeds decrease with distance | **Supp** | §solar | OrbitGravityLab | QuickCheck |
+| **6.1.2.8** Analyse planetary data (distance, period, density, surface T, surface g) | **Supp** | §solar | SolarSystemLab + PlanetaryDataLab | exam |
+| **6.1.2.9** Sun’s gravitational field & orbital speeds decrease with distance | **Supp** | §solar | SolarSystemLab unlock + OrbitGravityLab | QuickCheck |
 | **6.1.2.10** Elliptical orbit: faster when closer; conservation of energy | **Supp** | §solar | OrbitGravityLab | exam |
 | **6.2.1.1** Sun = medium star; mostly H & He; radiates IR, visible, UV | Core | §stars | SunStarLab | QuickCheck |
 | **6.2.1.2** Stars powered by nuclear fusion (H → He in stable stars) | **Supp** | §stars | SunStarLab | checkpoint |

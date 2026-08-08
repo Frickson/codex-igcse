@@ -15,10 +15,10 @@ const LEFT_STEPS = [
 ] as const;
 
 const RIGHT_STEPS = [
-  { label: "FIELD", title: "First finger follows the field", copy: "Again, point from N to S. The magnetic field is left → right." },
+  { label: "FIELD", title: "First finger follows the field", copy: "This is a true right hand. Here N is on the right, so the magnetic field points right → left." },
   { label: "MOTION", title: "Thumb follows the conductor’s motion", copy: "The conductor is moved downward across the magnetic field. Motion must cut field lines." },
-  { label: "INDUCED CURRENT", title: "The second finger reveals induced current", copy: "Field right and motion down give induced conventional current out of the page: ⊙." },
-  { label: "REVERSE", title: "Reverse motion — induced current reverses", copy: "Move the conductor upward instead and the induced conventional current flips into the page: ⊗." },
+  { label: "INDUCED CURRENT", title: "The second finger reveals induced current", copy: "Field left and motion down give induced conventional current into the page: ⊗." },
+  { label: "REVERSE", title: "Reverse motion — induced current reverses", copy: "Move the conductor upward instead and the induced conventional current flips out of the page: ⊙." },
 ] as const;
 
 function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: number; onInteract: () => void }) {
@@ -87,13 +87,12 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
           className="real-hand-model"
           style={{ "--hand-rx": `${rotation.x}deg`, "--hand-ry": `${rotation.y}deg` } as CSSProperties}
         >
-          <Image className="real-hand-photo" src={rule === "left" ? leftHandPhoto : rightHandPhoto} alt="" aria-hidden="true" priority />
+          <Image className={`real-hand-photo ${rule === "right" ? "right-hand-photo" : "left-hand-photo"}`} src={rule === "left" ? leftHandPhoto : rightHandPhoto} alt="" aria-hidden="true" priority />
           <svg className="real-hand-overlay" viewBox="0 0 100 100" aria-hidden="true">
             <g className={`hand-digit field ${fieldActive ? "active" : ""}`}>
-              <path d="M48 31 L89 31" />
-              <path className="arrow-tip" d="M89 31 L84 27 M89 31 L84 35" />
-              <text x="59" y="18">FIRST FINGER</text>
-              <text x="59" y="22">FIELD · B</text>
+              <path d={rule === "left" ? "M48 31 L89 31" : "M52 31 L11 31"} />
+              <path className="arrow-tip" d={rule === "left" ? "M89 31 L84 27 M89 31 L84 35" : "M11 31 L16 27 M11 31 L16 35"} />
+              <text x={rule === "left" ? "59" : "13"} y="18">FIRST FINGER</text><text x={rule === "left" ? "59" : "13"} y="22">FIELD · B</text>
             </g>
             <g className={`hand-digit input ${inputActive ? "active" : ""} ${reverse ? "reversed" : ""}`}>
               {rule === "left" ? (
@@ -102,12 +101,11 @@ function HandDiagram({ rule, localStep, onInteract }: { rule: Rule; localStep: n
                 <><path d={reverse ? "M56 83 L56 59" : "M56 59 L56 83"} /><path className="arrow-tip" d={reverse ? "M56 59 L52 65 M56 59 L60 65" : "M56 83 L52 77 M56 83 L60 77"} /><text x="63" y="75">THUMB</text><text x="63" y="79">MOTION · v</text></>
               )}
             </g>
-            <g className={`hand-depth result ${resultActive ? "active" : ""} ${reverse ? "into" : "out"}`}>
-              <path className="thumb-guide" d={rule === "left" ? "M30 40 L47 48" : "M31 39 L52 43"} />
-              <circle cx="22" cy="35" r="8" />
-              <text x="22" y="38">{reverse ? "×" : "•"}</text>
-              <text className="depth-label" x="6" y="52">{rule === "left" ? "THUMB · FORCE" : "SECOND · CURRENT"}</text>
-              <text className="depth-note" x="6" y="56">{reverse ? "into page" : "out of page"}</text>
+            <g className={`hand-depth result ${resultActive ? "active" : ""} ${(rule === "left" ? reverse : !reverse) ? "into" : "out"}`}>
+              <path className="thumb-guide" d={rule === "left" ? "M30 40 L47 48" : "M70 40 L53 48"} />
+              <circle cx={rule === "left" ? "22" : "78"} cy="35" r="8" />
+              <text x={rule === "left" ? "22" : "78"} y="38">{(rule === "left" ? reverse : !reverse) ? "×" : "•"}</text>
+              <text className="depth-label" x={rule === "left" ? "6" : "60"} y="52">{rule === "left" ? "THUMB · FORCE" : "SECOND · CURRENT"}</text><text className="depth-note" x={rule === "left" ? "6" : "64"} y="56">{(rule === "left" ? reverse : !reverse) ? "into page" : "out of page"}</text>
             </g>
           </svg>
         </div>
@@ -126,13 +124,14 @@ function DirectionScene({ rule, localStep }: { rule: Rule; localStep: number }) 
   const reverse = localStep === 3;
   const showInput = localStep >= 1;
   const showResult = localStep >= 2;
-  const resultOut = !reverse;
+  const fieldLeft = rule === "right";
+  const resultOut = rule === "left" ? !reverse : reverse;
 
   return (
     <div className={`fleming-scene ${rule} step-${localStep}`}>
-      <div className="scene-magnet north"><b>N</b><span>north</span></div>
-      <div className="scene-field" aria-label="Magnetic field from north to south"><i /><i /><i /><b>magnetic field B</b></div>
-      <div className="scene-magnet south"><b>S</b><span>south</span></div>
+      <div className={`scene-magnet ${fieldLeft ? "south" : "north"}`}><b>{fieldLeft ? "S" : "N"}</b><span>{fieldLeft ? "south" : "north"}</span></div>
+      <div className={`scene-field ${fieldLeft ? "field-left" : "field-right"}`} aria-label={`Magnetic field from north to south, ${fieldLeft ? "right to left" : "left to right"}`}><i /><i /><i /><b>magnetic field B</b></div>
+      <div className={`scene-magnet ${fieldLeft ? "north" : "south"}`}><b>{fieldLeft ? "N" : "S"}</b><span>{fieldLeft ? "north" : "south"}</span></div>
       <div className={`scene-wire ${showResult ? "reacting" : ""} ${resultOut ? "out" : "into"}`}>
         <i />
         <span>conductor</span>
